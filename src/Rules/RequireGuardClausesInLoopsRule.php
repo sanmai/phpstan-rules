@@ -160,8 +160,8 @@ final class RequireGuardClausesInLoopsRule implements Rule
                 }
 
                 // Check for exit/die function calls
-                if ($expr instanceof Node\Expr\FuncCall && $expr->name instanceof Node\Name) {
-                    $funcName = $expr->name->toString();
+                if ($expr instanceof Expr\FuncCall && $expr->name instanceof Node\Name) {
+                    $funcName = (string) $expr->name;
                     if (in_array($funcName, ['exit', 'die'], true)) {
                         continue;
                     }

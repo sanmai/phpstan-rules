@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -21,6 +22,7 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
@@ -28,6 +30,7 @@ use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 /**
  * Tests that all "good" examples from README don't trigger any rules
  */
+#[CoversNothing]
 class ReadmeExamplesTest extends RuleTestCase
 {
     public function testNoNestedLoopsRule(): void

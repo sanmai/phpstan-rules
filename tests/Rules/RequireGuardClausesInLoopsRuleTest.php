@@ -22,11 +22,14 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 
 /**
  * @extends RuleTestCase<RequireGuardClausesInLoopsRule>
  */
+#[CoversClass(RequireGuardClausesInLoopsRule::class)]
 class RequireGuardClausesInLoopsRuleTest extends RuleTestCase
 {
     protected function getRule(): Rule
