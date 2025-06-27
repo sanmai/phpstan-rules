@@ -29,6 +29,7 @@ use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 
 /**
  * Tests that all "good" examples from README don't trigger any rules
+ * @phpstan-ignore missingType.generics
  */
 #[CoversNothing]
 class ReadmeExamplesTest extends RuleTestCase
@@ -57,11 +58,17 @@ class ReadmeExamplesTest extends RuleTestCase
         $this->analyse([__DIR__ . '/../Fixtures/ReadmeExamples/good_examples.php'], []);
     }
 
+    /**
+     * @phpstan-ignore missingType.generics
+     */
     protected function getRule(): Rule
     {
         // This is set in each test method
         return $this->rule;
     }
 
+    /**
+     * @phpstan-ignore missingType.generics
+     */
     private Rule $rule;
 }
