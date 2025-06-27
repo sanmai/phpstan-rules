@@ -145,27 +145,32 @@ final class RequireGuardClausesInLoopsRule implements Rule
             }
 
             // If it's an expression, check if it's throw, exit, or die
-            if ($statement instanceof Expression) {
-                $expr = $statement->expr;
+            if (!$statement instanceof Expression) {
+                // Any other statement means it's not just early returns
+                return false;
+            }
 
-                // Check for throw expression (PHP 8+)
-                if ($expr instanceof Expr\Throw_) {
-                    continue;
-                }
+            $expr = $statement->expr;
 
-                // Check for exit/die function calls
-                if ($expr instanceof Expr\FuncCall && $expr->name instanceof Node\Name) {
-                    $funcName = (string) $expr->name;
-                    if (in_array($funcName, ['exit', 'die'], true)) {
-                        continue;
-                    }
-                }
+            // Check for throw expression (PHP 8+)
+            if ($expr instanceof Expr\Throw_) {
+                continue;
+            }
+
+            // Check for exit/die function calls
+            if (!($expr instanceof Expr\FuncCall && $expr->name instanceof Node\Name)) {
                 // Not an early return
                 return false;
             }
 
-            // Any other statement means it's not just early returns
-            return false;
+            $funcName = (string) $expr->name;
+            if (!in_array($funcName, ['exit', 'die'], true)) {
+                // Not an early return
+                return false;
+            }
+
+            // This is an exit/die call, continue checking other statements
+            continue;
         }
 
         return true;
