@@ -19,7 +19,6 @@
         "friendsofphp/php-cs-fixer": "^3.17",
         "infection/infection": ">=0.10.5",
         "league/pipeline": "^0.3 || ^1.0",
-        "phan/phan": ">=1.1",
         "php-coveralls/php-coveralls": "^2.4.1",
         "phpunit/phpunit": "^9.5 || ^10.0",
         "sanmai/pipeline": "^6.17",
