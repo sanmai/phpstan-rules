@@ -32,7 +32,10 @@
     "autoload-dev": {
         "psr-4": {
             "Sanmai\\PHPStanRules\\Tests\\": "tests/"
-        }
+        },
+        "classmap": [
+            "tests/Fixtures/"
+        ]
     },
     "config": {
         "allow-plugins": {

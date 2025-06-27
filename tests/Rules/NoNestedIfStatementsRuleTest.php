@@ -42,11 +42,11 @@ class NoNestedIfStatementsRuleTest extends RuleTestCase
         $this->analyse([__DIR__ . '/../Fixtures/NoNestedIf/nested_if.php'], [
             [
                 'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
-                21,
+                22,
             ],
             [
                 'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
-                65,
+                66,
             ],
         ]);
     }

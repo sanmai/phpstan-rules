@@ -16,6 +16,10 @@
  * limitations under the License.
  */
 
+declare(strict_types=1);
+
+namespace TestFixtures\NoNestedLoops;
+
 // This file contains examples that should trigger the NoNestedLoopsRule
 
 // Direct nested foreach
