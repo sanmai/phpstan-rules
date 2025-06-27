@@ -1,0 +1,53 @@
+{
+    "name": "sanmai/phpstan-rules",
+    "description": "Custom PHPStan rules for enforcing code quality standards",
+    "license": "Apache-2.0",
+    "type": "phpstan-extension",
+    "authors": [
+        {
+            "name": "Alexey Kopytko",
+            "email": "alexey@kopytko.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "nikic/php-parser": "^5.5",
+        "phpstan/phpstan": "^1.0"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.8",
+        "friendsofphp/php-cs-fixer": "^3.17",
+        "infection/infection": ">=0.10.5",
+        "league/pipeline": "^0.3 || ^1.0",
+        "phan/phan": ">=1.1",
+        "php-coveralls/php-coveralls": "^2.4.1",
+        "phpstan/phpstan": ">=0.10 <2",
+        "phpunit/phpunit": "^9.5 || ^10.0",
+        "sanmai/pipeline": "^6.17",
+        "vimeo/psalm": ">=2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sanmai\\PHPStanRules\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sanmai\\PHPStanRules\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    }
+}

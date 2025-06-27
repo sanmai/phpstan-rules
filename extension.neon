@@ -1,0 +1,13 @@
+services:
+    -
+        class: Sanmai\PHPStanRules\Rules\NoNestedLoopsRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule
+        tags:
+            - phpstan.rules.rule
