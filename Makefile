@@ -24,8 +24,7 @@ export XDEBUG_MODE=coverage
 
 # PHPStan
 PHPSTAN=vendor/bin/phpstan
-PHPSTAN_ARGS_TESTS=analyse src tests --level=2 -c .phpstan.neon
-PHPSTAN_ARGS_SRC=analyse -c .phpstan.src.neon
+PHPSTAN_ARGS=analyse -c .phpstan.neon
 
 # Psalm
 PSALM=vendor/bin/psalm
@@ -59,9 +58,8 @@ ci-phpunit: ci-cs
 ci-infection: ci-phpunit
 	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
 
-ci-phpstan: ci-cs .phpstan.neon .phpstan.src.neon
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS_SRC) --no-progress
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS_TESTS) --no-progress
+ci-phpstan: ci-cs .phpstan.neon
+	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS) --no-progress
 
 ci-psalm: ci-cs psalm.xml.dist
 	$(SILENT) $(PHP) $(PSALM) $(PSALM_ARGS) --no-cache --shepherd
@@ -97,9 +95,8 @@ infection: phpunit
 analyze: phpstan psalm
 
 .PHONY: phpstan
-phpstan: cs .phpstan.src.neon .phpstan.neon
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS_SRC)
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS_TESTS)
+phpstan: cs .phpstan.neon
+	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS)
 
 .PHONY: psalm
 psalm: cs psalm.xml.dist
