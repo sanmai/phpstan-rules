@@ -41,15 +41,15 @@ class NoNestedLoopsRuleTest extends RuleTestCase
         $this->analyse([__DIR__ . '/../Fixtures/NoNestedLoops/nested_loops.php'], [
             [
                 'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                26,
+                28,
             ],
             [
                 'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                33,
+                35,
             ],
             [
                 'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                41,
+                43,
             ],
         ]);
     }
