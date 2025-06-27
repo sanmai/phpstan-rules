@@ -20,6 +20,8 @@ declare(strict_types=1);
 
 namespace TestFixtures\NoNestedLoops;
 
+use function array_map;
+
 // This file contains examples that should trigger the NoNestedLoopsRule
 
 // Direct nested foreach
