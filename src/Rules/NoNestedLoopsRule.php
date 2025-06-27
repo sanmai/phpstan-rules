@@ -42,8 +42,6 @@ final class NoNestedLoopsRule implements Rule
     }
 
     /**
-     * @param Node $node
-     * @param Scope $scope
      * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
     #[Override]
@@ -84,7 +82,6 @@ final class NoNestedLoopsRule implements Rule
 
 
     /**
-     * @param Node $node
      * @return array<Node\Stmt>|null
      */
     private function getLoopStatements(Node $node): ?array

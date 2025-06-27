@@ -21,8 +21,6 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\FuncCall;
-use PhpParser\Node\Name;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Continue_;
@@ -53,8 +51,6 @@ final class RequireGuardClausesInLoopsRule implements Rule
     }
 
     /**
-     * @param Node $node
-     * @param Scope $scope
      * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
     #[Override]
@@ -114,7 +110,6 @@ final class RequireGuardClausesInLoopsRule implements Rule
     }
 
     /**
-     * @param Node $node
      * @return array<Stmt>|null
      */
     private function getLoopStatements(Node $node): ?array
@@ -132,7 +127,6 @@ final class RequireGuardClausesInLoopsRule implements Rule
 
     /**
      * @param array<Stmt> $statements
-     * @return bool
      */
     private function containsOnlyEarlyReturns(array $statements): bool
     {

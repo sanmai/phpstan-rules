@@ -41,13 +41,15 @@ final class NoNestedIfStatementsRule implements Rule
     }
 
     /**
-     * @param If_ $node
-     * @param Scope $scope
      * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
+        if (!$node instanceof If_) {
+            return [];
+        }
+
         // Skip if this if has else or elseif branches (more complex control flow)
         if (null !== $node->else || count($node->elseifs) > 0) {
             return [];
