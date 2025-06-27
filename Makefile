@@ -151,8 +151,8 @@ report-php-version:
 
 .PHONY: yamllint
 yamllint:
-	@find .github/ -name \*.y*ml -print0 | xargs -n 1 -0 yamllint --no-warnings
-	@find . -maxdepth 1 -name \*.y*ml -print0 | xargs -n 1 -0 yamllint --no-warnings
+	@find .github/ -name \*.y*ml -print0 | xargs -r -n 1 -0 yamllint --no-warnings
+	@find . -maxdepth 1 -name \*.y*ml -print0 | xargs -r -n 1 -0 yamllint --no-warnings
 
 ##############################################################
 # Quick development testing procedure                        #
