@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -27,12 +28,14 @@ use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Override;
 
 /**
  * @implements Rule<Node>
  */
-class NoNestedLoopsRule implements Rule
+final class NoNestedLoopsRule implements Rule
 {
+    #[Override]
     public function getNodeType(): string
     {
         return Node::class;
@@ -41,8 +44,9 @@ class NoNestedLoopsRule implements Rule
     /**
      * @param Node $node
      * @param Scope $scope
-     * @return array<\PHPStan\Rules\RuleError>
+     * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
+    #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
         if (!$this->isLoopNode($node)) {
@@ -61,7 +65,9 @@ class NoNestedLoopsRule implements Rule
             return [
                 RuleErrorBuilder::message(
                     'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.'
-                )->build(),
+                )
+                    ->identifier('sanmai.noNestedLoops')
+                    ->build(),
             ];
         }
 

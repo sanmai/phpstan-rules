@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -39,15 +40,15 @@ class RequireGuardClausesInLoopsRuleTest extends RuleTestCase
         $this->analyse([__DIR__ . '/../Fixtures/GuardClauses/missing_guard_clauses_fixed.php'], [
             [
                 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                25,
+                45,
             ],
             [
                 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                36,
+                56,
             ],
             [
                 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                82,
+                102,
             ],
         ]);
     }

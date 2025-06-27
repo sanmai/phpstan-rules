@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -22,6 +23,7 @@ namespace Sanmai\PHPStanRules\Rules;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Name;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Continue_;
 use PhpParser\Node\Stmt\Do_;
@@ -34,6 +36,7 @@ use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Override;
 
 use function count;
 use function in_array;
@@ -41,8 +44,9 @@ use function in_array;
 /**
  * @implements Rule<Node>
  */
-class RequireGuardClausesInLoopsRule implements Rule
+final class RequireGuardClausesInLoopsRule implements Rule
 {
+    #[Override]
     public function getNodeType(): string
     {
         return Node::class;
@@ -51,8 +55,9 @@ class RequireGuardClausesInLoopsRule implements Rule
     /**
      * @param Node $node
      * @param Scope $scope
-     * @return array<\PHPStan\Rules\RuleError>
+     * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
+    #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
         if (!$this->isLoopNode($node)) {
@@ -90,7 +95,10 @@ class RequireGuardClausesInLoopsRule implements Rule
             if ($hasStatementsAfter || count($statement->stmts) > 1) {
                 $errors[] = RuleErrorBuilder::message(
                     'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }'
-                )->line($statement->getLine())->build();
+                )
+                    ->identifier('sanmai.requireGuardClauses')
+                    ->line($statement->getLine())
+                    ->build();
             }
         }
 
@@ -138,13 +146,20 @@ class RequireGuardClausesInLoopsRule implements Rule
                 continue;
             }
 
-            if ($statement instanceof Stmt\Break_ || $statement instanceof Stmt\Throw_) {
+            if ($statement instanceof Stmt\Break_) {
                 continue;
             }
 
-            // If it's an expression, check if it's exit/die
+            // If it's an expression, check if it's throw, exit, or die
             if ($statement instanceof Expression) {
                 $expr = $statement->expr;
+
+                // Check for throw expression (PHP 8+)
+                if ($expr instanceof Expr\Throw_) {
+                    continue;
+                }
+
+                // Check for exit/die function calls
                 if ($expr instanceof Node\Expr\FuncCall && $expr->name instanceof Node\Name) {
                     $funcName = $expr->name->toString();
                     if (in_array($funcName, ['exit', 'die'], true)) {

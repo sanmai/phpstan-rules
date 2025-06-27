@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -24,14 +25,16 @@ use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Override;
 
 use function count;
 
 /**
  * @implements Rule<If_>
  */
-class NoNestedIfStatementsRule implements Rule
+final class NoNestedIfStatementsRule implements Rule
 {
+    #[Override]
     public function getNodeType(): string
     {
         return If_::class;
@@ -40,8 +43,9 @@ class NoNestedIfStatementsRule implements Rule
     /**
      * @param If_ $node
      * @param Scope $scope
-     * @return array<\PHPStan\Rules\RuleError>
+     * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
+    #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
         // Skip if this if has else or elseif branches (more complex control flow)
@@ -69,7 +73,9 @@ class NoNestedIfStatementsRule implements Rule
         return [
             RuleErrorBuilder::message(
                 'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.'
-            )->build(),
+            )
+                ->identifier('sanmai.noNestedIf')
+                ->build(),
         ];
     }
 }
