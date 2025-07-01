@@ -41,6 +41,7 @@ final class NoNestedIfStatementsRule implements Rule
     }
 
     /**
+     * @param If_ $node
      * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
     #[Override]

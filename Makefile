@@ -56,7 +56,7 @@ ci-phpunit: ci-cs
 	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_ARGS)
 
 ci-infection: ci-phpunit
-	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
+	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS) --no-progress
 
 ci-phpstan: ci-cs .phpstan.neon
 	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS) --no-progress

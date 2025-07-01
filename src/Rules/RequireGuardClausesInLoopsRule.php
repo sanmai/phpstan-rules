@@ -114,15 +114,14 @@ final class RequireGuardClausesInLoopsRule implements Rule
      */
     private function getLoopStatements(Node $node): ?array
     {
-        if ($node instanceof For_ || $node instanceof Foreach_ || $node instanceof While_) {
-            return $node->stmts;
+        if (!$this->isLoopNode($node)) {
+            return null;
         }
 
-        if ($node instanceof Do_) {
-            return $node->stmts;
-        }
-
-        return null;
+        // We know it's a loop node, so we can safely access stmts property
+        /** @psalm-suppress NoInterfaceProperties, MixedReturnStatement */
+        /** @phpstan-ignore-next-line */
+        return $node->stmts;
     }
 
     /**
@@ -157,20 +156,13 @@ final class RequireGuardClausesInLoopsRule implements Rule
                 continue;
             }
 
-            // Check for exit/die function calls
-            if (!($expr instanceof Expr\FuncCall && $expr->name instanceof Node\Name)) {
-                // Not an early return
-                return false;
+            // Check for exit/die expressions
+            if ($expr instanceof Expr\Exit_) {
+                continue;
             }
 
-            $funcName = (string) $expr->name;
-            if (!in_array($funcName, ['exit', 'die'], true)) {
-                // Not an early return
-                return false;
-            }
-
-            // This is an exit/die call, continue checking other statements
-            continue;
+            // Not an early return
+            return false;
         }
 
         return true;

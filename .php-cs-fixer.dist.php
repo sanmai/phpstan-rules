@@ -67,6 +67,7 @@ $config
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->in(__DIR__)
+            ->exclude('tests/Fixtures')
             ->append([__FILE__])
     )
 ;

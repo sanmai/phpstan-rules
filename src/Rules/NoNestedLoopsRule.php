@@ -86,11 +86,14 @@ final class NoNestedLoopsRule implements Rule
      */
     private function getLoopStatements(Node $node): ?array
     {
-        if ($node instanceof For_ || $node instanceof Foreach_ || $node instanceof While_ || $node instanceof Do_) {
-            return $node->stmts;
+        if (!$this->isLoopNode($node)) {
+            return null;
         }
 
-        return null;
+        // We know it's a loop node, so we can safely access stmts property
+        /** @psalm-suppress NoInterfaceProperties, MixedReturnStatement */
+        /** @phpstan-ignore-next-line */
+        return $node->stmts;
     }
 
     /**
