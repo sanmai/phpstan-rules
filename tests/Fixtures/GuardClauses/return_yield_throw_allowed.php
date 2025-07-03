@@ -58,3 +58,12 @@ function generateMultiple($items) {
         }
     }
 }
+
+// Exit - should NOT be flagged
+function exitConditional($items) {
+    foreach ($items as $item) {
+        if ($item->hasData()) {
+            exit(1);
+        }
+    }
+}

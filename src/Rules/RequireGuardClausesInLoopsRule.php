@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\Exit_;
 use PhpParser\Node\Expr\Throw_;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Expr\YieldFrom;
@@ -121,7 +122,8 @@ final class RequireGuardClausesInLoopsRule implements Rule
             $expr = $statement->expr;
             return $expr instanceof Yield_
                 || $expr instanceof YieldFrom
-                || $expr instanceof Throw_;
+                || $expr instanceof Throw_
+                || $expr instanceof Exit_;
         }
 
         return false;
