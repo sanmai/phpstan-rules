@@ -72,7 +72,7 @@ ci-cs: prerequisites
 ##############################################################
 
 .PHONY: test
-test: analyze phpunit infection composer-validate yamllint
+test: phpunit analyze infection composer-validate yamllint
 
 .PHONY: composer-validate
 composer-validate: test-prerequisites

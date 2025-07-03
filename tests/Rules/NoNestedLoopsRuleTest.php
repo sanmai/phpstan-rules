@@ -36,7 +36,7 @@ class NoNestedLoopsRuleTest extends SingleRuleTestCase
         return new NoNestedLoopsRule();
     }
 
-    public function testRule(): void
+    public function test_nested_loops(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedLoops/nested_loops.php'], [
             12,
@@ -46,4 +46,24 @@ class NoNestedLoopsRuleTest extends SingleRuleTestCase
             48,
         ]);
     }
+
+    public function test_all_loop_types(): void
+    {
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedLoops/all_loop_types.php'], [
+            10,
+            17,
+            25,
+            34,
+            42,
+            52,
+            61,
+            69,
+            78,
+            90,
+            100,
+            109,
+            119,
+        ]);
+    }
+
 }
