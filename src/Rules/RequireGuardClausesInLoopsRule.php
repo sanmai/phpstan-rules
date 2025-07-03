@@ -143,12 +143,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
                 continue;
             }
 
-            // If it's an expression, check if it's throw, exit, or die
-            if (!$statement instanceof Expression) {
-                // Any other statement means it's not just early returns
-                return false;
-            }
-
+            /** @var Expression $statement */
             $expr = $statement->expr;
 
             // Check for throw expression (PHP 8+)
