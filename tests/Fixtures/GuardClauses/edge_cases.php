@@ -2,96 +2,97 @@
 
 declare(strict_types=1);
 
-namespace TestFixtures\GuardClauses;
+// Edge cases and special scenarios
 
-// Mock functions
-function doSomething() {}
-function doMore() {}
+// If with elseif - should NOT be flagged (more complex control flow)
+foreach ($items as $item) {
+    if ($item->type === 'A') { // OK - has elseif
+        processTypeA($item);
+    } elseif ($item->type === 'B') {
+        processTypeB($item);
+    }
+}
 
-class EdgeCases
-{
-    public function testEmptyLoop($items)
-    {
-        // Empty loop - no errors
-        foreach ($items as $item) {
-            // Empty
+// Empty loop body except for if
+foreach ($items as $item) {
+    if ($item) { // error: Use guard clauses
+        // Just a comment
+        doSomething($item);
+    }
+}
+
+// If with else (else is forbidden by NoElseRule but not this rule's concern)
+foreach ($items as $item) {
+    if ($item->isActive()) { // OK - has else (though else itself is forbidden)
+        $item->activate();
+    } else {
+        $item->deactivate();
+    }
+}
+
+// Nested if inside single if
+foreach ($items as $item) {
+    if ($item->needsProcessing()) { // error: Use guard clauses
+        if ($item->isValid()) {
+            $item->process();
         }
     }
+}
 
-    public function testOnlyIfInLoop($items)
-    {
-        // Loop with only an if statement
-        foreach ($items as $item) {
-            if ($item) { // error: Use guard clauses
-                doSomething();
-            }
+// Loop with only if containing yield
+function generator($items) {
+    foreach ($items as $item) {
+        if ($item->isValid()) { // error: Use guard clauses
+            yield $item;
         }
     }
+}
 
-    public function testIfAsLastStatement($items)
-    {
-        // If as the last statement in loop
-        foreach ($items as $item) {
-            doSomething();
-            if ($item) { // No error - last statement
-                doMore();
-            }
+// Loop with only if containing yield from
+function generatorWithYieldFrom($items) {
+    foreach ($items as $item) {
+        if ($item instanceof \Generator) { // error: Use guard clauses
+            yield from $item;
         }
     }
+}
 
-    public function testMultipleIfsInLoop($items)
-    {
-        // Multiple if statements
-        foreach ($items as $item) {
-            if ($item['first']) { // error: Use guard clauses
-                doSomething();
-            }
-
-            if ($item['second']) { // error: Use guard clauses
-                doMore();
-            }
-
-            // More code after ifs
-            $item['processed'] = true;
+// Loop with only if containing yield from followed by continue - should NOT be flagged
+function generatorWithYieldFromAndContinue($items) {
+    foreach ($items as $item) {
+        if ($item instanceof \Generator) { // OK - yield from with continue
+            yield from $item;
+            continue;
         }
     }
+}
 
-    public function testNestedLoopsWithGuardClauses($matrix)
-    {
-        // Nested loops both with guard clauses
-        foreach ($matrix as $row) {
-            if (!$row) {
-                continue;
-            }
-
-            foreach ($row as $cell) {
-                if (!$cell) {
-                    continue;
-                }
-                doSomething();
-            }
+// Loop with only if containing regular yield - should be flagged
+function generatorWithRegularYield($items) {
+    foreach ($items as $item) {
+        if ($item->hasData()) { // error: Use guard clauses
+            yield $item->getData();
         }
     }
+}
 
-    public function testIfWithMultipleConditions($items)
-    {
-        // If with && conditions
-        foreach ($items as $item) {
-            if ($item['active'] && $item['valid']) { // error: Use guard clauses
-                doSomething();
-            }
-            doMore();
-        }
+// Loop with only if containing throw - should NOT be flagged
+foreach ($items as $item) {
+    if ($item->isInvalid()) { // OK - contains only throw
+        throw new \Exception('Invalid item');
     }
+}
 
-    public function testIfWithOrConditions($items)
-    {
-        // If with || conditions
-        foreach ($items as $item) {
-            if ($item['skip'] || $item['ignore']) { // Good - contains continue
-                continue;
-            }
-            doSomething();
-        }
+// Loop with only if containing exit - should NOT be flagged
+foreach ($items as $item) {
+    if ($item->isCritical()) { // OK - contains only exit
+        exit(1);
+    }
+}
+
+// Loop with only if containing die - should NOT be flagged
+foreach ($items as $item) {
+    if ($item->isFatal()) { // OK - contains only die
+        die('Fatal error');
     }
 }

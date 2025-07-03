@@ -99,17 +99,16 @@ $this->grantAccess();
 
 ### `RequireGuardClausesInLoopsRule`
 
-**Enforces the use of guard clauses in loops instead of wrapping the main logic in if statements.**
+**Enforces the use of guard clauses when a loop body consists of only an if statement.**
 
-This rule encourages early returns/continues to reduce nesting and improve readability.
+This rule detects the anti-pattern where the entire loop body is wrapped in a single if statement, encouraging the use of guard clauses for cleaner code.
 
-#### Bad
+#### Bad - Loop with only if
 ```php
 foreach ($items as $item) {
     if ($item->isValid()) { // Error: Use guard clauses
         $item->process();
         $item->save();
-        $this->notify($item);
     }
 }
 ```
@@ -123,31 +122,17 @@ foreach ($items as $item) {
     
     $item->process();
     $item->save();
-    $this->notify($item);
 }
 ```
 
-#### Bad - Multiple statements in if
+#### Good - If with other statements (allowed)
 ```php
-while ($record = $this->fetchNext()) {
-    if ($record->shouldProcess()) { // Error: Use guard clauses
-        $this->transform($record);
-        $this->validate($record);
-        $this->store($record);
-    }
-}
-```
-
-#### Good - Early continue pattern
-```php
-while ($record = $this->fetchNext()) {
-    if (!$record->shouldProcess()) {
-        continue;
+foreach ($items as $item) {
+    if (count($buffer) >= $limit) { // OK: Loop has more than just the if
+        array_shift($buffer);
     }
     
-    $record->transform();
-    $record->validate();
-    $record->store();
+    $buffer[] = $item;
 }
 ```
 

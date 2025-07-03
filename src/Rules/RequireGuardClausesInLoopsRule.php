@@ -22,6 +22,8 @@ namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\Yield_;
+use PhpParser\Node\Expr\YieldFrom;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Continue_;
 use PhpParser\Node\Stmt\Do_;
@@ -69,35 +71,23 @@ final class RequireGuardClausesInLoopsRule implements Rule
 
         $errors = [];
 
-        foreach ($statements as $index => $statement) {
-            // Skip if it's not an if statement
-            if (!$statement instanceof If_) {
-                continue;
+        // Simple rule: if the loop body is ONLY an if statement, it should use guard clauses
+        if (1 === count($statements) && $statements[0] instanceof If_) {
+            $ifStatement = $statements[0];
+
+            // Skip if it has elseif branches or else clause
+            if ([] !== $ifStatement->elseifs || null !== $ifStatement->else) {
+                return $errors;
             }
 
-            // Check if this if statement has elseif branches
-            if ([] !== $statement->elseifs) {
-                continue;
-            }
-
-            // Check if the if statement body contains only early returns
-            if ($this->containsOnlyEarlyReturns($statement->stmts)) {
-                continue;
-            }
-
-            // Check if there are statements after this if in the loop
-            $hasStatementsAfter = $index < count($statements) - 1;
-
-            // If the if body doesn't contain early returns and there are statements after it,
-            // this should be a guard clause
-            if (!$hasStatementsAfter && count($statement->stmts) <= 1) {
-                // @infection-ignore-all
-                continue;
+            // Skip if the if body contains only early returns (already using guard pattern)
+            if ($this->containsOnlyEarlyReturns($ifStatement->stmts)) {
+                return $errors;
             }
 
             $errors[] = RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->identifier('sanmai.requireGuardClauses')
-                ->line($statement->getLine())
+                ->line($ifStatement->getLine())
                 ->build();
         }
 
@@ -137,7 +127,10 @@ final class RequireGuardClausesInLoopsRule implements Rule
             return false;
         }
 
-        foreach ($statements as $statement) {
+        $hasYieldFrom = false;
+        $lastStatementIndex = count($statements) - 1;
+
+        foreach ($statements as $index => $statement) {
             // Check for continue, return, break, throw
             if ($statement instanceof Continue_ || $statement instanceof Return_) {
                 continue;
@@ -147,23 +140,41 @@ final class RequireGuardClausesInLoopsRule implements Rule
                 continue;
             }
 
-            /** @var Expression $statement */
-            $expr = $statement->expr;
+            if ($statement instanceof Expression) {
+                $expr = $statement->expr;
 
-            // Check for throw expression (PHP 8+)
-            if ($expr instanceof Expr\Throw_) {
-                continue;
+                // Check for throw expression (PHP 8+)
+                if ($expr instanceof Expr\Throw_) {
+                    continue;
+                }
+
+                // Check for exit/die expressions
+                if ($expr instanceof Expr\Exit_) {
+                    continue;
+                }
+
+                // Check for yield from expressions
+                if ($expr instanceof YieldFrom) {
+                    // yield from is ok if it's followed by an early return
+                    if ($index < $lastStatementIndex) {
+                        $hasYieldFrom = true;
+                        continue;
+                    }
+                    // yield from as the last statement is not an early return
+                    return false;
+                }
+
+                // Regular yield is not an early return
+                if ($expr instanceof Yield_) {
+                    return false;
+                }
             }
 
-            // Check for exit/die expressions
-            if ($expr instanceof Expr\Exit_) {
-                continue;
-            }
-
-            // Not an early return
+            // Not an early return or allowed expression
             return false;
         }
 
         return true;
     }
+
 }
