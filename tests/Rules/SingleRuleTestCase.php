@@ -38,6 +38,15 @@ use function is_array;
 abstract class SingleRuleTestCase extends RuleTestCase
 {
     /**
+     * @param string[] $files
+     * @param int[] $expectedErrorLines
+     */
+    public function analyseExpectingErrorLines(array $files, array $expectedErrorLines = []): void
+    {
+        $this->analyse($files, $this->linesToErrors($expectedErrorLines));
+    }
+
+    /**
      * @param list<array{0: string, 1: int, 2?: string|null}>|int[] $expectedErrors
      */
     public function analyse(array $files, array $expectedErrors): void

@@ -38,15 +38,9 @@ class RequireGuardClausesMultipleEarlyReturnIfsTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/GuardClauses/multiple_early_return_ifs.php'], [
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                26,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                32,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/multiple_early_return_ifs.php'], [
+            26,
+            32,
         ]);
     }
 }

@@ -38,7 +38,7 @@ class RequireGuardClausesBreakVsContinueTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/GuardClauses/break_vs_continue.php'], [
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/break_vs_continue.php'], [
             // The first function's ifs are not flagged because they contain only early returns
             // This is the correct behavior - they're already using the early return pattern
 

@@ -38,31 +38,13 @@ class RequireGuardClausesNonExpressionTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/GuardClauses/non_expression_statements.php'], [
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                13,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                26,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                40,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                53,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                66,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                78,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/non_expression_statements.php'], [
+            13,
+            26,
+            40,
+            53,
+            66,
+            78,
         ]);
     }
 }

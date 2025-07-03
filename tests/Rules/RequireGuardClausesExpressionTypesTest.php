@@ -38,19 +38,10 @@ class RequireGuardClausesExpressionTypesTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/GuardClauses/expression_types.php'], [
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                14,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                30,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                48,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/expression_types.php'], [
+            14,
+            30,
+            48,
         ]);
     }
 }

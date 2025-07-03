@@ -38,19 +38,10 @@ class RequireGuardClausesMixedStatementTypesTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/GuardClauses/mixed_statement_types.php'], [
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                15,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                28,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                42,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/mixed_statement_types.php'], [
+            15,
+            28,
+            42,
         ]);
     }
 }

@@ -38,19 +38,10 @@ class RequireGuardClausesEdgeCasesTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/GuardClauses/edge_cases.php'], [
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                46,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                50,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                80,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/edge_cases.php'], [
+            46,
+            50,
+            80,
         ]);
     }
 }

@@ -38,20 +38,20 @@ class NoNestedLoopsAllTypesTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/NoNestedLoops/all_loop_types.php'], [
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 10],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 17],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 25],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 34],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 42],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 52],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 61],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 69],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 78],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 90],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 100],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 109],
-            ['Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.', 119],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedLoops/all_loop_types.php'], [
+            10,
+            17,
+            25,
+            34,
+            42,
+            52,
+            61,
+            69,
+            78,
+            90,
+            100,
+            109,
+            119,
         ]);
     }
 }

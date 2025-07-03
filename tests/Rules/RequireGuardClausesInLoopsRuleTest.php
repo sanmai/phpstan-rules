@@ -40,19 +40,10 @@ class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     public function testRule(): void
     {
         // Test with the properly structured fixture
-        $this->analyse([__DIR__ . '/../Fixtures/GuardClauses/missing_guard_clauses_fixed.php'], [
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                30,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                41,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                87,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/missing_guard_clauses_fixed.php'], [
+            30,
+            41,
+            87,
         ]);
     }
 }

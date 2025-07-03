@@ -38,23 +38,11 @@ class NoNestedIfComplexCasesTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/NoNestedIf/complex_cases.php'], [
-            [
-                NoNestedIfStatementsRule::ERROR_MESSAGE,
-                25,
-            ],
-            [
-                NoNestedIfStatementsRule::ERROR_MESSAGE,
-                82,
-            ],
-            [
-                NoNestedIfStatementsRule::ERROR_MESSAGE,
-                92,
-            ],
-            [
-                NoNestedIfStatementsRule::ERROR_MESSAGE,
-                93,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/complex_cases.php'], [
+            25,
+            82,
+            92,
+            93,
         ]);
     }
 }

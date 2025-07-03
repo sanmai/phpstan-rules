@@ -38,27 +38,12 @@ class NoNestedLoopsRuleTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/NoNestedLoops/nested_loops.php'], [
-            [
-                'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                12,
-            ],
-            [
-                'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                19,
-            ],
-            [
-                'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                27,
-            ],
-            [
-                'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                38,
-            ],
-            [
-                'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                48,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedLoops/nested_loops.php'], [
+            12,
+            19,
+            27,
+            38,
+            48,
         ]);
     }
 }

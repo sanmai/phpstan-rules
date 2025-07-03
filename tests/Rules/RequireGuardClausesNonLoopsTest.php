@@ -38,7 +38,6 @@ class RequireGuardClausesNonLoopsTest extends SingleRuleTestCase
 
     public function testRule(): void
     {
-        // Test that the rule ignores non-loop nodes
-        $this->analyse([__DIR__ . '/../Fixtures/MixedNodeTypes/not_loops.php'], []);
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/MixedNodeTypes/not_loops.php']);
     }
 }
