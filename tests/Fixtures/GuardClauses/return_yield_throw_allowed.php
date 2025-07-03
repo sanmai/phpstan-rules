@@ -35,6 +35,7 @@ function validateItems($items) {
 foreach ($items as $item) {
     if ($item->needsProcessing()) { // error: Use guard clauses
         $item->process();
+        // Comments should not affect the rule
         return $item;
     }
 }
@@ -45,6 +46,16 @@ function findSpecial($items) {
         if ($item->isSpecial()) {
             return $item;
             return null; // flagged
+        }
+    }
+}
+
+// multiple returns should be flagged, even without comments
+function findSpecial2($items) {
+    foreach ($items as $item) {
+        if ($item->isSpecial()) {
+            return $item;
+            return null;
         }
     }
 }
@@ -104,6 +115,19 @@ function sideEffects($items) {
             // should NOT be flagged
             // Any number of comments is allowed
             // and this comment is OK
+        }
+    }
+}
+
+// Mixed generator - should not be flagged
+function mixedGenerator($items) {
+    foreach ($items as $item) {
+        if ($item->hasData()) {
+            yield from $item->data1;
+            yield from $item->data2;
+            yield $item->data3;
+            $item->process();
+            $item->log(); // Should not be flagged
         }
     }
 }

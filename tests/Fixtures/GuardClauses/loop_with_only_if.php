@@ -8,6 +8,7 @@ declare(strict_types=1);
 foreach ($items as $item) {
     if ($item->isActive()) {
         $item->process();
+        $item->log();
     }
 }
 
@@ -15,6 +16,7 @@ foreach ($items as $item) {
 while ($row = fetchNext()) {
     if ($row->isValid()) {
         processRow($row);
+        doSomethingElse($row);
     }
 }
 
@@ -22,6 +24,7 @@ while ($row = fetchNext()) {
 for ($i = 0; $i < count($items); $i++) {
     if ($items[$i] !== null) {
         process($items[$i]);
+        logItem($items[$i]);
     }
 }
 

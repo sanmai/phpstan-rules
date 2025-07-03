@@ -96,10 +96,23 @@ final class RequireGuardClausesInLoopsRule implements Rule
      */
     private function isLoopNode(Node $node): bool
     {
-        return $node instanceof For_
-            || $node instanceof Foreach_
-            || $node instanceof While_
-            || $node instanceof Do_;
+        if ($node instanceof For_) {
+            return true;
+        }
+
+        if ($node instanceof Foreach_) {
+            return true;
+        }
+
+        if ($node instanceof While_) {
+            return true;
+        }
+
+        if ($node instanceof Do_) {
+            return true;
+        }
+
+        return false;
     }
 
     private function isYieldOrYieldFrom(Node $statement): bool
@@ -141,8 +154,8 @@ final class RequireGuardClausesInLoopsRule implements Rule
             }
 
             if ($this->isYieldOrYieldFrom($statement)) {
-                // Allow as many yields as needed
-                continue;
+                // Allow as many yields as needed, with other statements
+                break;
             }
 
             $count++;
