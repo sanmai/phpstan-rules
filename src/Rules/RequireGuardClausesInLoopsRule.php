@@ -81,7 +81,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
         $ifStatement = $statements[0];
 
         // Exception: Allow if the if body contains only return, yield, or throw
-        if ($this->containsOnlyReturnYieldOrThrow($ifStatement->stmts)) {
+        if ($this->containsOnlyOneStatement($ifStatement->stmts)) {
             return [];
         }
 
@@ -105,35 +105,14 @@ final class RequireGuardClausesInLoopsRule implements Rule
             || $node instanceof Do_;
     }
 
-    private function isAllowedStatement(Node $statement): bool
+    private function isYieldOrYieldFrom(Node $statement): bool
     {
-        // Skip empty statements
-        if ($statement instanceof Stmt\Nop) {
-            return true;
+        if (!$statement instanceof Expression) {
+            return false;
         }
 
-        // Direct return statement
-        if ($statement instanceof Return_) {
-            return true;
-        }
-
-        // Loop control statements
-        if ($statement instanceof Stmt\Break_) {
-            return true;
-        }
-
-
-        // Expression statement that might be yield, yield from, or throw
-        if ($statement instanceof Expression) {
-            $expr = $statement->expr;
-            return $expr instanceof Yield_
-                || $expr instanceof YieldFrom
-                || $expr instanceof Throw_
-                || $expr instanceof Exit_
-            ;
-        }
-
-        return false;
+        return $statement->expr instanceof Yield_
+                || $statement->expr instanceof YieldFrom;
     }
 
     /**
@@ -151,15 +130,28 @@ final class RequireGuardClausesInLoopsRule implements Rule
     /**
      * @param array<Stmt> $statements
      */
-    private function containsOnlyReturnYieldOrThrow(array $statements): bool
+    private function containsOnlyOneStatement(array $statements): bool
     {
         if ([] === $statements) {
             return false;
         }
 
+        $count = 0;
         foreach ($statements as $statement) {
-            if (!$this->isAllowedStatement($statement)) {
-                return false;
+            if ($statement instanceof Stmt\Nop) {
+                // Skip empty statements
+                continue;
+            }
+
+            if ($this->isYieldOrYieldFrom($statement)) {
+                // Allow as many yields as needed
+                continue;
+            }
+
+            $count++;
+
+            if ($count > 1) {
+                return false; // More than one statement found
             }
         }
 

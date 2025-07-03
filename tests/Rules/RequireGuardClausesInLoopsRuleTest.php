@@ -39,7 +39,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/GuardClauses/loop_with_only_if.php'],
-            [9, 16, 23, 31, 39, 50, 58] // All loops with only if should be flagged
+            [31, 39] // All loops with only if AND several statements should be flagged
         );
     }
 
@@ -63,7 +63,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/GuardClauses/return_yield_throw_allowed.php'],
-            [36]
+            [36, 45]
         );
     }
 }

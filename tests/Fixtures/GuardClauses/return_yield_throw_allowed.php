@@ -59,6 +59,15 @@ function generateMultiple($items) {
     }
 }
 
+function generateMultiple2($items) {
+    foreach ($items as $item) {
+        if ($item->hasData()) {
+            yield from $item->data1;
+            yield from $item->data2;
+        }
+    }
+}
+
 // Exit - should NOT be flagged
 function exitConditional($items) {
     foreach ($items as $item) {
@@ -75,4 +84,15 @@ function walkBreak($items) {
             break; // should NOT be flagged
         }
     }
+}
+
+// Assignment - should NOT be flagged
+function minIterator(Traversable $items) {
+    foreach ($items as $value) {
+        if ($value < $min) {
+            $min = $value; // should NOT be flagged
+        }
+    }
+
+    return $min;
 }

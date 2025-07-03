@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-// Test cases where loops contain ONLY an if statement - these should be flagged
+// Test cases where loops contain ONLY an if statement - two of these should be flagged
 
 // Basic case - foreach with only if
 foreach ($items as $item) {
-    if ($item->isActive()) { // error: Use guard clauses
+    if ($item->isActive()) {
         $item->process();
     }
 }
 
 // While loop with only if
 while ($row = fetchNext()) {
-    if ($row->isValid()) { // error: Use guard clauses
+    if ($row->isValid()) {
         processRow($row);
     }
 }
 
 // For loop with only if
 for ($i = 0; $i < count($items); $i++) {
-    if ($items[$i] !== null) { // error: Use guard clauses
+    if ($items[$i] !== null) {
         process($items[$i]);
     }
 }
@@ -47,7 +47,7 @@ foreach ($users as $user) {
 foreach ($groups as $group) {
     processGroup($group);
     foreach ($group->members as $member) {
-        if ($member->isActive()) { // error: Use guard clauses
+        if ($member->isActive()) {
             processMember($member);
         }
     }
@@ -55,7 +55,7 @@ foreach ($groups as $group) {
 
 // Complex condition - still only if in loop
 foreach ($records as $record) {
-    if ($record->status === 'active' && $record->type === 'premium' && $record->balance > 0) { // error: Use guard clauses
+    if ($record->status === 'active' && $record->type === 'premium' && $record->balance > 0) {
         processRecord($record);
     }
 }
