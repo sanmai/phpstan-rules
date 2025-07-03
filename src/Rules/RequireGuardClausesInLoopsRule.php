@@ -135,14 +135,14 @@ final class RequireGuardClausesInLoopsRule implements Rule
      */
     private function containsOnlyReturnYieldOrThrow(array $statements): bool
     {
-        foreach ($statements as $statement) {
-            // Direct return statement
-            if ($this->isAllowedStatement($statement)) {
-                continue;
-            }
-
-            // Any other statement type means it's not only return/yield/throw
+        if ([] === $statements) {
             return false;
+        }
+
+        foreach ($statements as $statement) {
+            if (!$this->isAllowedStatement($statement)) {
+                return false;
+            }
         }
 
         return true;

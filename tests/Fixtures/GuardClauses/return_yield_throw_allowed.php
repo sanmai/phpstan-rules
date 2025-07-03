@@ -39,17 +39,17 @@ foreach ($items as $item) {
     }
 }
 
-// Multiple returns - should NOT be flagged
+// Multiple returns - should be flagged
 function findSpecial($items) {
     foreach ($items as $item) {
         if ($item->isSpecial()) {
             return $item;
-            return null; // Unreachable but allowed
+            return null; // not allowed, flagged
         }
     }
 }
 
-// Multiple yields - should NOT be flagged  
+// Multiple yields - should NOT be flagged
 function generateMultiple($items) {
     foreach ($items as $item) {
         if ($item->hasData()) {
