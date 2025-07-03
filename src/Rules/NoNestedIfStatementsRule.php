@@ -34,6 +34,8 @@ use function count;
  */
 final class NoNestedIfStatementsRule implements Rule
 {
+    public const ERROR_MESSAGE = 'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.';
+
     #[Override]
     public function getNodeType(): string
     {
@@ -70,9 +72,7 @@ final class NoNestedIfStatementsRule implements Rule
         }
 
         return [
-            RuleErrorBuilder::message(
-                'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.'
-            )
+            RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->identifier('sanmai.noNestedIf')
                 ->build(),
         ];

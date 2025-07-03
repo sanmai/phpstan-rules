@@ -26,10 +26,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
 
 /**
- * @extends RuleTestCase<NoNestedIfStatementsRule>
+ * @extends SingleRuleTestCase<NoNestedIfStatementsRule>
  */
 #[CoversClass(NoNestedIfStatementsRule::class)]
-class NoNestedIfComplexCasesTest extends RuleTestCase
+class NoNestedIfComplexCasesTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
@@ -40,19 +40,19 @@ class NoNestedIfComplexCasesTest extends RuleTestCase
     {
         $this->analyse([__DIR__ . '/../Fixtures/NoNestedIf/complex_cases.php'], [
             [
-                'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
+                NoNestedIfStatementsRule::ERROR_MESSAGE,
                 25,
             ],
             [
-                'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
+                NoNestedIfStatementsRule::ERROR_MESSAGE,
                 82,
             ],
             [
-                'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
+                NoNestedIfStatementsRule::ERROR_MESSAGE,
                 92,
             ],
             [
-                'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
+                NoNestedIfStatementsRule::ERROR_MESSAGE,
                 93,
             ],
         ]);

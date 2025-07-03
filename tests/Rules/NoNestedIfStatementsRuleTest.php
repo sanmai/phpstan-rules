@@ -27,10 +27,10 @@ use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 
 /**
- * @extends RuleTestCase<NoNestedIfStatementsRule>
+ * @extends SingleRuleTestCase<NoNestedIfStatementsRule>
  */
 #[CoversClass(NoNestedIfStatementsRule::class)]
-class NoNestedIfStatementsRuleTest extends RuleTestCase
+class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
@@ -40,14 +40,8 @@ class NoNestedIfStatementsRuleTest extends RuleTestCase
     public function testRule(): void
     {
         $this->analyse([__DIR__ . '/../Fixtures/NoNestedIf/nested_if.php'], [
-            [
-                'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
-                6,
-            ],
-            [
-                'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
-                50,
-            ],
+            6,
+            50,
         ]);
     }
 }

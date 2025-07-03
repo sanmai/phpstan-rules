@@ -44,6 +44,8 @@ use function in_array;
  */
 final class RequireGuardClausesInLoopsRule implements Rule
 {
+    public const ERROR_MESSAGE = 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }';
+
     #[Override]
     public function getNodeType(): string
     {
@@ -88,14 +90,14 @@ final class RequireGuardClausesInLoopsRule implements Rule
 
             // If the if body doesn't contain early returns and there are statements after it,
             // this should be a guard clause
-            if ($hasStatementsAfter || count($statement->stmts) > 1) {
-                $errors[] = RuleErrorBuilder::message(
-                    'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }'
-                )
-                    ->identifier('sanmai.requireGuardClauses')
-                    ->line($statement->getLine())
-                    ->build();
+            if (!$hasStatementsAfter && count($statement->stmts) <= 1) {
+                continue;
             }
+
+            $errors[] = RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                ->identifier('sanmai.requireGuardClauses')
+                ->line($statement->getLine())
+                ->build();
         }
 
         return $errors;

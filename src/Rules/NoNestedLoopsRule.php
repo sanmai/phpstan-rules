@@ -35,6 +35,8 @@ use Override;
  */
 final class NoNestedLoopsRule implements Rule
 {
+    public const ERROR_MESSAGE = 'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.';
+
     #[Override]
     public function getNodeType(): string
     {
@@ -59,17 +61,15 @@ final class NoNestedLoopsRule implements Rule
 
         $hasNestedLoop = $this->hasDirectNestedLoop($stmts);
 
-        if ($hasNestedLoop) {
-            return [
-                RuleErrorBuilder::message(
-                    'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.'
-                )
-                    ->identifier('sanmai.noNestedLoops')
-                    ->build(),
-            ];
+        if (!$hasNestedLoop) {
+            return [];
         }
 
-        return [];
+        return [
+            RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                ->identifier('sanmai.noNestedLoops')
+                ->build(),
+        ];
     }
 
     /**
