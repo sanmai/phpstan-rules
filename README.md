@@ -151,6 +151,61 @@ while ($record = $this->fetchNext()) {
 }
 ```
 
+### 4. `NoElseRule`
+
+**Forbids the use of `else` statements.**
+
+This rule enforces the use of early returns and guard clauses instead of `else` branches, leading to flatter and more readable code.
+
+#### Bad
+```php
+if ($user->isActive()) {
+    return $user->getName();
+} else { // Error: Else statements are not allowed
+    return 'Guest';
+}
+```
+
+#### Good
+```php
+if (!$user->isActive()) {
+    return 'Guest';
+}
+
+return $user->getName();
+```
+
+### 5. `NoEmptyRule`
+
+**Forbids the use of the `empty()` function.**
+
+This rule encourages more explicit checks instead of the ambiguous `empty()` function, which can hide bugs and make code harder to understand.
+
+#### Bad
+```php
+if (empty($data)) { // Error: The empty() function is not allowed
+    return null;
+}
+```
+
+#### Good
+```php
+// Be explicit about what you're checking
+if ($data === null) {
+    return null;
+}
+
+// Or for arrays
+if ($data === [] || count($data) === 0) {
+    return null;
+}
+
+// Or for strings
+if ($data === '') {
+    return null;
+}
+```
+
 ## Ignoring Rules
 
 ### Inline Suppression
