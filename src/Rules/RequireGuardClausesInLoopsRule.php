@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -20,8 +21,7 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\FuncCall;
-use PhpParser\Node\Name;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Continue_;
 use PhpParser\Node\Stmt\Do_;
@@ -34,6 +34,7 @@ use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Override;
 
 use function count;
 use function in_array;
@@ -41,18 +42,20 @@ use function in_array;
 /**
  * @implements Rule<Node>
  */
-class RequireGuardClausesInLoopsRule implements Rule
+final class RequireGuardClausesInLoopsRule implements Rule
 {
+    public const ERROR_MESSAGE = 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }';
+
+    #[Override]
     public function getNodeType(): string
     {
         return Node::class;
     }
 
     /**
-     * @param Node $node
-     * @param Scope $scope
-     * @return array<\PHPStan\Rules\RuleError>
+     * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
+    #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
         if (!$this->isLoopNode($node)) {
@@ -87,16 +90,24 @@ class RequireGuardClausesInLoopsRule implements Rule
 
             // If the if body doesn't contain early returns and there are statements after it,
             // this should be a guard clause
-            if ($hasStatementsAfter || count($statement->stmts) > 1) {
-                $errors[] = RuleErrorBuilder::message(
-                    'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }'
-                )->line($statement->getLine())->build();
+            if (!$hasStatementsAfter && count($statement->stmts) <= 1) {
+                // @infection-ignore-all
+                continue;
             }
+
+            $errors[] = RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                ->identifier('sanmai.requireGuardClauses')
+                ->line($statement->getLine())
+                ->build();
         }
 
         return $errors;
     }
 
+    /**
+     * @phpstan-assert-if-true For_|Foreach_|While_|Do_ $node
+     * @psalm-assert-if-true For_|Foreach_|While_|Do_ $node
+     */
     private function isLoopNode(Node $node): bool
     {
         return $node instanceof For_
@@ -106,25 +117,19 @@ class RequireGuardClausesInLoopsRule implements Rule
     }
 
     /**
-     * @param Node $node
      * @return array<Stmt>|null
      */
     private function getLoopStatements(Node $node): ?array
     {
-        if ($node instanceof For_ || $node instanceof Foreach_ || $node instanceof While_) {
-            return $node->stmts;
+        if (!$this->isLoopNode($node)) {
+            return null;
         }
 
-        if ($node instanceof Do_) {
-            return $node->stmts;
-        }
-
-        return null;
+        return $node->stmts;
     }
 
     /**
      * @param array<Stmt> $statements
-     * @return bool
      */
     private function containsOnlyEarlyReturns(array $statements): bool
     {
@@ -138,24 +143,24 @@ class RequireGuardClausesInLoopsRule implements Rule
                 continue;
             }
 
-            if ($statement instanceof Stmt\Break_ || $statement instanceof Stmt\Throw_) {
+            if ($statement instanceof Stmt\Break_) {
                 continue;
             }
 
-            // If it's an expression, check if it's exit/die
-            if ($statement instanceof Expression) {
-                $expr = $statement->expr;
-                if ($expr instanceof Node\Expr\FuncCall && $expr->name instanceof Node\Name) {
-                    $funcName = $expr->name->toString();
-                    if (in_array($funcName, ['exit', 'die'], true)) {
-                        continue;
-                    }
-                }
-                // Not an early return
-                return false;
+            /** @var Expression $statement */
+            $expr = $statement->expr;
+
+            // Check for throw expression (PHP 8+)
+            if ($expr instanceof Expr\Throw_) {
+                continue;
             }
 
-            // Any other statement means it's not just early returns
+            // Check for exit/die expressions
+            if ($expr instanceof Expr\Exit_) {
+                continue;
+            }
+
+            // Not an early return
             return false;
         }
 

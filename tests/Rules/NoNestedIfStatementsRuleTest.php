@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -21,29 +22,37 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
+use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 
 /**
- * @extends RuleTestCase<NoNestedIfStatementsRule>
+ * @extends SingleRuleTestCase<NoNestedIfStatementsRule>
  */
-class NoNestedIfStatementsRuleTest extends RuleTestCase
+#[CoversClass(NoNestedIfStatementsRule::class)]
+class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
         return new NoNestedIfStatementsRule();
     }
 
-    public function testRule(): void
+    public function test_nested_if(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/NoNestedIf/nested_if.php'], [
-            [
-                'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
-                6,
-            ],
-            [
-                'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.',
-                49,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/nested_if.php'], [
+            6,
+            50,
         ]);
     }
+
+    public function test_complex_cases(): void
+    {
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/complex_cases.php'], [
+            25,
+            82,
+            92,
+            93,
+        ]);
+    }
+
 }

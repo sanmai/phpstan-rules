@@ -3,15 +3,15 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![PHPStan](https://img.shields.io/badge/PHPStan-max%20level-brightgreen.svg)](https://phpstan.org/)
 
-A collection of opinionated PHPStan rules focused on improving code quality by enforcing functional programming patterns and reducing complexity.
+A collection of opinionated PHPStan rules focused on enforcing functional programming patterns and reducing complexity. These rules are tailored specifically to the kind of code LLMs are prone to produce.
 
 ## Philosophy
 
 These rules encourage:
-- **Functional programming patterns** over imperative nested structures
-- **Early returns and guard clauses** for better readability
-- **Reduced cyclomatic complexity** through flatter code structures
-- **Explicit code flow** that's easier to test and maintain
+- Functional programming patterns over imperative nested structures
+- Early returns and guard clauses for better readability
+- Reduced cyclomatic complexity through flatter code structures
+- Explicit code flow that's easier to test and maintain
 
 These principles align well with libraries like [`sanmai/pipeline`](https://github.com/sanmai/pipeline) that provide functional programming patterns as alternatives to nested loops.
 
@@ -34,7 +34,7 @@ That's it! The rules will be automatically registered and start analyzing your c
 
 ## Rules
 
-### 1. NoNestedLoopsRule
+### 1. `NoNestedLoopsRule`
 
 **Prevents nested loops within the same function scope.**
 
@@ -62,10 +62,7 @@ $titles = take($users)
     ->toList();
 ```
 
-
-**Note:** The rule respects function boundaries. Loops inside closures or called methods are not considered nested.
-
-### 2. NoNestedIfStatementsRule
+### 2. `NoNestedIfStatementsRule`
 
 **Discourages simple nested if statements without else branches.**
 
@@ -99,8 +96,6 @@ if (!$user->hasPermission('edit')) {
 
 $this->grantAccess();
 ```
-
-**Note:** The rule only flags simple nested ifs without else branches.
 
 ### 3. RequireGuardClausesInLoopsRule
 
@@ -150,15 +145,11 @@ while ($record = $this->fetchNext()) {
         continue;
     }
     
-    $this->transform($record);
-    $this->validate($record);
-    $this->store($record);
+    $record->transform();
+    $record->validate();
+    $record->store();
 }
 ```
-
-**Note:** The rule does not flag:
-- If statements that only contain early returns (`continue`, `break`, `return`)
-- Single if statement at the end of a loop with only one statement inside
 
 ## Ignoring Rules
 
@@ -175,51 +166,6 @@ foreach ($items as $item) {
 }
 ```
 
-### Configuration File
-
-You can disable rules globally or for specific files in your `phpstan.neon`:
-
-```neon
-parameters:
-    ignoreErrors:
-        - '#Nested loops are not allowed#'
-        
-    excludePaths:
-        - tests/fixtures/*
-        - legacy/*
-```
-
-### Per-File Configuration
-
-For more granular control:
-
-```neon
-parameters:
-    ignoreErrors:
-        -
-            message: '#Use guard clauses#'
-            paths:
-                - src/Legacy/*
-                - src/ComplexAlgorithm.php
-```
-
-## Benefits
-
-Using these rules helps create code that is:
-
-1. **More testable** - Extracted methods are easier to unit test
-2. **More readable** - Flatter code structure is easier to follow
-3. **More maintainable** - Single responsibility methods are easier to modify
-4. **Less error-prone** - Reduced complexity means fewer bugs
-
 ## Contributing
 
 Found a bug or have a suggestion? Please open an issue on GitHub.
-
-## License
-
-This package is licensed under the Apache License 2.0. See [LICENSE](LICENSE) file for details.
-
-## Credits
-
-Created by [Alexey Kopytko](https://github.com/sanmai) and contributors.

@@ -22,16 +22,9 @@ PHPUNIT_GROUP=default
 PHPUNIT_ARGS=--coverage-xml=build/logs/coverage-xml --log-junit=build/logs/junit.xml $(PHPUNIT_COVERAGE_CLOVER)
 export XDEBUG_MODE=coverage
 
-# Phan
-PHAN=vendor/bin/phan
-PHAN_ARGS=-j $(JOBS) --allow-polyfill-parser
-PHAN_PHP_VERSION=8.2
-export PHAN_DISABLE_XDEBUG_WARN=1
-
 # PHPStan
 PHPSTAN=vendor/bin/phpstan
-PHPSTAN_ARGS_TESTS=analyse src tests --level=2 -c .phpstan.neon
-PHPSTAN_ARGS_SRC=analyse -c .phpstan.src.neon
+PHPSTAN_ARGS=analyse -c .phpstan.neon
 
 # Psalm
 PSALM=vendor/bin/psalm
@@ -57,20 +50,16 @@ ci-test: prerequisites
 	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_COVERAGE_CLOVER) --group=$(PHPUNIT_GROUP)
 
 ci-analyze: SILENT=
-ci-analyze: prerequisites ci-phpunit ci-infection ci-phan ci-phpstan ci-psalm
+ci-analyze: prerequisites ci-phpunit ci-infection ci-phpstan ci-psalm
 
 ci-phpunit: ci-cs
 	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_ARGS)
 
 ci-infection: ci-phpunit
-	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
+	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS) --no-progress
 
-ci-phan: ci-cs
-	$(SILENT) $(PHP) $(PHAN) $(PHAN_ARGS)
-
-ci-phpstan: ci-cs .phpstan.neon .phpstan.src.neon
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS_SRC) --no-progress
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS_TESTS) --no-progress
+ci-phpstan: ci-cs .phpstan.neon
+	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS) --no-progress
 
 ci-psalm: ci-cs psalm.xml.dist
 	$(SILENT) $(PHP) $(PSALM) $(PSALM_ARGS) --no-cache --shepherd
@@ -83,7 +72,7 @@ ci-cs: prerequisites
 ##############################################################
 
 .PHONY: test
-test: analyze phpunit infection composer-validate yamllint
+test: phpunit analyze infection composer-validate yamllint
 
 .PHONY: composer-validate
 composer-validate: test-prerequisites
@@ -103,16 +92,11 @@ infection: phpunit
 	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
 
 .PHONY: analyze
-analyze: phan phpstan psalm
-
-.PHONY: phan
-phan: cs
-	$(SILENT) $(PHP) $(PHAN) $(PHAN_ARGS) --color
+analyze: phpstan psalm
 
 .PHONY: phpstan
-phpstan: cs .phpstan.src.neon .phpstan.neon
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS_SRC)
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS_TESTS)
+phpstan: cs .phpstan.neon
+	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS)
 
 .PHONY: psalm
 psalm: cs psalm.xml.dist
@@ -128,7 +112,7 @@ cs: test-prerequisites
 
 # We need both vendor/autoload.php and composer.lock being up to date
 .PHONY: prerequisites
-prerequisites: report-php-version build/cache vendor/autoload.php .phan/config.php composer.lock
+prerequisites: report-php-version build/cache vendor/autoload.php composer.lock
 
 # Do install if there's no 'vendor'
 vendor/autoload.php:
@@ -139,9 +123,6 @@ vendor/autoload.php:
 composer.lock: composer.json
 	$(SILENT) $(COMPOSER) update && touch composer.lock
 
-.phan/config.php:
-	$(PHP) $(PHAN) --init --init-level=1 --init-overwrite --target-php-version=$(PHAN_PHP_VERSION) > /dev/null
-
 build/cache:
 	mkdir -p build/cache
 
@@ -151,8 +132,8 @@ report-php-version:
 
 .PHONY: yamllint
 yamllint:
-	@find .github/ -name \*.y*ml -print0 | xargs -n 1 -0 yamllint --no-warnings
-	@find . -maxdepth 1 -name \*.y*ml -print0 | xargs -n 1 -0 yamllint --no-warnings
+	@find .github/ -name \*.y*ml -print0 | xargs -r -n 1 -0 yamllint --no-warnings
+	@find . -maxdepth 1 -name \*.y*ml -print0 | xargs -r -n 1 -0 yamllint --no-warnings
 
 ##############################################################
 # Quick development testing procedure                        #
