@@ -208,8 +208,8 @@ if ($data === '') {
 
 ## Ignoring Rules
 
-Please refer to PHPStan documentation.
+[Please refer to the PHPStan documentation.](https://phpstan.org/user-guide/ignoring-errors)
 
 ## Contributing
 
-Found a bug or have a suggestion? Please open an issue.
+Found a bug or have a suggestion? [Please open an issue.](https://github.com/sanmai/phpstan-rules/issues)
