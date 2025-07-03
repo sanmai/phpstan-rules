@@ -41,6 +41,8 @@ class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/nested_if.php'], [
             6,
+            21,
+            39,
             50,
         ]);
     }
@@ -49,6 +51,7 @@ class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/complex_cases.php'], [
             25,
+            70,
             82,
             92,
             93,

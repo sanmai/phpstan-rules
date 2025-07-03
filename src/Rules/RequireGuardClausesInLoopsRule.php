@@ -75,8 +75,8 @@ final class RequireGuardClausesInLoopsRule implements Rule
                 continue;
             }
 
-            // Check if this if statement has else/elseif branches
-            if (null !== $statement->else || count($statement->elseifs) > 0) {
+            // Check if this if statement has elseif branches
+            if (count($statement->elseifs) > 0) {
                 continue;
             }
 

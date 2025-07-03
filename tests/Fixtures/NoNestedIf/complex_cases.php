@@ -54,11 +54,11 @@ class ComplexCases
 
     public function testElseBranch($condition)
     {
-        // Good - has else
+        // Now triggers - else no longer allowed
         if ($condition) {
             process('yes');
         } else {
-            if (false === $condition) { // No error - parent has else
+            if (false === $condition) { // Still no error - parent has else (but else itself is forbidden by NoElseRule)
                 process('no');
             }
         }
@@ -66,9 +66,9 @@ class ComplexCases
 
     public function testNestedIfWithElse($data)
     {
-        // Good - nested if has else
+        // Now triggers - else no longer allowed
         if (isValid($data)) {
-            if ($data['special']) { // No error - has else branch
+            if ($data['special']) { // error: Nested if statements should be avoided.
                 handleSpecial($data);
             } else {
                 process($data);

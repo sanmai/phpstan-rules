@@ -130,6 +130,7 @@ class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
             14,
             18,
             22,
+            36,
             43,
         ]);
     }
@@ -166,6 +167,13 @@ class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
             46,
             50,
             80,
+        ]);
+    }
+
+    public function test_elseif_with_multiple_statements(): void
+    {
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/elseif_with_multiple_statements.php'], [
+            23,
         ]);
     }
 }
