@@ -73,6 +73,8 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
                 36,
                 46,
                 56,
+                137,
+                154,
             ]
         );
     }

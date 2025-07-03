@@ -149,8 +149,8 @@ final class RequireGuardClausesInLoopsRule implements Rule
         $count = 0;
         foreach ($statements as $statement) {
             if ($statement instanceof Stmt\Nop) {
-                // Skip empty statements
-                continue;
+                // Skip empty statements, i.e. only with comments
+                return true;
             }
 
             if ($this->isYieldOrYieldFrom($statement)) {

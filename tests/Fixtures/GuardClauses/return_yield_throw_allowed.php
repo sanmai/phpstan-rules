@@ -92,7 +92,7 @@ function exitConditional($items) {
 function walkBreak($items) {
     foreach ($items as $item) {
         if ($item->isSpecial()) {
-            break; // should NOT be flagged
+            break;
         }
     }
 }
@@ -101,7 +101,7 @@ function walkBreak($items) {
 function minIterator(Traversable $items) {
     foreach ($items as $value) {
         if ($value < $min) {
-            $min = $value; // should NOT be flagged
+            $min = $value;
         }
     }
 
@@ -128,6 +128,32 @@ function mixedGenerator($items) {
             yield $item->data3;
             $item->process();
             $item->log(); // Should not be flagged
+        }
+    }
+}
+
+function processLoop($items) {
+    foreach ($items as $item) {
+        if ($item->isSpecial()) {
+            // Should be flagged
+            // This comment should not affect the rule
+            // and this comment is also OK
+            // Another comment
+            // Yet another comment
+            // Final comment
+            $item->process();
+            return $item;
+        }
+    }
+}
+
+
+// should be flagged as well
+function processLoopNoComments($items) {
+    foreach ($items as $item) {
+        if ($item->isSpecial()) {
+            $item->process();
+            return $item;
         }
     }
 }
