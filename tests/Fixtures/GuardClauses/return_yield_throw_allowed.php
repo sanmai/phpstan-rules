@@ -39,12 +39,12 @@ foreach ($items as $item) {
     }
 }
 
-// Multiple returns - should not be flagged
+// Multiple returns - should be flagged
 function findSpecial($items) {
     foreach ($items as $item) {
         if ($item->isSpecial()) {
             return $item;
-            return null; // allowed, not flagged
+            return null; // flagged
         }
     }
 }
@@ -95,4 +95,15 @@ function minIterator(Traversable $items) {
     }
 
     return $min;
+}
+
+// Side effects - should NOT be flagged
+function sideEffects($items) {
+    foreach ($items as $item) {
+        if ($item->doIt()) {
+            // should NOT be flagged
+            // Any number of comments is allowed
+            // and this comment is OK
+        }
+    }
 }
