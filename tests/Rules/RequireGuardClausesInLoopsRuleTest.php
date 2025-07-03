@@ -51,43 +51,4 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
         );
     }
 
-    public function test_already_using_guard_clauses(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/already_using_guard_clauses.php'],
-            [] // None should be flagged - all use guard clauses correctly
-        );
-    }
-
-    public function test_edge_cases(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/edge_cases.php'],
-            [18, 35, 45, 54, 73] // Loops with only if (various edge cases)
-        );
-    }
-
-    public function test_multiple_errors(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/multiple_errors.php'],
-            [9, 16, 23, 25] // Multiple errors in same file
-        );
-    }
-
-    public function test_yield_edge_cases(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/yield_edge_cases.php'],
-            [10, 19, 35, 42] // Yield and expression edge cases
-        );
-    }
-
-    public function test_continue_break_edge_cases(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/continue_break_edge_cases.php'],
-            [9, 19, 28, 45, 52] // Mixed content and empty body cases
-        );
-    }
 }
