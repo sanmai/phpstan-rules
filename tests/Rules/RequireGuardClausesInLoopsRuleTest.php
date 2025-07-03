@@ -51,4 +51,11 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
         );
     }
 
+    public function test_non_loop_nodes(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/non_loop_nodes.php'],
+            [] // No errors - these are not loops
+        );
+    }
 }
