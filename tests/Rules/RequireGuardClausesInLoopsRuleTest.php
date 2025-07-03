@@ -58,4 +58,5 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
             [] // No errors - these are not loops
         );
     }
+
 }
