@@ -73,4 +73,10 @@ class NoNestedLoopsRuleTest extends SingleRuleTestCase
             // No errors expected - these are all single loops or non-loops
         ]);
     }
+
+    public function test_not_loops(): void
+    {
+        // No errors expected - all nodes are non-loops
+        $this->analyse([__DIR__ . '/../Fixtures/MixedNodeTypes/not_loops.php'], []);
+    }
 }
