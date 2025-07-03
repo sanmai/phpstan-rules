@@ -20,60 +20,36 @@ declare(strict_types=1);
 
 namespace Sanmai\PHPStanRules\Rules;
 
+use Override;
 use PhpParser\Node;
-use PhpParser\Node\Stmt\If_;
+use PhpParser\Node\Expr\Empty_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use Override;
-
-use function count;
 
 /**
- * @implements Rule<If_>
+ * @implements Rule<Empty_>
  */
-final class NoNestedIfStatementsRule implements Rule
+final class NoEmptyRule implements Rule
 {
-    public const ERROR_MESSAGE = 'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.';
+    public const ERROR_MESSAGE = 'The empty() function is not allowed. Use more explicit checks like === null, === [], or count() === 0 instead.';
 
     #[Override]
     public function getNodeType(): string
     {
-        return If_::class;
+        return Empty_::class;
     }
 
     /**
-     * @param If_ $node
+     * @param Empty_ $node
      * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
-        // Skip if this if has elseif branches (more complex control flow)
-        if (count($node->elseifs) > 0) {
-            return [];
-        }
-
-        $statements = $node->stmts;
-        if (1 !== count($statements)) {
-            return [];
-        }
-
-        $onlyStatement = $statements[0];
-
-        // Check if the only statement is another if
-        if (!$onlyStatement instanceof If_) {
-            return [];
-        }
-
-        // Check if the nested if has elseif
-        if (count($onlyStatement->elseifs) > 0) {
-            return [];
-        }
-
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noNestedIf')
+                ->identifier('sanmai.noEmpty')
                 ->build(),
         ];
     }

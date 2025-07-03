@@ -11,3 +11,11 @@ services:
         class: Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule
         tags:
             - phpstan.rules.rule
+    -
+        class: Sanmai\PHPStanRules\Rules\NoElseRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: Sanmai\PHPStanRules\Rules\NoEmptyRule
+        tags:
+            - phpstan.rules.rule

@@ -21,41 +21,25 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
-use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
-use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
+use Sanmai\PHPStanRules\Rules\NoEmptyRule;
 
 /**
- * @extends SingleRuleTestCase<NoNestedIfStatementsRule>
+ * @extends SingleRuleTestCase<NoEmptyRule>
  */
-#[CoversClass(NoNestedIfStatementsRule::class)]
-class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
+#[CoversClass(NoEmptyRule::class)]
+final class NoEmptyRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new NoNestedIfStatementsRule();
+        return new NoEmptyRule();
     }
 
-    public function test_nested_if(): void
+    public function test_detects_empty_function_calls(): void
     {
-        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/nested_if.php'], [
-            6,
-            21,
-            39,
-            50,
-        ]);
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/NoEmptyRule/empty_function_calls.php'],
+            [7, 12, 17, 22, 30, 36, 45]
+        );
     }
-
-    public function test_complex_cases(): void
-    {
-        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/complex_cases.php'], [
-            25,
-            70,
-            82,
-            92,
-            93,
-        ]);
-    }
-
 }

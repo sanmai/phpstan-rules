@@ -34,7 +34,7 @@ That's it! The rules will be automatically registered and start analyzing your c
 
 ## Rules
 
-### 1. `NoNestedLoopsRule`
+### `NoNestedLoopsRule`
 
 **Prevents nested loops within the same function scope.**
 
@@ -62,7 +62,7 @@ $titles = take($users)
     ->toList();
 ```
 
-### 2. `NoNestedIfStatementsRule`
+### `NoNestedIfStatementsRule`
 
 **Discourages simple nested if statements without else branches.**
 
@@ -97,7 +97,7 @@ if (!$user->hasPermission('edit')) {
 $this->grantAccess();
 ```
 
-### 3. RequireGuardClausesInLoopsRule
+### `RequireGuardClausesInLoopsRule`
 
 **Enforces the use of guard clauses in loops instead of wrapping the main logic in if statements.**
 
@@ -151,21 +151,65 @@ while ($record = $this->fetchNext()) {
 }
 ```
 
-## Ignoring Rules
+### `NoElseRule`
 
-### Inline Suppression
+**Forbids the use of `else` statements.**
 
-You can suppress specific rule violations using PHPStan's ignore comments:
+This rule enforces the use of early returns and guard clauses instead of `else` branches, leading to flatter and more readable code.
 
+#### Bad
 ```php
-foreach ($items as $item) {
-    // @phpstan-ignore-next-line
-    if ($item->isSpecial()) {
-        // Complex logic that really needs to be here
-    }
+if ($user->isActive()) {
+    return $user->getName();
+} else { // Error: Else statements are not allowed
+    return 'Guest';
 }
 ```
 
+#### Good
+```php
+if (!$user->isActive()) {
+    return 'Guest';
+}
+
+return $user->getName();
+```
+
+### `NoEmptyRule`
+
+**Forbids the use of the `empty()` function.**
+
+This rule encourages more explicit checks instead of the ambiguous `empty()` function, which can hide bugs and make code harder to understand.
+
+#### Bad
+```php
+if (empty($data)) { // Error: The empty() function is not allowed
+    return null;
+}
+```
+
+#### Good
+```php
+// Be explicit about what you're checking
+if ($data === null) {
+    return null;
+}
+
+// Or for arrays
+if ($data === []) {
+    return null;
+}
+
+// Or for strings
+if ($data === '') {
+    return null;
+}
+```
+
+## Ignoring Rules
+
+[Please refer to the PHPStan documentation.](https://phpstan.org/user-guide/ignoring-errors)
+
 ## Contributing
 
-Found a bug or have a suggestion? Please open an issue on GitHub.
+Found a bug or have a suggestion? [Please open an issue.](https://github.com/sanmai/phpstan-rules/issues)

@@ -17,9 +17,9 @@ if ($condition1) {
     }
 }
 
-// If with else - should NOT trigger
+// If with else - now triggers (else no longer allowed)
 if ($condition1) {
-    if ($condition2) { // No error - parent has else
+    if ($condition2) { // error: Nested if statements should be avoided.
         doSomething();
     }
 } else {
@@ -35,9 +35,9 @@ if ($condition1) {
     doSomethingElse();
 }
 
-// Nested if where inner has else - should NOT trigger
+// Nested if where inner has else - now triggers (else no longer allowed)
 if ($condition1) {
-    if ($condition2) { // No error - inner has else
+    if ($condition2) { // error: Nested if statements should be avoided.
         doSomething();
     } else {
         doSomethingElse();

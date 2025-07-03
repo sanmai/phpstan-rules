@@ -21,41 +21,33 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
-use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
-use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
+use Sanmai\PHPStanRules\Rules\NoElseRule;
 
 /**
- * @extends SingleRuleTestCase<NoNestedIfStatementsRule>
+ * @extends SingleRuleTestCase<NoElseRule>
  */
-#[CoversClass(NoNestedIfStatementsRule::class)]
-class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
+#[CoversClass(NoElseRule::class)]
+final class NoElseRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new NoNestedIfStatementsRule();
+        return new NoElseRule();
     }
 
-    public function test_nested_if(): void
+    public function test_detects_else_statements(): void
     {
-        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/nested_if.php'], [
-            6,
-            21,
-            39,
-            50,
-        ]);
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/NoElseRule/else_statements.php'],
+            [9, 19, 22, 33, 43]
+        );
     }
 
-    public function test_complex_cases(): void
+    public function test_allows_elseif_without_else(): void
     {
-        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/complex_cases.php'], [
-            25,
-            70,
-            82,
-            92,
-            93,
-        ]);
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/NoElseRule/elseif_without_else.php'],
+            []
+        );
     }
-
 }

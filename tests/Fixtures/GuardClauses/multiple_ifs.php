@@ -32,8 +32,8 @@ class MultipleIfsTest
     {
         // Mix of guardable and non-guardable ifs
         foreach ($items as $item) {
-            // This one has else, so it's OK
-            if ($item['hasElse']) { // No error - has else
+            // This one has else, but else is forbidden by NoElseRule
+            if ($item['hasElse']) { // error: Use guard clauses
                 processItem($item);
             } else {
                 skipItem($item);
