@@ -36,7 +36,7 @@ class RequireGuardClausesNonExpressionTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function test_rule(): void
+    public function test_non_expression_statements(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/non_expression_statements.php'], [
             13,

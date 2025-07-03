@@ -36,7 +36,7 @@ class RequireGuardClausesExpressionTypesTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function test_rule(): void
+    public function test_expression_types(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/expression_types.php'], [
             14,

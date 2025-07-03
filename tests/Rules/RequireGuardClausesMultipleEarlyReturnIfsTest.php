@@ -36,7 +36,7 @@ class RequireGuardClausesMultipleEarlyReturnIfsTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function test_rule(): void
+    public function test_multiple_early_return_ifs(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/multiple_early_return_ifs.php'], [
             26,

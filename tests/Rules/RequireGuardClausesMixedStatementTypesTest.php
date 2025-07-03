@@ -36,7 +36,7 @@ class RequireGuardClausesMixedStatementTypesTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function test_rule(): void
+    public function test_mixed_statement_types(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/mixed_statement_types.php'], [
             15,

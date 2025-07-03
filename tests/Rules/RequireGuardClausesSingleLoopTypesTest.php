@@ -36,7 +36,7 @@ class RequireGuardClausesSingleLoopTypesTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function test_rule(): void
+    public function test_single_loop_types(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/single_loop_types.php'], [
             14,

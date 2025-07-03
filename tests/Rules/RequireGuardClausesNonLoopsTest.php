@@ -36,7 +36,7 @@ class RequireGuardClausesNonLoopsTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function test_rule(): void
+    public function test_not_loops(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/MixedNodeTypes/not_loops.php']);
     }

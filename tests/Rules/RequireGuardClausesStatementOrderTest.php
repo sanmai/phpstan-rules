@@ -36,7 +36,7 @@ class RequireGuardClausesStatementOrderTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function test_rule(): void
+    public function test_statement_order(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/statement_order.php'], [
             15,

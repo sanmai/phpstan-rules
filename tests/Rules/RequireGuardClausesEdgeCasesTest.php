@@ -36,7 +36,7 @@ class RequireGuardClausesEdgeCasesTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function test_rule(): void
+    public function test_edge_cases(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/edge_cases.php'], [
             46,

@@ -37,7 +37,7 @@ class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function test_rule(): void
+    public function test_missing_guard_clauses_fixed(): void
     {
         // Test with the properly structured fixture
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/missing_guard_clauses_fixed.php'], [
