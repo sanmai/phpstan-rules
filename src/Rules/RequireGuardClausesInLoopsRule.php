@@ -154,8 +154,9 @@ final class RequireGuardClausesInLoopsRule implements Rule
             }
 
             if ($this->isYieldOrYieldFrom($statement)) {
-                // Allow as many yields as needed, with other statements
-                return true;
+                // Allow as many yields as needed, but with only one following statement
+                $count = 0;
+                continue;
             }
 
             $count++;

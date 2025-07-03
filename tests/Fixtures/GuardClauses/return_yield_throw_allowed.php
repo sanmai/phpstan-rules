@@ -125,9 +125,10 @@ function mixedGenerator($items) {
         if ($item->hasData()) {
             yield from $item->data1;
             yield from $item->data2;
-            yield $item->data3;
             $item->process();
-            $item->log(); // Should not be flagged
+
+            yield $item->data3;
+            $item->log();
         }
     }
 }
@@ -157,3 +158,17 @@ function processLoopNoComments($items) {
         }
     }
 }
+
+
+function addGuardClausesToThisGenerator($items) {
+    foreach ($items as $item) {
+        if ($item->hasData()) {
+            $this->log("Processing item with data");
+            yield from $item->data1;
+            yield from $item->data2;
+            $item->process();
+            $this->log("Finished processing item with data");
+        }
+    }
+}
+
