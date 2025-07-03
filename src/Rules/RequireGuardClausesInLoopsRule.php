@@ -117,13 +117,20 @@ final class RequireGuardClausesInLoopsRule implements Rule
             return true;
         }
 
+        // Loop control statements
+        if ($statement instanceof Stmt\Break_) {
+            return true;
+        }
+
+
         // Expression statement that might be yield, yield from, or throw
         if ($statement instanceof Expression) {
             $expr = $statement->expr;
             return $expr instanceof Yield_
                 || $expr instanceof YieldFrom
                 || $expr instanceof Throw_
-                || $expr instanceof Exit_;
+                || $expr instanceof Exit_
+            ;
         }
 
         return false;

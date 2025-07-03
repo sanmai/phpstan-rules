@@ -67,3 +67,12 @@ function exitConditional($items) {
         }
     }
 }
+
+// Break - should NOT be flagged
+function walkBreak($items) {
+    foreach ($items as $item) {
+        if ($item->isSpecial()) {
+            break; // should NOT be flagged
+        }
+    }
+}
