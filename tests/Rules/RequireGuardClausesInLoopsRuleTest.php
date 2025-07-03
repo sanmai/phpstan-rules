@@ -63,7 +63,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/GuardClauses/return_yield_throw_allowed.php'],
-            [36, 45]
+            [36]
         );
     }
 }

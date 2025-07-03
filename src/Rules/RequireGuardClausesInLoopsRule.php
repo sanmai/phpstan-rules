@@ -38,7 +38,6 @@ use PHPStan\Rules\RuleErrorBuilder;
 use Override;
 
 use function count;
-use function in_array;
 
 /**
  * @implements Rule<Node>
@@ -102,6 +101,11 @@ final class RequireGuardClausesInLoopsRule implements Rule
 
     private function isAllowedStatement(Node $statement): bool
     {
+        // Skip empty statements
+        if ($statement instanceof Stmt\Nop) {
+            return true;
+        }
+
         // Direct return statement
         if ($statement instanceof Return_) {
             return true;
