@@ -27,10 +27,10 @@ use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 
 /**
- * @extends RuleTestCase<RequireGuardClausesInLoopsRule>
+ * @extends SingleRuleTestCase<RequireGuardClausesInLoopsRule>
  */
 #[CoversClass(RequireGuardClausesInLoopsRule::class)]
-class RequireGuardClausesInLoopsRuleTest extends RuleTestCase
+class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {

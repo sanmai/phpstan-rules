@@ -26,10 +26,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 
 /**
- * @extends RuleTestCase<RequireGuardClausesInLoopsRule>
+ * @extends SingleRuleTestCase<RequireGuardClausesInLoopsRule>
  */
 #[CoversClass(RequireGuardClausesInLoopsRule::class)]
-class RequireGuardClausesStatementOrderTest extends RuleTestCase
+class RequireGuardClausesStatementOrderTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {

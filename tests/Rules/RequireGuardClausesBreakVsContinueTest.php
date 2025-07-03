@@ -26,10 +26,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 
 /**
- * @extends RuleTestCase<RequireGuardClausesInLoopsRule>
+ * @extends SingleRuleTestCase<RequireGuardClausesInLoopsRule>
  */
 #[CoversClass(RequireGuardClausesInLoopsRule::class)]
-class RequireGuardClausesBreakVsContinueTest extends RuleTestCase
+class RequireGuardClausesBreakVsContinueTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
@@ -43,18 +43,9 @@ class RequireGuardClausesBreakVsContinueTest extends RuleTestCase
             // This is the correct behavior - they're already using the early return pattern
 
             // The second function's ifs ARE flagged:
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                40,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                44,
-            ],
-            [
-                'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }',
-                49,
-            ],
+            44,
+            48,
+            53,
         ]);
     }
 }

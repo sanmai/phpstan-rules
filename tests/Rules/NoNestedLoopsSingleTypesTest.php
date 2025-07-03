@@ -26,10 +26,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 
 /**
- * @extends RuleTestCase<NoNestedLoopsRule>
+ * @extends SingleRuleTestCase<NoNestedLoopsRule>
  */
 #[CoversClass(NoNestedLoopsRule::class)]
-class NoNestedLoopsSingleTypesTest extends RuleTestCase
+class NoNestedLoopsSingleTypesTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {

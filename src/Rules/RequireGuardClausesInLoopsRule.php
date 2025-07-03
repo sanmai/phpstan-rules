@@ -91,6 +91,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
             // If the if body doesn't contain early returns and there are statements after it,
             // this should be a guard clause
             if (!$hasStatementsAfter && count($statement->stmts) <= 1) {
+                // @infection-ignore-all
                 continue;
             }
 

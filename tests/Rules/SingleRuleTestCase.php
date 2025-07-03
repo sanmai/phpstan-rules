@@ -42,29 +42,22 @@ abstract class SingleRuleTestCase extends RuleTestCase
      */
     public function analyse(array $files, array $expectedErrors): void
     {
-        parent::analyse($files, iterator_to_array($this->linesToErrors($expectedErrors), preserve_keys: false));
+        parent::analyse($files, $this->linesToErrors($expectedErrors));
     }
 
     /**
      * @param list<array{0: string, 1: int, 2?: string|null}>|int[] $lines
-     * @return Traversable<array{0: string, 1: int, 2?: string|null}>
+     * @return list<array{0: string, 1: int, 2?: string|null}>
      */
-    private function linesToErrors(array $lines): Traversable
+    private function linesToErrors(array $lines): array
     {
         /** @var string $message */
         /** @phpstan-ignore classConstant.notFound */
         $message = $this->getRule()::ERROR_MESSAGE;
 
-        foreach ($lines as $line) {
-            if (is_array($line)) {
-                yield $line;
-                continue;
-            }
-
-            yield [
-                $message,
-                $line,
-            ];
-        }
+        /** @phpstan-ignore return.type */
+        return take($lines)
+            ->cast(fn(array|int $line): array => is_array($line) ? $line : [$message, $line])
+            ->toList();
     }
 }
