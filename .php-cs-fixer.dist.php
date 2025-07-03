@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -61,10 +62,12 @@ $config
         'strict_comparison' => true,
         'yoda_style' => true,
         'array_indentation' => true,
+        'no_superfluous_phpdoc_tags' => true,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->in(__DIR__)
+            ->exclude('tests/Fixtures')
             ->append([__FILE__])
     )
 ;

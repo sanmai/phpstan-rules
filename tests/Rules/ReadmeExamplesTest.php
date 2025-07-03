@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -21,14 +22,17 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 
 /**
  * Tests that all "good" examples from README don't trigger any rules
+ * @phpstan-ignore missingType.generics
  */
-class ReadmeExamplesTest extends RuleTestCase
+#[CoversNothing]
+class ReadmeExamplesTest extends SingleRuleTestCase
 {
     public function testNoNestedLoopsRule(): void
     {
@@ -54,11 +58,17 @@ class ReadmeExamplesTest extends RuleTestCase
         $this->analyse([__DIR__ . '/../Fixtures/ReadmeExamples/good_examples.php'], []);
     }
 
+    /**
+     * @phpstan-ignore missingType.generics
+     */
     protected function getRule(): Rule
     {
         // This is set in each test method
         return $this->rule;
     }
 
+    /**
+     * @phpstan-ignore missingType.generics
+     */
     private Rule $rule;
 }

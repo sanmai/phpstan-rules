@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -21,33 +22,61 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 
 /**
- * @extends RuleTestCase<NoNestedLoopsRule>
+ * @extends SingleRuleTestCase<NoNestedLoopsRule>
  */
-class NoNestedLoopsRuleTest extends RuleTestCase
+#[CoversClass(NoNestedLoopsRule::class)]
+class NoNestedLoopsRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
         return new NoNestedLoopsRule();
     }
 
-    public function testRule(): void
+    public function test_nested_loops(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/NoNestedLoops/nested_loops.php'], [
-            [
-                'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                6,
-            ],
-            [
-                'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                13,
-            ],
-            [
-                'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.',
-                21,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedLoops/nested_loops.php'], [
+            12,
+            19,
+            27,
+            38,
+            48,
         ]);
+    }
+
+    public function test_all_loop_types(): void
+    {
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedLoops/all_loop_types.php'], [
+            10,
+            17,
+            25,
+            34,
+            42,
+            52,
+            61,
+            69,
+            78,
+            90,
+            100,
+            109,
+            119,
+        ]);
+    }
+
+    public function test_single_loop_types(): void
+    {
+        // This test verifies single loop types are not flagged as nested
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedLoops/single_loop_types.php'], [
+            // No errors expected - these are all single loops or non-loops
+        ]);
+    }
+
+    public function test_not_loops(): void
+    {
+        // No errors expected - all nodes are non-loops
+        $this->analyse([__DIR__ . '/../Fixtures/MixedNodeTypes/not_loops.php'], []);
     }
 }

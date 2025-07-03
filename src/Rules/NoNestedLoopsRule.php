@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Alexey Kopytko <alexey@kopytko.com>
  *
@@ -27,22 +28,25 @@ use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Override;
 
 /**
  * @implements Rule<Node>
  */
-class NoNestedLoopsRule implements Rule
+final class NoNestedLoopsRule implements Rule
 {
+    public const ERROR_MESSAGE = 'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.';
+
+    #[Override]
     public function getNodeType(): string
     {
         return Node::class;
     }
 
     /**
-     * @param Node $node
-     * @param Scope $scope
-     * @return array<\PHPStan\Rules\RuleError>
+     * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
+    #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
         if (!$this->isLoopNode($node)) {
@@ -57,17 +61,21 @@ class NoNestedLoopsRule implements Rule
 
         $hasNestedLoop = $this->hasDirectNestedLoop($stmts);
 
-        if ($hasNestedLoop) {
-            return [
-                RuleErrorBuilder::message(
-                    'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.'
-                )->build(),
-            ];
+        if (!$hasNestedLoop) {
+            return [];
         }
 
-        return [];
+        return [
+            RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                ->identifier('sanmai.noNestedLoops')
+                ->build(),
+        ];
     }
 
+    /**
+     * @phpstan-assert-if-true For_|Foreach_|While_|Do_ $node
+     * @psalm-assert-if-true For_|Foreach_|While_|Do_ $node
+     */
     private function isLoopNode(Node $node): bool
     {
         return $node instanceof For_
@@ -78,16 +86,15 @@ class NoNestedLoopsRule implements Rule
 
 
     /**
-     * @param Node $node
      * @return array<Node\Stmt>|null
      */
     private function getLoopStatements(Node $node): ?array
     {
-        if ($node instanceof For_ || $node instanceof Foreach_ || $node instanceof While_ || $node instanceof Do_) {
-            return $node->stmts;
+        if (!$this->isLoopNode($node)) {
+            return null;
         }
 
-        return null;
+        return $node->stmts;
     }
 
     /**
