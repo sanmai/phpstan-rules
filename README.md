@@ -99,9 +99,9 @@ $this->grantAccess();
 
 ### `RequireGuardClausesInLoopsRule`
 
-**Enforces the use of guard clauses when a loop body consists of only an if statement.**
+**Enforces the use of guard clauses in loops instead of wrapping the main logic in if statements.**
 
-This rule detects the anti-pattern where the entire loop body is wrapped in a single if statement, encouraging the use of guard clauses for cleaner code.
+This rule encourages early returns/continues to reduce nesting and improve readability.
 
 **Exception**: Loops where the if statement contains only `return`, `yield`, `yield from`, or `throw` statements are allowed, as these are common patterns for filtering/searching operations.
 
