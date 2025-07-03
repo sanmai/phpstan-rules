@@ -67,24 +67,29 @@ final class RequireGuardClausesInLoopsRule implements Rule
             return [];
         }
 
-        // Simple rule: if the loop body is ONLY an if statement, flag it
-        if (1 === count($statements) && $statements[0] instanceof If_) {
-            $ifStatement = $statements[0];
-
-            // Exception: Allow if the if body contains only return, yield, or throw
-            if ($this->containsOnlyReturnYieldOrThrow($ifStatement->stmts)) {
-                return [];
-            }
-
-            return [
-                RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                    ->identifier('sanmai.requireGuardClauses')
-                    ->line($ifStatement->getLine())
-                    ->build(),
-            ];
+        if (1 !== count($statements)) {
+            return [];
         }
 
-        return [];
+
+        if (!$statements[0] instanceof If_) {
+            return [];
+        }
+
+        // Simple rule: if the loop body is ONLY an if statement, flag it
+        $ifStatement = $statements[0];
+
+        // Exception: Allow if the if body contains only return, yield, or throw
+        if ($this->containsOnlyReturnYieldOrThrow($ifStatement->stmts)) {
+            return [];
+        }
+
+        return [
+            RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                ->identifier('sanmai.requireGuardClauses')
+                ->line($ifStatement->getLine())
+                ->build(),
+        ];
     }
 
     /**
