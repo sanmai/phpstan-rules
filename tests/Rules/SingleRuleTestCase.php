@@ -22,12 +22,7 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
-use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
-use Traversable;
 
-use function iterator_to_array;
 use function Pipeline\take;
 use function is_array;
 

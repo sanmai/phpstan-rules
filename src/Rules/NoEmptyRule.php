@@ -32,7 +32,7 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class NoEmptyRule implements Rule
 {
-    public const ERROR_MESSAGE = 'The empty() function is not allowed. Use more explicit checks like === null, === [], or count() === 0 instead.';
+    public const ERROR_MESSAGE = 'The empty() function is not allowed. Use more explicit checks like === null, === [] instead.';
 
     #[Override]
     public function getNodeType(): string

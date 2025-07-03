@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
-use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;

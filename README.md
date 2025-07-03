@@ -103,13 +103,14 @@ $this->grantAccess();
 
 This rule encourages early returns/continues to reduce nesting and improve readability.
 
-#### Bad
+**Exception**: Loops where the if statement contains only `return`, `yield`, `yield from`, or `throw` statements are allowed, as these are common patterns for filtering/searching operations.
+
+#### Bad - Loop with only if
 ```php
 foreach ($items as $item) {
     if ($item->isValid()) { // Error: Use guard clauses
         $item->process();
         $item->save();
-        $this->notify($item);
     }
 }
 ```
@@ -123,31 +124,17 @@ foreach ($items as $item) {
     
     $item->process();
     $item->save();
-    $this->notify($item);
 }
 ```
 
-#### Bad - Multiple statements in if
+#### Good - If with other statements (allowed)
 ```php
-while ($record = $this->fetchNext()) {
-    if ($record->shouldProcess()) { // Error: Use guard clauses
-        $this->transform($record);
-        $this->validate($record);
-        $this->store($record);
-    }
-}
-```
-
-#### Good - Early continue pattern
-```php
-while ($record = $this->fetchNext()) {
-    if (!$record->shouldProcess()) {
-        continue;
+foreach ($items as $item) {
+    if (count($buffer) >= $limit) { // OK: Loop has more than just the if
+        array_shift($buffer);
     }
     
-    $record->transform();
-    $record->validate();
-    $record->store();
+    $buffer[] = $item;
 }
 ```
 

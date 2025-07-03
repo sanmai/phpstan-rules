@@ -21,9 +21,11 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\Exit_;
+use PhpParser\Node\Expr\Throw_;
+use PhpParser\Node\Expr\Yield_;
+use PhpParser\Node\Expr\YieldFrom;
 use PhpParser\Node\Stmt;
-use PhpParser\Node\Stmt\Continue_;
 use PhpParser\Node\Stmt\Do_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\For_;
@@ -37,7 +39,6 @@ use PHPStan\Rules\RuleErrorBuilder;
 use Override;
 
 use function count;
-use function in_array;
 
 /**
  * @implements Rule<Node>
@@ -67,41 +68,29 @@ final class RequireGuardClausesInLoopsRule implements Rule
             return [];
         }
 
-        $errors = [];
-
-        foreach ($statements as $index => $statement) {
-            // Skip if it's not an if statement
-            if (!$statement instanceof If_) {
-                continue;
-            }
-
-            // Check if this if statement has elseif branches
-            if ([] !== $statement->elseifs) {
-                continue;
-            }
-
-            // Check if the if statement body contains only early returns
-            if ($this->containsOnlyEarlyReturns($statement->stmts)) {
-                continue;
-            }
-
-            // Check if there are statements after this if in the loop
-            $hasStatementsAfter = $index < count($statements) - 1;
-
-            // If the if body doesn't contain early returns and there are statements after it,
-            // this should be a guard clause
-            if (!$hasStatementsAfter && count($statement->stmts) <= 1) {
-                // @infection-ignore-all
-                continue;
-            }
-
-            $errors[] = RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.requireGuardClauses')
-                ->line($statement->getLine())
-                ->build();
+        if (1 !== count($statements)) {
+            return [];
         }
 
-        return $errors;
+
+        if (!$statements[0] instanceof If_) {
+            return [];
+        }
+
+        // Simple rule: if the loop body is ONLY an if statement, flag it
+        $ifStatement = $statements[0];
+
+        // Exception: Allow if the if body contains only return, yield, or throw
+        if ($this->containsOnlyReturnYieldOrThrow($ifStatement->stmts)) {
+            return [];
+        }
+
+        return [
+            RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                ->identifier('sanmai.requireGuardClauses')
+                ->line($ifStatement->getLine())
+                ->build(),
+        ];
     }
 
     /**
@@ -114,6 +103,37 @@ final class RequireGuardClausesInLoopsRule implements Rule
             || $node instanceof Foreach_
             || $node instanceof While_
             || $node instanceof Do_;
+    }
+
+    private function isAllowedStatement(Node $statement): bool
+    {
+        // Skip empty statements
+        if ($statement instanceof Stmt\Nop) {
+            return true;
+        }
+
+        // Direct return statement
+        if ($statement instanceof Return_) {
+            return true;
+        }
+
+        // Loop control statements
+        if ($statement instanceof Stmt\Break_) {
+            return true;
+        }
+
+
+        // Expression statement that might be yield, yield from, or throw
+        if ($statement instanceof Expression) {
+            $expr = $statement->expr;
+            return $expr instanceof Yield_
+                || $expr instanceof YieldFrom
+                || $expr instanceof Throw_
+                || $expr instanceof Exit_
+            ;
+        }
+
+        return false;
     }
 
     /**
@@ -131,37 +151,16 @@ final class RequireGuardClausesInLoopsRule implements Rule
     /**
      * @param array<Stmt> $statements
      */
-    private function containsOnlyEarlyReturns(array $statements): bool
+    private function containsOnlyReturnYieldOrThrow(array $statements): bool
     {
         if ([] === $statements) {
             return false;
         }
 
         foreach ($statements as $statement) {
-            // Check for continue, return, break, throw
-            if ($statement instanceof Continue_ || $statement instanceof Return_) {
-                continue;
+            if (!$this->isAllowedStatement($statement)) {
+                return false;
             }
-
-            if ($statement instanceof Stmt\Break_) {
-                continue;
-            }
-
-            /** @var Expression $statement */
-            $expr = $statement->expr;
-
-            // Check for throw expression (PHP 8+)
-            if ($expr instanceof Expr\Throw_) {
-                continue;
-            }
-
-            // Check for exit/die expressions
-            if ($expr instanceof Expr\Exit_) {
-                continue;
-            }
-
-            // Not an early return
-            return false;
         }
 
         return true;
