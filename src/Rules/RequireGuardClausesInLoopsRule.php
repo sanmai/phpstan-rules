@@ -21,8 +21,6 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\Exit_;
-use PhpParser\Node\Expr\Throw_;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Expr\YieldFrom;
 use PhpParser\Node\Stmt;
@@ -31,7 +29,6 @@ use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\For_;
 use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\If_;
-use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
