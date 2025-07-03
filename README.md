@@ -206,6 +206,39 @@ if ($data === '') {
 }
 ```
 
+### `NoCountZeroComparisonRule`
+
+**Forbids comparing `count()` with 0.**
+
+This rule encourages using direct array comparisons (`=== []` or `!== []`) instead of counting elements, which is more efficient and clearer.
+
+#### Bad
+```php
+if (count($items) === 0) { // Error: Avoid comparing count() with 0
+    return 'No items';
+}
+
+if (count($items) > 0) { // Error: Avoid comparing count() with 0
+    process($items);
+}
+```
+
+#### Good
+```php
+if ($items === []) {
+    return 'No items';
+}
+
+if ($items !== []) {
+    process($items);
+}
+
+// Other count comparisons are fine
+if (count($items) === 1) {
+    return 'Single item';
+}
+```
+
 ## Ignoring Rules
 
 [Please refer to the PHPStan documentation.](https://phpstan.org/user-guide/ignoring-errors)

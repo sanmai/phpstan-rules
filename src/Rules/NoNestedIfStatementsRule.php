@@ -50,7 +50,7 @@ final class NoNestedIfStatementsRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         // Skip if this if has elseif branches (more complex control flow)
-        if (count($node->elseifs) > 0) {
+        if ([] !== $node->elseifs) {
             return [];
         }
 
@@ -67,7 +67,7 @@ final class NoNestedIfStatementsRule implements Rule
         }
 
         // Check if the nested if has elseif
-        if (count($onlyStatement->elseifs) > 0) {
+        if ([] !== $onlyStatement->elseifs) {
             return [];
         }
 

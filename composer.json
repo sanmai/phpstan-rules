@@ -3,6 +3,10 @@
     "description": "Custom PHPStan rules for enforcing code quality standards",
     "license": "Apache-2.0",
     "type": "phpstan-extension",
+    "keywords": [
+        "dev",
+        "static analysis"
+    ],
     "authors": [
         {
             "name": "Alexey Kopytko",
