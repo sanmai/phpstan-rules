@@ -34,7 +34,7 @@ That's it! The rules will be automatically registered and start analyzing your c
 
 ## Rules
 
-### 1. `NoNestedLoopsRule`
+### `NoNestedLoopsRule`
 
 **Prevents nested loops within the same function scope.**
 
@@ -62,7 +62,7 @@ $titles = take($users)
     ->toList();
 ```
 
-### 2. `NoNestedIfStatementsRule`
+### `NoNestedIfStatementsRule`
 
 **Discourages simple nested if statements without else branches.**
 
@@ -97,7 +97,7 @@ if (!$user->hasPermission('edit')) {
 $this->grantAccess();
 ```
 
-### 3. RequireGuardClausesInLoopsRule
+### `RequireGuardClausesInLoopsRule`
 
 **Enforces the use of guard clauses in loops instead of wrapping the main logic in if statements.**
 
@@ -151,7 +151,7 @@ while ($record = $this->fetchNext()) {
 }
 ```
 
-### 4. `NoElseRule`
+### `NoElseRule`
 
 **Forbids the use of `else` statements.**
 
@@ -175,7 +175,7 @@ if (!$user->isActive()) {
 return $user->getName();
 ```
 
-### 5. `NoEmptyRule`
+### `NoEmptyRule`
 
 **Forbids the use of the `empty()` function.**
 
