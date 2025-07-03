@@ -196,7 +196,7 @@ if ($data === null) {
 }
 
 // Or for arrays
-if ($data === [] || count($data) === 0) {
+if ($data === []) {
     return null;
 }
 
@@ -208,19 +208,8 @@ if ($data === '') {
 
 ## Ignoring Rules
 
-### Inline Suppression
-
-You can suppress specific rule violations using PHPStan's ignore comments:
-
-```php
-foreach ($items as $item) {
-    // @phpstan-ignore-next-line
-    if ($item->isSpecial()) {
-        // Complex logic that really needs to be here
-    }
-}
-```
+Please refer to PHPStan documentation.
 
 ## Contributing
 
-Found a bug or have a suggestion? Please open an issue on GitHub.
+Found a bug or have a suggestion? Please open an issue.
