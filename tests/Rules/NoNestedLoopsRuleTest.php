@@ -66,4 +66,11 @@ class NoNestedLoopsRuleTest extends SingleRuleTestCase
         ]);
     }
 
+    public function test_single_loop_types(): void
+    {
+        // This test verifies single loop types are not flagged as nested
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedLoops/single_loop_types.php'], [
+            // No errors expected - these are all single loops or non-loops
+        ]);
+    }
 }

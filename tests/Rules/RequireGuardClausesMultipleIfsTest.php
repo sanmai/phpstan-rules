@@ -36,7 +36,7 @@ class RequireGuardClausesMultipleIfsTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function testRule(): void
+    public function test_rule(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/multiple_ifs.php'], [
             14,

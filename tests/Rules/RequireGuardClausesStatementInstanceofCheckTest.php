@@ -36,7 +36,7 @@ class RequireGuardClausesStatementInstanceofCheckTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function testRule(): void
+    public function test_rule(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/statement_instanceof_check.php'], [
             14,

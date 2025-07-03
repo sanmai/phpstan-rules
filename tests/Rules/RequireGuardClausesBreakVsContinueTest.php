@@ -36,7 +36,7 @@ class RequireGuardClausesBreakVsContinueTest extends SingleRuleTestCase
         return new RequireGuardClausesInLoopsRule();
     }
 
-    public function testRule(): void
+    public function test_rule(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/GuardClauses/break_vs_continue.php'], [
             // The first function's ifs are not flagged because they contain only early returns

@@ -37,11 +37,22 @@ class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
         return new NoNestedIfStatementsRule();
     }
 
-    public function testRule(): void
+    public function test_nested_if(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/nested_if.php'], [
             6,
             50,
         ]);
     }
+
+    public function test_complex_cases(): void
+    {
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/complex_cases.php'], [
+            25,
+            82,
+            92,
+            93,
+        ]);
+    }
+
 }
