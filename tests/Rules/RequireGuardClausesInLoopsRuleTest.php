@@ -59,4 +59,11 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
         );
     }
 
+    public function test_return_yield_throw_allowed(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/return_yield_throw_allowed.php'],
+            [36] // Only the one with mixed statements should be flagged
+        );
+    }
 }

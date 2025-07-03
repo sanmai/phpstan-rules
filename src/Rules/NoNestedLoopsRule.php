@@ -104,11 +104,9 @@ final class NoNestedLoopsRule implements Rule
     {
         // Simply check if any direct statement is a loop
         foreach ($stmts as $stmt) {
-            if (!$this->isLoopNode($stmt)) {
-                continue;
+            if ($this->isLoopNode($stmt)) {
+                return true;
             }
-
-            return true;
         }
 
         return false;

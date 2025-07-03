@@ -21,11 +21,16 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\Throw_;
+use PhpParser\Node\Expr\Yield_;
+use PhpParser\Node\Expr\YieldFrom;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Do_;
+use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\For_;
 use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\If_;
+use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -67,6 +72,11 @@ final class RequireGuardClausesInLoopsRule implements Rule
         if (1 === count($statements) && $statements[0] instanceof If_) {
             $ifStatement = $statements[0];
 
+            // Exception: Allow if the if body contains only return, yield, or throw
+            if ($this->containsOnlyReturnYieldOrThrow($ifStatement->stmts)) {
+                return [];
+            }
+
             return [
                 RuleErrorBuilder::message(self::ERROR_MESSAGE)
                     ->identifier('sanmai.requireGuardClauses')
@@ -90,6 +100,24 @@ final class RequireGuardClausesInLoopsRule implements Rule
             || $node instanceof Do_;
     }
 
+    private function isAllowedStatement(Node $statement): bool
+    {
+        // Direct return statement
+        if ($statement instanceof Return_) {
+            return true;
+        }
+
+        // Expression statement that might be yield, yield from, or throw
+        if ($statement instanceof Expression) {
+            $expr = $statement->expr;
+            return $expr instanceof Yield_
+                || $expr instanceof YieldFrom
+                || $expr instanceof Throw_;
+        }
+
+        return false;
+    }
+
     /**
      * @return array<Stmt>|null
      */
@@ -100,5 +128,23 @@ final class RequireGuardClausesInLoopsRule implements Rule
         }
 
         return $node->stmts;
+    }
+
+    /**
+     * @param array<Stmt> $statements
+     */
+    private function containsOnlyReturnYieldOrThrow(array $statements): bool
+    {
+        foreach ($statements as $statement) {
+            // Direct return statement
+            if ($this->isAllowedStatement($statement)) {
+                continue;
+            }
+
+            // Any other statement type means it's not only return/yield/throw
+            return false;
+        }
+
+        return true;
     }
 }

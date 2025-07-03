@@ -103,6 +103,8 @@ $this->grantAccess();
 
 This rule detects the anti-pattern where the entire loop body is wrapped in a single if statement, encouraging the use of guard clauses for cleaner code.
 
+**Exception**: Loops where the if statement contains only `return`, `yield`, `yield from`, or `throw` statements are allowed, as these are common patterns for filtering/searching operations.
+
 #### Bad - Loop with only if
 ```php
 foreach ($items as $item) {
