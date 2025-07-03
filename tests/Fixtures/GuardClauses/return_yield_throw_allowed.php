@@ -39,12 +39,12 @@ foreach ($items as $item) {
     }
 }
 
-// Multiple returns - should be flagged
+// Multiple returns - should not be flagged
 function findSpecial($items) {
     foreach ($items as $item) {
         if ($item->isSpecial()) {
             return $item;
-            return null; // not allowed, flagged
+            return null; // allowed, not flagged
         }
     }
 }
