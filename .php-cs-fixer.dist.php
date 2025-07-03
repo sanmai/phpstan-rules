@@ -63,6 +63,7 @@ $config
         'yoda_style' => true,
         'array_indentation' => true,
         'no_superfluous_phpdoc_tags' => true,
+        'no_unused_imports' => true,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
