@@ -57,3 +57,24 @@ foreach ($records as $record) {
     }
     $record->save();
 }
+
+while ($condition) {
+    if ($checkCondition) { // OK - has statement after
+        doSomething();
+    }
+    doSomethingElse();
+}
+
+for ($i = 0; $i < $count; $i++) {
+    if ($items[$i]->isActive()) { // OK - has statement after
+        $items[$i]->activate();
+    }
+    $items[$i]->log();
+}
+
+do {
+    if ($data->isValid()) { // OK - has statement after
+        processData($data);
+    }
+    $data->log();
+} while ($data->hasNext());

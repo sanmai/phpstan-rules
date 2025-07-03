@@ -21,8 +21,6 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\Exit_;
-use PhpParser\Node\Expr\Throw_;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Expr\YieldFrom;
 use PhpParser\Node\Stmt;
@@ -31,7 +29,6 @@ use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\For_;
 use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\If_;
-use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -81,7 +78,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
         $ifStatement = $statements[0];
 
         // Exception: Allow if the if body contains only return, yield, or throw
-        if ($this->containsOnlyReturnYieldOrThrow($ifStatement->stmts)) {
+        if ($this->containsOnlyOneStatement($ifStatement->stmts)) {
             return [];
         }
 
@@ -99,41 +96,33 @@ final class RequireGuardClausesInLoopsRule implements Rule
      */
     private function isLoopNode(Node $node): bool
     {
-        return $node instanceof For_
-            || $node instanceof Foreach_
-            || $node instanceof While_
-            || $node instanceof Do_;
-    }
-
-    private function isAllowedStatement(Node $statement): bool
-    {
-        // Skip empty statements
-        if ($statement instanceof Stmt\Nop) {
+        if ($node instanceof For_) {
             return true;
         }
 
-        // Direct return statement
-        if ($statement instanceof Return_) {
+        if ($node instanceof Foreach_) {
             return true;
         }
 
-        // Loop control statements
-        if ($statement instanceof Stmt\Break_) {
+        if ($node instanceof While_) {
             return true;
         }
 
-
-        // Expression statement that might be yield, yield from, or throw
-        if ($statement instanceof Expression) {
-            $expr = $statement->expr;
-            return $expr instanceof Yield_
-                || $expr instanceof YieldFrom
-                || $expr instanceof Throw_
-                || $expr instanceof Exit_
-            ;
+        if ($node instanceof Do_) {
+            return true;
         }
 
         return false;
+    }
+
+    private function isYieldOrYieldFrom(Node $statement): bool
+    {
+        if (!$statement instanceof Expression) {
+            return false;
+        }
+
+        return $statement->expr instanceof Yield_
+                || $statement->expr instanceof YieldFrom;
     }
 
     /**
@@ -151,15 +140,29 @@ final class RequireGuardClausesInLoopsRule implements Rule
     /**
      * @param array<Stmt> $statements
      */
-    private function containsOnlyReturnYieldOrThrow(array $statements): bool
+    private function containsOnlyOneStatement(array $statements): bool
     {
         if ([] === $statements) {
             return false;
         }
 
+        $count = 0;
         foreach ($statements as $statement) {
-            if (!$this->isAllowedStatement($statement)) {
-                return false;
+            if ($statement instanceof Stmt\Nop) {
+                // Skip empty statements, i.e. only with comments
+                return true;
+            }
+
+            if ($this->isYieldOrYieldFrom($statement)) {
+                // Allow as many yields as needed, but with only one following statement
+                $count = 0;
+                continue;
+            }
+
+            $count++;
+
+            if ($count > 1) {
+                return false; // More than one statement found
             }
         }
 

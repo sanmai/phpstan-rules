@@ -35,16 +35,27 @@ function validateItems($items) {
 foreach ($items as $item) {
     if ($item->needsProcessing()) { // error: Use guard clauses
         $item->process();
+        // Comments should not affect the rule
         return $item;
     }
 }
 
-// Multiple returns - should not be flagged
+// Multiple returns - should be flagged
 function findSpecial($items) {
     foreach ($items as $item) {
         if ($item->isSpecial()) {
             return $item;
-            return null; // allowed, not flagged
+            return null; // flagged
+        }
+    }
+}
+
+// multiple returns should be flagged, even without comments
+function findSpecial2($items) {
+    foreach ($items as $item) {
+        if ($item->isSpecial()) {
+            return $item;
+            return null;
         }
     }
 }
@@ -55,6 +66,15 @@ function generateMultiple($items) {
         if ($item->hasData()) {
             yield $item->data1;
             yield $item->data2;
+        }
+    }
+}
+
+function generateMultiple2($items) {
+    foreach ($items as $item) {
+        if ($item->hasData()) {
+            yield from $item->data1;
+            yield from $item->data2;
         }
     }
 }
@@ -72,7 +92,83 @@ function exitConditional($items) {
 function walkBreak($items) {
     foreach ($items as $item) {
         if ($item->isSpecial()) {
-            break; // should NOT be flagged
+            break;
         }
     }
 }
+
+// Assignment - should NOT be flagged
+function minIterator(Traversable $items) {
+    foreach ($items as $value) {
+        if ($value < $min) {
+            $min = $value;
+        }
+    }
+
+    return $min;
+}
+
+// Side effects - should NOT be flagged
+function sideEffects($items) {
+    foreach ($items as $item) {
+        if ($item->doIt()) {
+            // should NOT be flagged
+            // Any number of comments is allowed
+            // and this comment is OK
+        }
+    }
+}
+
+// Mixed generator - should not be flagged
+function mixedGenerator($items) {
+    foreach ($items as $item) {
+        if ($item->hasData()) {
+            yield from $item->data1;
+            yield from $item->data2;
+            $item->process();
+
+            yield $item->data3;
+            $item->log();
+        }
+    }
+}
+
+function processLoop($items) {
+    foreach ($items as $item) {
+        if ($item->isSpecial()) {
+            // Should be flagged
+            // This comment should not affect the rule
+            // and this comment is also OK
+            // Another comment
+            // Yet another comment
+            // Final comment
+            $item->process();
+            return $item;
+        }
+    }
+}
+
+
+// should be flagged as well
+function processLoopNoComments($items) {
+    foreach ($items as $item) {
+        if ($item->isSpecial()) {
+            $item->process();
+            return $item;
+        }
+    }
+}
+
+
+function addGuardClausesToThisGenerator($items) {
+    foreach ($items as $item) {
+        if ($item->hasData()) {
+            $this->log("Processing item with data");
+            yield from $item->data1;
+            yield from $item->data2;
+            $item->process();
+            $this->log("Finished processing item with data");
+        }
+    }
+}
+

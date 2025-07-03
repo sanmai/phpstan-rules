@@ -36,6 +36,7 @@ $header = <<<'EOF'
 
 $config = new PhpCsFixer\Config();
 $config
+    ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
     ->setRiskyAllowed(true)
     ->setRules([
         'header_comment' => ['comment_type' => 'PHPDoc', 'header' => $header, 'separate' => 'bottom', 'location' => 'after_open'],
