@@ -101,6 +101,10 @@ final class RequireGuardClausesInLoopsRule implements Rule
         return $errors;
     }
 
+    /**
+     * @phpstan-assert-if-true For_|Foreach_|While_|Do_ $node
+     * @psalm-assert-if-true For_|Foreach_|While_|Do_ $node
+     */
     private function isLoopNode(Node $node): bool
     {
         return $node instanceof For_
@@ -118,9 +122,6 @@ final class RequireGuardClausesInLoopsRule implements Rule
             return null;
         }
 
-        // We know it's a loop node, so we can safely access stmts property
-        /** @psalm-suppress NoInterfaceProperties, MixedReturnStatement */
-        /** @phpstan-ignore-next-line */
         return $node->stmts;
     }
 
