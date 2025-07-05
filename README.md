@@ -21,16 +21,20 @@ These principles align well with libraries like [`sanmai/pipeline`](https://gith
 composer require --dev sanmai/phpstan-rules
 ```
 
-## Configuration
+If you also install `phpstan/extension-installer` then you're all set!
 
-Include the extension in your project's `phpstan.neon`:
+```bash
+composer require --dev phpstan/extension-installer
+```
+
+### Manual Installation
+
+If you don't want to use `phpstan/extension-installer`, include the extension in your project's `phpstan.neon`:
 
 ```neon
 includes:
     - vendor/sanmai/phpstan-rules/extension.neon
 ```
-
-That's it! The rules will be automatically registered and start analyzing your code.
 
 ## Rules
 
