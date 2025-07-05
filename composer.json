@@ -28,6 +28,9 @@
         "sanmai/pipeline": "^6.17",
         "vimeo/psalm": ">=2"
     },
+    "suggest": {
+        "phpstan/extension-installer": "Allows automatic registration of PHPStan extensions"
+    },
     "autoload": {
         "psr-4": {
             "Sanmai\\PHPStanRules\\": "src/"
