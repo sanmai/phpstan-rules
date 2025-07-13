@@ -27,6 +27,7 @@ jobs:
         php-parser:
           - '^4.14'
           - '^5.5'
+          - 'none'
 
     steps:
       - name: Checkout code
@@ -49,12 +50,16 @@ jobs:
             composer-${{ matrix.php-version }}-
             composer-
 
+      - name: Install specific PHP-Parser version
+        if: matrix.php-parser != 'none'
+        run: |
+          composer require --no-update "nikic/php-parser:${{ matrix.php-parser }}"
+
       - name: Install dependencies
         run: |
           composer remove --no-update --dev \
               phan/phan phpstan/phpstan vimeo/psalm \
               infection/infection friendsofphp/php-cs-fixer
-          composer require --no-update "nikic/php-parser:${{ matrix.php-parser }}"
           composer update --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
