@@ -117,6 +117,6 @@ jobs:
         run: |
           php vendor/bin/phpunit --group=documentation
 
-      - name: Static Analysis
+      - name: Final Analysis and Validation
         run: |
-          make ci-analyze --keep-going
+          make ci-analyze --keep-going -j2 --output-sync=target
