@@ -51,7 +51,7 @@ jobs:
   approve_pr:
     name: Automatic Approval
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == github.repository_owner
+    if: github.event.pull_request.user.login == github.repository_owner && github.event.pull_request.draft == false
 
     steps:
       - name: Approve PR
