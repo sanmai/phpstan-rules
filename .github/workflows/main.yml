@@ -119,4 +119,4 @@ jobs:
 
       - name: Final Analysis and Validation
         run: |
-          make ci-analyze --keep-going -j2 --output-sync=target
+          make ci-analyze --keep-going -j4 --output-sync=target
