@@ -14,7 +14,7 @@ on:
 
 jobs:
   tests:
-    name: Tests with PHP ${{ matrix.php-version }}
+    name: Tests with PHP ${{ matrix.php-version }} / PHP-Parser ${{ matrix.php-parser }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -24,6 +24,10 @@ jobs:
           - '8.3'
           - '8.4'
           - 'latest'
+        php-parser:
+          - '^4.14'
+          - '^5.5'
+          - 'none'
 
     steps:
       - name: Checkout code
@@ -40,10 +44,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/composer
-          key: composer-${{ matrix.php-version }}-${{ hashFiles('composer.*') }}
+          key: composer-${{ matrix.php-version }}-${{ matrix.php-parser }}-${{ hashFiles('composer.*') }}
           restore-keys: |
+            composer-${{ matrix.php-version }}-${{ matrix.php-parser }}-
             composer-${{ matrix.php-version }}-
             composer-
+
+      - name: Install specific PHP-Parser version
+        if: matrix.php-parser != 'none'
+        run: |
+          composer require --no-update "nikic/php-parser:${{ matrix.php-parser }}"
 
       - name: Install dependencies
         run: |
@@ -117,6 +127,6 @@ jobs:
         run: |
           php vendor/bin/phpunit --group=documentation
 
-      - name: Static Analysis
+      - name: Final Analysis and Validation
         run: |
-          make ci-analyze --keep-going
+          make ci-analyze --keep-going -j2 --output-sync=target
