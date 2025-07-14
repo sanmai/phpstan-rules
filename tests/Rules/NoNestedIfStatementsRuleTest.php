@@ -56,4 +56,14 @@ class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
         ]);
     }
 
+    public function test_multiple_statements_policy(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/NoNestedIf/multiple_statements_policy.php'],
+            [
+                17, // Only the single-statement nested if should be flagged
+            ]
+        );
+    }
+
 }

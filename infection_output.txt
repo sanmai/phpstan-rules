@@ -1,0 +1,160 @@
+# Using /usr/bin/php
+/usr/bin/chronic /usr/bin/php vendor/bin/php-cs-fixer --cache-file=build/cache/.php_cs.cache --verbose --diff fix
+rm -fr build/logs/*
+/usr/bin/chronic /usr/bin/php vendor/bin/phpunit --coverage-xml=build/logs/coverage-xml --log-junit=build/logs/junit.xml --coverage-clover=build/logs/clover.xml
+PHPUnit 10.5.47 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.8 with Xdebug 3.4.2
+Configuration: /home/lesha/Dropbox/workspace/phpstan-rules/phpunit.xml.dist
+Random Seed:   1751018656
+
+FF...FFFFF                                                        10 / 10 (100%)
+
+Time: 00:04.727, Memory: 76.00 MB
+
+There were 7 failures:
+
+1) Sanmai\PHPStanRules\Tests\Rules\RequireGuardClausesEarlyReturnsTest::testRule
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'94: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+-108: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+-119: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+-130: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++'78: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++92: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++103: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++114: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+ '
+
+phar:///home/lesha/Dropbox/workspace/phpstan-rules/vendor/phpstan/phpstan/phpstan.phar/src/Testing/RuleTestCase.php:110
+/home/lesha/Dropbox/workspace/phpstan-rules/tests/Rules/RequireGuardClausesEarlyReturnsTest.php:41
+
+2) Sanmai\PHPStanRules\Tests\Rules\RequireGuardClausesInLoopsRuleTest::testRule
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'46: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+-57: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+-103: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++'30: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++41: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++87: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+ '
+
+phar:///home/lesha/Dropbox/workspace/phpstan-rules/vendor/phpstan/phpstan/phpstan.phar/src/Testing/RuleTestCase.php:110
+/home/lesha/Dropbox/workspace/phpstan-rules/tests/Rules/RequireGuardClausesInLoopsRuleTest.php:43
+
+3) Sanmai\PHPStanRules\Tests\Rules\RequireGuardClausesEdgeCasesTest::testRule
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'62: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+-66: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+-96: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++'46: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++50: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
++80: Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }
+ '
+
+phar:///home/lesha/Dropbox/workspace/phpstan-rules/vendor/phpstan/phpstan/phpstan.phar/src/Testing/RuleTestCase.php:110
+/home/lesha/Dropbox/workspace/phpstan-rules/tests/Rules/RequireGuardClausesEdgeCasesTest.php:41
+
+4) Sanmai\PHPStanRules\Tests\Rules\NoNestedLoopsAllTypesTest::testRule
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'26: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-33: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-41: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-50: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-58: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-68: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-77: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-85: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-94: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-106: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-116: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-125: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-135: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++'10: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++17: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++25: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++34: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++42: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++52: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++61: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++69: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++78: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++90: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++100: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++109: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++119: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+ '
+
+phar:///home/lesha/Dropbox/workspace/phpstan-rules/vendor/phpstan/phpstan/phpstan.phar/src/Testing/RuleTestCase.php:110
+/home/lesha/Dropbox/workspace/phpstan-rules/tests/Rules/NoNestedLoopsAllTypesTest.php:41
+
+5) Sanmai\PHPStanRules\Tests\Rules\NoNestedIfStatementsRuleTest::testRule
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'22: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
+-66: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
++'06: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
++50: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
+ '
+
+phar:///home/lesha/Dropbox/workspace/phpstan-rules/vendor/phpstan/phpstan/phpstan.phar/src/Testing/RuleTestCase.php:110
+/home/lesha/Dropbox/workspace/phpstan-rules/tests/Rules/NoNestedIfStatementsRuleTest.php:42
+
+6) Sanmai\PHPStanRules\Tests\Rules\NoNestedLoopsRuleTest::testRule
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'28: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-35: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-43: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-54: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+-64: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++'12: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++19: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++27: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++38: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
++48: Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.
+ '
+
+phar:///home/lesha/Dropbox/workspace/phpstan-rules/vendor/phpstan/phpstan/phpstan.phar/src/Testing/RuleTestCase.php:110
+/home/lesha/Dropbox/workspace/phpstan-rules/tests/Rules/NoNestedLoopsRuleTest.php:41
+
+7) Sanmai\PHPStanRules\Tests\Rules\NoNestedIfComplexCasesTest::testRule
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'41: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
+-98: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
+-108: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
+-109: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
++'25: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
++82: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
++92: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
++93: Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.
+ '
+
+phar:///home/lesha/Dropbox/workspace/phpstan-rules/vendor/phpstan/phpstan/phpstan.phar/src/Testing/RuleTestCase.php:110
+/home/lesha/Dropbox/workspace/phpstan-rules/tests/Rules/NoNestedIfComplexCasesTest.php:41
+
+FAILURES!
+Tests: 10, Assertions: 10, Failures: 7.
+
+Generating code coverage report in Clover XML format ... done [00:00.003]
+
+Generating code coverage report in PHPUnit XML format ... done [00:00.029]

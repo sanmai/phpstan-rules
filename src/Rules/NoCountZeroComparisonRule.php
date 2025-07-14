@@ -90,7 +90,7 @@ final class NoCountZeroComparisonRule implements Rule
 
     private function isCountCall(Node $node): bool
     {
-        return $node instanceof FuncCall 
+        return $node instanceof FuncCall
             && $node->name instanceof Name
             && 'count' === strtolower($node->name->toString());
     }

@@ -98,4 +98,17 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
             ]
         );
     }
+
+    public function test_expression_policy(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/expression_policy.php'],
+            [
+                9,  // testYieldExpressions: currently flagged due to yield + echo
+                18, // testReturnStatements: return + echo = multiple statements = flagged
+                27, // testThrowStatements: throw + echo = multiple statements = flagged
+                36, // testMixedStatements: yield + echo = multiple statements = flagged
+            ]
+        );
+    }
 }
