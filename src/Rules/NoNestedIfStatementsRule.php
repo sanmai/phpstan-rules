@@ -27,12 +27,16 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use Override;
 
+use function count;
+
 /**
  * @implements Rule<If_>
  */
 final class NoNestedIfStatementsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.';
+
+    private const EXACTLY_ONE = 1;
 
     #[Override]
     public function getNodeType(): string
@@ -52,25 +56,28 @@ final class NoNestedIfStatementsRule implements Rule
             return [];
         }
 
-        // Look for any nested if statements
-        foreach ($node->stmts as $statement) {
-            if (!$statement instanceof If_) {
-                continue;
-            }
-
-            // Skip if the nested if has elseif (more complex control flow)
-            if ([] !== $statement->elseifs) {
-                continue;
-            }
-
-            return [
-                RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                    ->identifier('sanmai.noNestedIf')
-                    ->line($statement->getLine())
-                    ->build(),
-            ];
+        // Only flag if the if statement contains exactly one statement
+        if (self::EXACTLY_ONE !== count($node->stmts)) {
+            return [];
         }
 
-        return [];
+        $statement = $node->stmts[0];
+
+        // Check if that single statement is an if
+        if (!$statement instanceof If_) {
+            return [];
+        }
+
+        // Skip if the nested if has elseif (more complex control flow)
+        if ([] !== $statement->elseifs) {
+            return [];
+        }
+
+        return [
+            RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                ->identifier('sanmai.noNestedIf')
+                ->line($node->getLine())
+                ->build(),
+        ];
     }
 }
