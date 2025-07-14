@@ -24,6 +24,7 @@
         "league/pipeline": "^0.3 || ^1.0",
         "php-coveralls/php-coveralls": "^2.4.1",
         "phpunit/phpunit": "^9.5 || ^10.0",
+        "sanmai/later": "^0.1.7",
         "sanmai/pipeline": "^6.17",
         "vimeo/psalm": ">=2"
     },
