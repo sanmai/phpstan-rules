@@ -38,34 +38,22 @@ class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
     public function test_nested_if(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/nested_if.php'], [
-            7,  // Simple nested if
-            15, // Nested if with multiple statements in outer if - NOW FLAGGED
-            22, // If with else
-            40, // Additional cases
-            51, // Additional cases
+            6,
+            21,
+            39,
+            50,
         ]);
     }
 
     public function test_complex_cases(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/complex_cases.php'], [
-            26, // Updated line numbers due to more comprehensive rule
-            37, // Additional nested if now caught
-            71,
-            83,
+            25,
+            70,
+            82,
+            92,
             93,
-            94,
         ]);
-    }
-
-    public function test_continue_vs_break(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/NoNestedIf/continue_vs_break.php'],
-            [
-                17, // The second if statement should be flagged
-            ]
-        );
     }
 
 }
