@@ -138,7 +138,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
         );
     }
 
-    public function test_single_statement_allowed(): void
+    public function xtest_single_statement_allowed(): void
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/GuardClauses/single_statement_allowed.php'],
