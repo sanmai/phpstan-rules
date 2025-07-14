@@ -38,7 +38,7 @@ use Override;
 use function count;
 
 /**
- * @implements Rule<Node>
+ * @implements Rule<Stmt>
  */
 final class RequireGuardClausesInLoopsRule implements Rule
 {

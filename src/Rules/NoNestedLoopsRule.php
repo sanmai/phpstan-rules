@@ -32,7 +32,7 @@ use PHPStan\Rules\RuleErrorBuilder;
 use Override;
 
 /**
- * @implements Rule<Node>
+ * @implements Rule<Stmt>
  */
 final class NoNestedLoopsRule implements Rule
 {
