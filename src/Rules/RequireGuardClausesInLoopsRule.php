@@ -44,7 +44,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }';
 
-    private const ONE = 1;
+    private const EXPECTED_STATEMENT_COUNT = 1;
 
     #[Override]
     public function getNodeType(): string
@@ -60,7 +60,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
     {
         $statements = $this->getLoopStatements($node);
 
-        if (self::ONE !== count($statements)) {
+        if (self::EXPECTED_STATEMENT_COUNT !== count($statements)) {
             return [];
         }
 
