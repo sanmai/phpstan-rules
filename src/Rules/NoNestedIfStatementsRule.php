@@ -66,7 +66,7 @@ final class NoNestedIfStatementsRule implements Rule
         // Skip if the nested if has elseif (more complex control flow)
         if (
             !$statement instanceof If_ ||
-            [] !== $statement->elseifs
+            self::ifHasElseIf($statement)
         ) {
             return [];
         }
@@ -77,5 +77,10 @@ final class NoNestedIfStatementsRule implements Rule
                 ->line($node->getLine())
                 ->build(),
         ];
+    }
+
+    private static function ifHasElseIf(If_ $if): bool
+    {
+        return [] !== $if->elseifs;
     }
 }
