@@ -111,4 +111,50 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
             ]
         );
     }
+
+    public function test_non_loop_statements(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/non_loop_statements.php'],
+            [] // No errors - these are not loops
+        );
+    }
+
+    public function test_empty_loops(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/empty_loops.php'],
+            [] // No errors - empty loops
+        );
+    }
+
+    public function test_do_while_specific(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/do_while_specific.php'],
+            [
+                10, // Do-while with only if should be flagged
+            ]
+        );
+    }
+
+    public function test_single_statement_allowed(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/single_statement_allowed.php'],
+            [] // All cases have single statements - allowed
+        );
+    }
+
+    public function test_empty_if_body(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/empty_if_body.php'],
+            [
+                9,  // For loop with empty if body
+                15, // Foreach with empty if body
+                30, // Do-while with empty if body
+            ]
+        );
+    }
 }

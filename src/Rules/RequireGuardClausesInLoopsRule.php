@@ -86,6 +86,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
         ];
     }
 
+
     /**
      * @phpstan-assert-if-true For_|Foreach_|While_|Do_ $node
      * @psalm-assert-if-true For_|Foreach_|While_|Do_ $node

@@ -49,24 +49,26 @@ final class NoNestedIfStatementsRule implements Rule
     {
         // Skip if this if has elseif branches (more complex control flow)
         if ([] !== $node->elseifs) {
-            return [];
+            return []; // this line is not covered by tests
         }
 
         // Look for any nested if statements
         foreach ($node->stmts as $statement) {
-            if ($statement instanceof If_) {
-                // Skip if the nested if has elseif (more complex control flow)
-                if ([] !== $statement->elseifs) {
-                    continue;
-                }
-
-                return [
-                    RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                        ->identifier('sanmai.noNestedIf')
-                        ->line($statement->getLine())
-                        ->build(),
-                ];
+            if (!$statement instanceof If_) {
+                continue;
             }
+
+            // Skip if the nested if has elseif (more complex control flow)
+            if ([] !== $statement->elseifs) {
+                continue;
+            }
+
+            return [
+                RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                    ->identifier('sanmai.noNestedIf')
+                    ->line($statement->getLine())
+                    ->build(),
+            ];
         }
 
         return [];
