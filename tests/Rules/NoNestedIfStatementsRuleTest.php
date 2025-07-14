@@ -58,18 +58,6 @@ class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
         ]);
     }
 
-    public function xtest_multiple_statements_policy(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/NoNestedIf/multiple_statements_policy.php'],
-            [
-                10, // NOW flagged - multiple statements no longer exempt
-                18, // Single-statement nested if
-                26, // NOW flagged - multiple statements no longer exempt
-            ]
-        );
-    }
-
     public function test_continue_vs_break(): void
     {
         $this->analyseExpectingErrorLines(

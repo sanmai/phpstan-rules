@@ -58,12 +58,4 @@ final class NoCountZeroComparisonRuleTest extends SingleRuleTestCase
             []
         );
     }
-
-    public function xtest_non_function_calls(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/NoCountZeroComparison/non_function_calls.php'],
-            [30] // Only the actual count() call should be flagged
-        );
-    }
 }

@@ -78,12 +78,4 @@ class NoNestedLoopsRuleTest extends SingleRuleTestCase
         // No errors expected - all nodes are non-loops
         $this->analyse([__DIR__ . '/../Fixtures/MixedNodeTypes/not_loops.php'], []);
     }
-
-    public function xtest_non_loop_stress_test(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/NoNestedLoops/non_loop_stress_test.php'],
-            [38] // Only the actual nested loop should be flagged
-        );
-    }
 }

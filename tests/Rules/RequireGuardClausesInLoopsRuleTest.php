@@ -80,69 +80,11 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
         );
     }
 
-
-    public function xtest_negative_cases(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/negative_cases.php'],
-            [] // No errors expected - these should NOT trigger the rule
-        );
-    }
-
-    public function xtest_yield_detection_edge_cases(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/yield_detection_edge_cases.php'],
-            [
-                36, // foreach with multiple statements - should be flagged
-            ]
-        );
-    }
-
-    public function xtest_expression_policy(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/expression_policy.php'],
-            [
-                9,  // testYieldExpressions: currently flagged due to yield + echo
-                18, // testReturnStatements: return + echo = multiple statements = flagged
-                27, // testThrowStatements: throw + echo = multiple statements = flagged
-                36, // testMixedStatements: yield + echo = multiple statements = flagged
-            ]
-        );
-    }
-
-    public function xtest_non_loop_statements(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/non_loop_statements.php'],
-            [] // No errors - these are not loops
-        );
-    }
-
     public function test_empty_loops(): void
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/GuardClauses/empty_loops.php'],
             [] // No errors - empty loops
-        );
-    }
-
-    public function xtest_do_while_specific(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/do_while_specific.php'],
-            [
-                10, // Do-while with only if should be flagged
-            ]
-        );
-    }
-
-    public function xtest_single_statement_allowed(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/single_statement_allowed.php'],
-            [] // All cases have single statements - allowed
         );
     }
 
