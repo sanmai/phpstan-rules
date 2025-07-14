@@ -63,13 +63,11 @@ final class NoNestedIfStatementsRule implements Rule
 
         $statement = $node->stmts[0];
 
-        // Check if that single statement is an if
-        if (!$statement instanceof If_) {
-            return [];
-        }
-
         // Skip if the nested if has elseif (more complex control flow)
-        if ([] !== $statement->elseifs) {
+        if (
+            !$statement instanceof If_ ||
+            [] !== $statement->elseifs
+        ) {
             return [];
         }
 
