@@ -44,6 +44,8 @@ final class RequireGuardClausesInLoopsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }';
 
+    private const ONE = 1;
+
     #[Override]
     public function getNodeType(): string
     {
@@ -57,14 +59,10 @@ final class RequireGuardClausesInLoopsRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $statements = $this->getLoopStatements($node);
-        if (null === $statements || [] === $statements) {
+
+        if (self::ONE !== count($statements)) {
             return [];
         }
-
-        if (1 !== count($statements)) {
-            return [];
-        }
-
 
         if (!$statements[0] instanceof If_) {
             return [];
@@ -115,21 +113,19 @@ final class RequireGuardClausesInLoopsRule implements Rule
     private function isYieldOrYieldFrom(Node $statement): bool
     {
         // Yield statements are always wrapped in Expression nodes
-        if ($statement instanceof Expression) {
-            return $statement->expr instanceof Yield_
-                    || $statement->expr instanceof YieldFrom;
-        }
-
-        return false;
+        return $statement instanceof Expression && (
+            $statement->expr instanceof Yield_ ||
+            $statement->expr instanceof YieldFrom
+        );
     }
 
     /**
-     * @return array<Stmt>|null
+     * @return array<Stmt>
      */
-    private function getLoopStatements(Node $node): ?array
+    private function getLoopStatements(Node $node): array
     {
         if (!$this->isLoopNode($node)) {
-            return null;
+            return [];
         }
 
         return $node->stmts;

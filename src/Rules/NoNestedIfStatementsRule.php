@@ -49,7 +49,7 @@ final class NoNestedIfStatementsRule implements Rule
     {
         // Skip if this if has elseif branches (more complex control flow)
         if ([] !== $node->elseifs) {
-            return []; // this line is not covered by tests
+            return [];
         }
 
         // Look for any nested if statements
