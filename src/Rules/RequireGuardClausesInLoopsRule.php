@@ -113,12 +113,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
 
     private function isYieldOrYieldFrom(Node $statement): bool
     {
-        // Check if this is a direct yield/yield from statement
-        if ($statement instanceof Yield_ || $statement instanceof YieldFrom) {
-            return true;
-        }
-
-        // Check if this is an Expression wrapping yield/yield from
+        // Yield statements are always wrapped in Expression nodes
         if ($statement instanceof Expression) {
             return $statement->expr instanceof Yield_
                     || $statement->expr instanceof YieldFrom;

@@ -27,8 +27,6 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use Override;
 
-use function count;
-
 /**
  * @implements Rule<If_>
  */
@@ -54,27 +52,23 @@ final class NoNestedIfStatementsRule implements Rule
             return [];
         }
 
-        $statements = $node->stmts;
-        if (1 !== count($statements)) {
-            return [];
+        // Look for any nested if statements
+        foreach ($node->stmts as $statement) {
+            if ($statement instanceof If_) {
+                // Skip if the nested if has elseif (more complex control flow)
+                if ([] !== $statement->elseifs) {
+                    continue;
+                }
+
+                return [
+                    RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                        ->identifier('sanmai.noNestedIf')
+                        ->line($statement->getLine())
+                        ->build(),
+                ];
+            }
         }
 
-        $onlyStatement = $statements[0];
-
-        // Check if the only statement is another if
-        if (!$onlyStatement instanceof If_) {
-            return [];
-        }
-
-        // Check if the nested if has elseif
-        if ([] !== $onlyStatement->elseifs) {
-            return [];
-        }
-
-        return [
-            RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noNestedIf')
-                ->build(),
-        ];
+        return [];
     }
 }
