@@ -79,4 +79,23 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
             ]
         );
     }
+
+
+    public function test_negative_cases(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/negative_cases.php'],
+            [] // No errors expected - these should NOT trigger the rule
+        );
+    }
+
+    public function test_yield_detection_edge_cases(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/yield_detection_edge_cases.php'],
+            [
+                36, // foreach with multiple statements - should be flagged
+            ]
+        );
+    }
 }
