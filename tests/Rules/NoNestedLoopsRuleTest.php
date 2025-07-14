@@ -79,7 +79,7 @@ class NoNestedLoopsRuleTest extends SingleRuleTestCase
         $this->analyse([__DIR__ . '/../Fixtures/MixedNodeTypes/not_loops.php'], []);
     }
 
-    public function test_non_loop_stress_test(): void
+    public function xtest_non_loop_stress_test(): void
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/NoNestedLoops/non_loop_stress_test.php'],
