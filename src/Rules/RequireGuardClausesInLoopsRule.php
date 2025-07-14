@@ -47,7 +47,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
     #[Override]
     public function getNodeType(): string
     {
-        return Node::class;
+        return Stmt::class;
     }
 
     /**
@@ -56,10 +56,6 @@ final class RequireGuardClausesInLoopsRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$this->isLoopNode($node)) {
-            return [];
-        }
-
         $statements = $this->getLoopStatements($node);
         if (null === $statements || [] === $statements) {
             return [];
