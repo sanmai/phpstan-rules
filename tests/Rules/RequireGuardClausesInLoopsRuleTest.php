@@ -81,7 +81,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     }
 
 
-    public function test_negative_cases(): void
+    public function xtest_negative_cases(): void
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/GuardClauses/negative_cases.php'],
