@@ -4,9 +4,5 @@
             "src"
         ]
     },
-    "timeout": 10,
-    "mutators": {
-        "@default": true,
-        "ReturnRemoval": false
-    }
+    "timeout": 10
 }

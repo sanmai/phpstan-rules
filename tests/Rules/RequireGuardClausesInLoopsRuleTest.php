@@ -79,4 +79,24 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
             ]
         );
     }
+
+    public function test_empty_loops(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/empty_loops.php'],
+            [] // No errors - empty loops
+        );
+    }
+
+    public function test_empty_if_body(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/GuardClauses/empty_if_body.php'],
+            [
+                9,  // For loop with empty if body
+                15, // Foreach with empty if body
+                30, // Do-while with empty if body
+            ]
+        );
+    }
 }

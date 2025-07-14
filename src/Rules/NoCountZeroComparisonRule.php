@@ -90,16 +90,9 @@ final class NoCountZeroComparisonRule implements Rule
 
     private function isCountCall(Node $node): bool
     {
-        if (!$node instanceof FuncCall) {
-            return false;
-        }
-
-        if (!$node->name instanceof Name) {
-            return false;
-        }
-
-        $functionName = $node->name->toString();
-        return 'count' === strtolower($functionName);
+        return $node instanceof FuncCall
+            && $node->name instanceof Name
+            && 'count' === strtolower($node->name->toString());
     }
 
     private function isZero(Node $node): bool

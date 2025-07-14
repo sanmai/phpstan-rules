@@ -38,16 +38,18 @@ use Override;
 use function count;
 
 /**
- * @implements Rule<Node>
+ * @implements Rule<Stmt>
  */
 final class RequireGuardClausesInLoopsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; }';
 
+    private const EXPECTED_STATEMENT_COUNT = 1;
+
     #[Override]
     public function getNodeType(): string
     {
-        return Node::class;
+        return Stmt::class;
     }
 
     /**
@@ -56,19 +58,11 @@ final class RequireGuardClausesInLoopsRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$this->isLoopNode($node)) {
-            return [];
-        }
-
         $statements = $this->getLoopStatements($node);
-        if (null === $statements || [] === $statements) {
+
+        if (self::EXPECTED_STATEMENT_COUNT !== count($statements)) {
             return [];
         }
-
-        if (1 !== count($statements)) {
-            return [];
-        }
-
 
         if (!$statements[0] instanceof If_) {
             return [];
@@ -89,6 +83,7 @@ final class RequireGuardClausesInLoopsRule implements Rule
                 ->build(),
         ];
     }
+
 
     /**
      * @phpstan-assert-if-true For_|Foreach_|While_|Do_ $node
@@ -117,21 +112,20 @@ final class RequireGuardClausesInLoopsRule implements Rule
 
     private function isYieldOrYieldFrom(Node $statement): bool
     {
-        if (!$statement instanceof Expression) {
-            return false;
-        }
-
-        return $statement->expr instanceof Yield_
-                || $statement->expr instanceof YieldFrom;
+        // Yield statements are always wrapped in Expression nodes
+        return $statement instanceof Expression && (
+            $statement->expr instanceof Yield_ ||
+            $statement->expr instanceof YieldFrom
+        );
     }
 
     /**
-     * @return array<Stmt>|null
+     * @return array<Stmt>
      */
-    private function getLoopStatements(Node $node): ?array
+    private function getLoopStatements(Node $node): array
     {
         if (!$this->isLoopNode($node)) {
-            return null;
+            return [];
         }
 
         return $node->stmts;
@@ -148,11 +142,6 @@ final class RequireGuardClausesInLoopsRule implements Rule
 
         $count = 0;
         foreach ($statements as $statement) {
-            if ($statement instanceof Stmt\Nop) {
-                // Skip empty statements, i.e. only with comments
-                return true;
-            }
-
             if ($this->isYieldOrYieldFrom($statement)) {
                 // Allow as many yields as needed, but with only one following statement
                 $count = 0;

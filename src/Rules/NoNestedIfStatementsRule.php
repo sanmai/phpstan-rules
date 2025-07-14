@@ -36,6 +36,8 @@ final class NoNestedIfStatementsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.';
 
+    private const EXACTLY_ONE = 1;
+
     #[Override]
     public function getNodeType(): string
     {
@@ -54,27 +56,31 @@ final class NoNestedIfStatementsRule implements Rule
             return [];
         }
 
-        $statements = $node->stmts;
-        if (1 !== count($statements)) {
+        // Only flag if the if statement contains exactly one statement
+        if (self::EXACTLY_ONE !== count($node->stmts)) {
             return [];
         }
 
-        $onlyStatement = $statements[0];
+        $statement = $node->stmts[0];
 
-        // Check if the only statement is another if
-        if (!$onlyStatement instanceof If_) {
-            return [];
-        }
-
-        // Check if the nested if has elseif
-        if ([] !== $onlyStatement->elseifs) {
+        // Skip if the nested if has elseif (more complex control flow)
+        if (
+            !$statement instanceof If_ ||
+            self::ifHasElseIf($statement)
+        ) {
             return [];
         }
 
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->identifier('sanmai.noNestedIf')
+                ->line($node->getLine())
                 ->build(),
         ];
+    }
+
+    private static function ifHasElseIf(If_ $if): bool
+    {
+        return [] !== $if->elseifs;
     }
 }

@@ -56,4 +56,10 @@ class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
         ]);
     }
 
+    public function test_edge_cases(): void
+    {
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedIf/edge_cases.php'], [
+            24, // If with else block should be flagged (parent has else, contains single nested if)
+        ]);
+    }
 }

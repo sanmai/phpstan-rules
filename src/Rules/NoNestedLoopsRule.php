@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
+use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Do_;
 use PhpParser\Node\Stmt\For_;
 use PhpParser\Node\Stmt\Foreach_;
@@ -31,7 +32,7 @@ use PHPStan\Rules\RuleErrorBuilder;
 use Override;
 
 /**
- * @implements Rule<Node>
+ * @implements Rule<Stmt>
  */
 final class NoNestedLoopsRule implements Rule
 {
@@ -40,7 +41,7 @@ final class NoNestedLoopsRule implements Rule
     #[Override]
     public function getNodeType(): string
     {
-        return Node::class;
+        return Stmt::class;
     }
 
     /**
@@ -49,10 +50,6 @@ final class NoNestedLoopsRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$this->isLoopNode($node)) {
-            return [];
-        }
-
         // Only check direct statements within the loop body, not inside function calls
         $stmts = $this->getLoopStatements($node);
         if (null === $stmts) {
