@@ -9,7 +9,7 @@ function checkWithEmpty($value): bool
 
 function checkArrayWithEmpty(array $items): bool
 {
-    return empty($items); // Error: empty() is not allowed
+    return empty($items); // empty with arrays is allowed (exception)
 }
 
 function checkStringWithEmpty(string $str): bool
@@ -25,9 +25,9 @@ function conditionalWithEmpty($value): string
     return 'not empty';
 }
 
-function negatedEmpty($value): bool
+function negatedEmpty(string|array $value): bool
 {
-    return !empty($value); // Error: empty() is not allowed
+    return !empty($value); // Error: empty() is not allowed (composite type includes anything else but array)
 }
 
 function emptyInLoop(array $items): void
@@ -43,4 +43,14 @@ function emptyInLoop(array $items): void
 function ternaryWithEmpty($value): string
 {
     return empty($value) ? 'empty' : 'not empty'; // Error: empty() is not allowed
+}
+
+function checkArrayNullableArrays(?array $items): bool
+{
+    return empty($items); // empty with nullable arrays is allowed (exception)
+}
+
+function checkArrayNullableArrays2(null|array $items): bool
+{
+    return empty($items); // empty with nullable arrays is allowed (exception)
 }

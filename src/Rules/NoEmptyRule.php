@@ -26,6 +26,9 @@ use PhpParser\Node\Expr\Empty_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Type\UnionType;
+
+use function count;
 
 /**
  * @implements Rule<Empty_>
@@ -47,10 +50,57 @@ final class NoEmptyRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
+        $exprType = $scope->getType($node->expr);
+
+        // Allow empty() on arrays or nullable arrays
+        if ($this->isArrayOrNullableArray($exprType)) {
+            return [];
+        }
+
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->identifier('sanmai.noEmpty')
                 ->build(),
         ];
+    }
+
+    private function isArrayOrNullableArray(\PHPStan\Type\Type $type): bool
+    {
+        // Pure array type
+        if ($type->isArray()->yes()) {
+            return true;
+        }
+
+        // Union type - check if it's nullable array (array|null or null|array)
+        if ($type instanceof UnionType) {
+            $types = $type->getTypes();
+
+            // Must be exactly 2 types for nullable array
+            if (2 !== count($types)) {
+                return false;
+            }
+
+            $hasArray = false;
+            $hasNull = false;
+
+            foreach ($types as $subType) {
+                if ($subType->isArray()->yes()) {
+                    $hasArray = true;
+                    continue;
+                }
+
+                if ($subType->isNull()->yes()) {
+                    $hasNull = true;
+                    continue;
+                }
+
+                // Has something other than array or null
+                return false;
+            }
+
+            return $hasArray && $hasNull;
+        }
+
+        return false;
     }
 }

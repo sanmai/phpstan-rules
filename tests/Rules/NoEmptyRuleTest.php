@@ -39,7 +39,7 @@ final class NoEmptyRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/NoEmptyRule/empty_function_calls.php'],
-            [7, 12, 17, 22, 30, 36, 45]
+            [7, 17, 22, 30, 36, 45]
         );
     }
 }
