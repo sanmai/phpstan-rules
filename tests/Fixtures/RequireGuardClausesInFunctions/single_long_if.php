@@ -98,3 +98,16 @@ function bad($that): void
         $that->work('3');
     }
 }
+
+// Function with non-void return type (should not trigger)
+function hasStringReturn(): string
+{
+    $result = doSetup();
+    
+    if ($result->isValid()) {
+        $result->process();
+        return $result->getValue();
+    }
+    
+    return 'default';
+}

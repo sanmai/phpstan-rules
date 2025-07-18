@@ -76,3 +76,17 @@ function withElseIf(): void
         $this->alternative();
     }
 }
+
+// Edge case: abstract method (should not trigger - no body)
+abstract class AbstractExample
+{
+    abstract public function abstractMethod(): void;
+    
+    // Interface methods also have no body
+    public function concreteMethod(): void
+    {
+        if ($this->condition) { // Error: should use guard clause
+            $this->work();
+        }
+    }
+}

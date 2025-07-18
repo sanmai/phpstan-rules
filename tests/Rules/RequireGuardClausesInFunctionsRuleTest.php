@@ -43,11 +43,35 @@ final class RequireGuardClausesInFunctionsRuleTest extends SingleRuleTestCase
         );
     }
 
+    public function test_non_void_return_types(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/RequireGuardClausesInFunctions/non_void_returns.php'],
+            [86]  // Only the void method should trigger
+        );
+    }
+
     public function test_edge_cases(): void
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/RequireGuardClausesInFunctions/edge_cases.php'],
-            [8, 27, 38, 48]  // singleStatement, onlyIfStatement, ifWithSingleStatement, and noReturnType should trigger
+            [8, 27, 38, 48, 88]  // singleStatement, onlyIfStatement, ifWithSingleStatement, noReturnType, and concreteMethod should trigger
+        );
+    }
+
+    public function test_mixed_return_types(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/RequireGuardClausesInFunctions/mixed_return_types.php'],
+            [47, 54]  // Only void and no-return-type functions should trigger
+        );
+    }
+
+    public function test_class_return_types(): void
+    {
+        $this->analyse(
+            [__DIR__ . '/../Fixtures/RequireGuardClausesInFunctions/class_return_types.php'],
+            []  // No errors expected - all have non-void return types
         );
     }
 }

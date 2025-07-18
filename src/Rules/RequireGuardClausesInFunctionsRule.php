@@ -97,11 +97,6 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             return 'void' === $returnType->name;
         }
 
-        // Handle name nodes
-        if ($returnType instanceof Node\Name) {
-            return 'void' === $returnType->toString();
-        }
-
         return false;
     }
 }
