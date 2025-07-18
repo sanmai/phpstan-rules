@@ -103,11 +103,29 @@ function bad($that): void
 function hasStringReturn(): string
 {
     $result = doSetup();
-    
+
     if ($result->isValid()) {
         $result->process();
         return $result->getValue();
     }
-    
+
     return 'default';
+}
+
+class Good
+{
+    private float $min = NAN;
+
+    private float $max = NAN;
+
+    function minmax(self $other): void
+    {
+        if ($other->min < $this->min) {
+            $this->min = $other->min;
+        }
+
+        if ($other->max > $this->max) { // Should not be flagged
+            $this->max = $other->max;
+        }
+    }
 }
