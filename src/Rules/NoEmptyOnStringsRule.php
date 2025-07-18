@@ -32,7 +32,7 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class NoEmptyOnStringsRule implements Rule
 {
-    public const ERROR_MESSAGE = 'The empty() function is not allowed on strings. Use more explicit checks like === "" or === "0" instead. Note: empty("0") returns true!';
+    public const ERROR_MESSAGE = 'The empty() call is not allowed on strings. Use more explicit checks like === "" or === "0" instead. Note: empty("0") ==== empty(null)';
 
     #[Override]
     public function getNodeType(): string
