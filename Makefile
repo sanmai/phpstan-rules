@@ -89,7 +89,7 @@ phpunit: cs
 
 .PHONY: infection
 infection: phpunit
-	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
+	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS) --no-progress
 
 .PHONY: analyze
 analyze: phpstan psalm

@@ -15,6 +15,8 @@ These rules encourage:
 
 These principles align well with libraries like [`sanmai/pipeline`](https://github.com/sanmai/pipeline) that provide functional programming patterns as alternatives to nested loops.
 
+My rules are designed to work together without creating "whack-a-mole" scenarios. When multiple rules could apply to the same code pattern, they all trigger simultaneously, showing you the complete picture upfront. For example, a function ending with if-else will trigger all matching rules, guiding you directly to the guard clause rather than making you fix one issue only to discover another. This approach helps you fix all violations in a single pass.
+
 ## Installation
 
 ```bash
@@ -242,6 +244,46 @@ function process(?string $input): void
     // process input...
 }
 ```
+
+### `RequireGuardClausesInFunctionsRule`
+
+**Requires guard clauses in functions/methods that end with a single large if statement.**
+
+This rule detects functions with void return types (or no return type) that end with a single `if` statement containing the main logic. These should be refactored to use guard clauses with early returns, reducing nesting and improving readability.
+
+#### Bad
+```php
+function processData(): void
+{
+    $this->initialize();
+
+    if ($this->isValid()) { // Error: Use guard clause instead
+        $this->transform();
+        $this->validate();
+        $this->save();
+        $this->notify();
+    }
+}
+```
+
+#### Good
+```php
+function processData(): void
+{
+    $this->initialize();
+
+    if (!$this->isValid()) {
+        return;
+    }
+
+    $this->transform();
+    $this->validate();
+    $this->save();
+    $this->notify();
+}
+```
+
+This rule only applies to functions with `void` return type or no return type. Functions that declare specific return types are exempt, for now.
 
 ### `NoCountZeroComparisonRule`
 

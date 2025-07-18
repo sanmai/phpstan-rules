@@ -38,7 +38,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     public function test_loop_with_only_if(): void
     {
         $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/loop_with_only_if.php'],
+            [__DIR__ . '/../Fixtures/RequireGuardClausesInLoops/loop_with_only_if.php'],
             [ // All loops with only if AND several statements should be flagged
                 9,
                 17,
@@ -52,7 +52,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     public function test_loop_with_if_and_more(): void
     {
         $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/loop_with_if_and_more.php'],
+            [__DIR__ . '/../Fixtures/RequireGuardClausesInLoops/loop_with_if_and_more.php'],
             [] // None should be flagged - all have additional statements
         );
     }
@@ -60,7 +60,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     public function test_non_loop_nodes(): void
     {
         $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/non_loop_nodes.php'],
+            [__DIR__ . '/../Fixtures/RequireGuardClausesInLoops/non_loop_nodes.php'],
             [] // No errors - these are not loops
         );
     }
@@ -68,7 +68,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     public function test_return_yield_throw_allowed(): void
     {
         $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/return_yield_throw_allowed.php'],
+            [__DIR__ . '/../Fixtures/RequireGuardClausesInLoops/return_yield_throw_allowed.php'],
             [
                 36,
                 46,
@@ -83,7 +83,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     public function test_empty_loops(): void
     {
         $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/empty_loops.php'],
+            [__DIR__ . '/../Fixtures/RequireGuardClausesInLoops/empty_loops.php'],
             [] // No errors - empty loops
         );
     }
@@ -91,7 +91,7 @@ final class RequireGuardClausesInLoopsRuleTest extends SingleRuleTestCase
     public function test_empty_if_body(): void
     {
         $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/GuardClauses/empty_if_body.php'],
+            [__DIR__ . '/../Fixtures/RequireGuardClausesInLoops/empty_if_body.php'],
             [
                 9,  // For loop with empty if body
                 15, // Foreach with empty if body
