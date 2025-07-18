@@ -67,13 +67,27 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             return [];
         }
 
+        // Count the number of if statements in the function
+        $ifCount = 0;
+        foreach ($statements as $statement) {
+            if (!$statement instanceof If_) {
+                continue;
+            }
+
+            $ifCount++;
+            // Early exit if we find more than one if statement
+            if ($ifCount > 1) {
+                return [];
+            }
+        }
+
         // Check if the last statement is an if without else
         $lastStatement = $statements[count($statements) - 1];
         if (!$lastStatement instanceof If_ || [] !== $lastStatement->elseifs) {
             return [];
         }
 
-        // If we got here, we have a function ending with a single if that should use a guard clause
+        // If we got here, we have a function with exactly one if statement that should use a guard clause
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->identifier('sanmai.requireGuardClausesInFunctions')
