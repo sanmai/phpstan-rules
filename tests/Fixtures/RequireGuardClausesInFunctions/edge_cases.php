@@ -56,7 +56,7 @@ function withElse(): void
 {
     $this->setup();
 
-    if ($this->condition) {
+    if ($this->condition) { // Error: flagged because our other rule forbids else entirely
         $this->work1();
         $this->work2();
     } else {
@@ -81,7 +81,7 @@ function withElseIf(): void
 abstract class AbstractExample
 {
     abstract public function abstractMethod(): void;
-    
+
     // Interface methods also have no body
     public function concreteMethod(): void
     {

@@ -69,7 +69,7 @@ final class RequireGuardClausesInFunctionsRule implements Rule
 
         // Check if the last statement is an if without else
         $lastStatement = $statements[count($statements) - 1];
-        if (!$lastStatement instanceof If_ || null !== $lastStatement->else || [] !== $lastStatement->elseifs) {
+        if (!$lastStatement instanceof If_ || [] !== $lastStatement->elseifs) {
             return [];
         }
 
