@@ -39,7 +39,7 @@ final class NoEmptyOnStringsRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/NoEmptyOnStringsRule/empty_string_checks.php'],
-            [7, 12, 17, 22, 27, 35, 58]
+            [7, 12, 17, 22, 27, 35, 58, 70, 75]
         );
     }
 
