@@ -108,6 +108,7 @@ function hasStringReturn(): string
         $result->process();
         return $result->getValue();
     }
+
     return 'default';
 }
 
