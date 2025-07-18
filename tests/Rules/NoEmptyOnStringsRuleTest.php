@@ -47,7 +47,7 @@ final class NoEmptyOnStringsRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/NoEmptyRule/empty_function_calls.php'],
-            [17, 30, 60, 75]  // String-related errors from main fixture
+            [7, 17, 22, 30, 36, 45, 60, 75, 80, 85]  // String-related and mixed type errors
         );
     }
 }

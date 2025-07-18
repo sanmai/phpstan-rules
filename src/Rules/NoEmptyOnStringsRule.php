@@ -68,6 +68,11 @@ final class NoEmptyOnStringsRule implements Rule
             return true;
         }
 
+        // Mixed type can contain strings
+        if ($type instanceof \PHPStan\Type\MixedType) {
+            return true;
+        }
+
         // Check if it's a union type containing string
         if ($type instanceof \PHPStan\Type\UnionType) {
             foreach ($type->getTypes() as $innerType) {
