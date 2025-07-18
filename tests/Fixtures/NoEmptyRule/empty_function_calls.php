@@ -75,3 +75,12 @@ function checkSingleNullType(?string $value): bool
     return empty($value); // Error: empty() is not allowed (this is string|null, not array|null)
 }
 
+function checkUnknown($str): bool
+{
+    return empty($str); // Error: empty() on string - could miss "0"
+}
+
+function checkMixed(mixed $str): bool
+{
+    return empty($str); // Error: empty() on string - could miss "0"
+}
