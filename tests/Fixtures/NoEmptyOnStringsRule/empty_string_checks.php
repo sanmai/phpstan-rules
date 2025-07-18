@@ -64,3 +64,13 @@ function searchTag(string $tag): array
 }
 
 searchTag('0');
+
+function checkUnknown($str): bool
+{
+    return empty($str); // Error: empty() on string - could miss "0"
+}
+
+function checkMixed(mixed $str): bool
+{
+    return empty($str); // Error: empty() on string - could miss "0"
+}
