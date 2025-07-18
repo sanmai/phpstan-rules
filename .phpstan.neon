@@ -8,3 +8,7 @@ parameters:
         - tests
     excludePaths:
         - tests/Fixtures/*
+    ignoreErrors:
+        -
+            identifier: argument.type
+            path: tests/UnusedFixturesTest.php

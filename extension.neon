@@ -23,3 +23,7 @@ services:
         class: Sanmai\PHPStanRules\Rules\NoCountZeroComparisonRule
         tags:
             - phpstan.rules.rule
+    -
+        class: Sanmai\PHPStanRules\Rules\NoEmptyOnStringsRule
+        tags:
+            - phpstan.rules.rule

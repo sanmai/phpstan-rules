@@ -9,7 +9,7 @@ function checkWithEmpty($value): bool
 
 function checkArrayWithEmpty(array $items): bool
 {
-    return empty($items); // empty with arrays is allowed (exception)
+    return empty($items); // Error: empty() is not allowed (use $items === [] instead)
 }
 
 function checkStringWithEmpty(string $str): bool
@@ -47,10 +47,31 @@ function ternaryWithEmpty($value): string
 
 function checkArrayNullableArrays(?array $items): bool
 {
-    return empty($items); // empty with nullable arrays is allowed (exception)
+    return empty($items); // empty with nullable arrays is allowed
 }
 
 function checkArrayNullableArrays2(null|array $items): bool
 {
-    return empty($items); // empty with nullable arrays is allowed (exception)
+    return empty($items); // empty with nullable arrays is allowed
 }
+
+function checkUnionWithMultipleTypes(string|array|null $value): bool
+{
+    return empty($value); // Error: empty() is not allowed (union has more than just array|null)
+}
+
+function checkArrayOrInt(array|int $value): bool
+{
+    return empty($value); // Error: empty() is not allowed (union contains non-null non-array type)
+}
+
+function checkThreeWayUnion(array|null|false $value): bool
+{
+    return empty($value); // Error: empty() is not allowed (union has more than 2 types)
+}
+
+function checkSingleNullType(?string $value): bool
+{
+    return empty($value); // Error: empty() is not allowed (this is string|null, not array|null)
+}
+
