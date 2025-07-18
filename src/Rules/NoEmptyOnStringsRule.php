@@ -74,11 +74,13 @@ final class NoEmptyOnStringsRule implements Rule
         }
 
         // Check if it's a union type containing string
-        if ($type instanceof \PHPStan\Type\UnionType) {
-            foreach ($type->getTypes() as $innerType) {
-                if ($innerType->isString()->yes()) {
-                    return true;
-                }
+        if (!$type instanceof \PHPStan\Type\UnionType) {
+            return false;
+        }
+
+        foreach ($type->getTypes() as $innerType) {
+            if ($innerType->isString()->yes()) {
+                return true;
             }
         }
 
