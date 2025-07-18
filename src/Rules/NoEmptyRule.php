@@ -86,11 +86,13 @@ final class NoEmptyRule implements Rule
         }
 
         // Check if it's a union type containing string
-        if ($type instanceof UnionType) {
-            foreach ($type->getTypes() as $innerType) {
-                if ($innerType->isString()->yes()) {
-                    return true;
-                }
+        if (!$type instanceof UnionType) {
+            return false;
+        }
+
+        foreach ($type->getTypes() as $innerType) {
+            if ($innerType->isString()->yes()) {
+                return true;
             }
         }
 
