@@ -15,6 +15,8 @@ These rules encourage:
 
 These principles align well with libraries like [`sanmai/pipeline`](https://github.com/sanmai/pipeline) that provide functional programming patterns as alternatives to nested loops.
 
+My rules are designed to work together without creating "whack-a-mole" scenarios. When multiple rules could apply to the same code pattern, they all trigger simultaneously, showing you the complete picture upfront. For example, a function ending with if-else will trigger all matching rules, guiding you directly to the guard clause rather than making you fix one issue only to discover another. This approach helps you fix all violations in a single pass.
+
 ## Installation
 
 ```bash
