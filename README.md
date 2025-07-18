@@ -243,6 +243,46 @@ function process(?string $input): void
 }
 ```
 
+### `RequireGuardClausesInFunctionsRule`
+
+**Requires guard clauses in functions/methods that end with a single large if statement.**
+
+This rule detects functions with void return types (or no return type) that end with a single `if` statement containing the main logic. These should be refactored to use guard clauses with early returns, reducing nesting and improving readability.
+
+#### Bad
+```php
+function processData(): void
+{
+    $this->initialize();
+
+    if ($this->isValid()) { // Error: Use guard clause instead
+        $this->transform();
+        $this->validate();
+        $this->save();
+        $this->notify();
+    }
+}
+```
+
+#### Good
+```php
+function processData(): void
+{
+    $this->initialize();
+
+    if (!$this->isValid()) {
+        return;
+    }
+
+    $this->transform();
+    $this->validate();
+    $this->save();
+    $this->notify();
+}
+```
+
+This rule only applies to functions with `void` return type or no return type. Functions that declare specific return types are exempt, for now.
+
 ### `NoCountZeroComparisonRule`
 
 **Forbids comparing `count()` with 0.**
