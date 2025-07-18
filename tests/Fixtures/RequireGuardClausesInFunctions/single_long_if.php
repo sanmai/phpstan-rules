@@ -129,3 +129,11 @@ class Good
         }
     }
 }
+
+// Should not be flagged
+function forever(): string
+{
+    while (true) {
+        sleep(1);
+    }
+}

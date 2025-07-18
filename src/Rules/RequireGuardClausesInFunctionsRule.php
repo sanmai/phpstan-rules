@@ -72,7 +72,7 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             }
 
             // If we already found one if statement, this function has multiple
-            if ($ifStatement !== null) {
+            if (null !== $ifStatement) {
                 return [];
             }
 
@@ -80,7 +80,7 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         }
 
         // Must have exactly one if statement
-        if ($ifStatement === null) {
+        if (null === $ifStatement) {
             return [];
         }
 
