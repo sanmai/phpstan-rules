@@ -30,8 +30,6 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
-use function count;
-
 /**
  * @implements Rule<Stmt>
  */
@@ -62,22 +60,37 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         }
 
         // Get the statements in the function body
-        $statements = $node->stmts;
-        if (null === $statements) {
+        $statements = $node->stmts ?? [];
+
+        // Find if statements - return early if we find more than one
+        $ifStatement = null;
+        $lastStatement = null;
+        foreach ($statements as $statement) {
+            $lastStatement = $statement;
+            if (!$statement instanceof If_) {
+                continue;
+            }
+
+            // If we already found one if statement, this function has multiple
+            if (null !== $ifStatement) {
+                return [];
+            }
+
+            $ifStatement = $statement;
+        }
+
+        /** @var If_ $ifStatement */
+
+        // The if statement must be the last statement and have no elseifs
+        if ($ifStatement !== $lastStatement || [] !== $ifStatement->elseifs) {
             return [];
         }
 
-        // Check if the last statement is an if without else
-        $lastStatement = $statements[count($statements) - 1];
-        if (!$lastStatement instanceof If_ || [] !== $lastStatement->elseifs) {
-            return [];
-        }
-
-        // If we got here, we have a function ending with a single if that should use a guard clause
+        // If we got here, we have a function with exactly one if statement that should use a guard clause
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->identifier('sanmai.requireGuardClausesInFunctions')
-                ->line($lastStatement->getStartLine())
+                ->line($ifStatement->getStartLine())
                 ->build(),
         ];
     }

@@ -57,7 +57,7 @@ function testInIfCondition(array $items): void
     if (count($items) === 0) { // Error on this line
         echo "empty";
     }
-    
+
     if (count($items) != 0) { // Error on this line
         echo "not empty";
     }
