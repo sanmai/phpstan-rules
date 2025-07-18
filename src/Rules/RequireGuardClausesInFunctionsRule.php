@@ -68,13 +68,13 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         }
 
         // Skip only if there are no statements
-        if (0 === count($statements)) {
+        if ([] === $statements) {
             return [];
         }
 
         // Check if the last statement is an if without else
         $lastStatement = $statements[count($statements) - 1];
-        if (!$lastStatement instanceof If_ || null !== $lastStatement->else || count($lastStatement->elseifs) > 0) {
+        if (!$lastStatement instanceof If_ || null !== $lastStatement->else || [] !== $lastStatement->elseifs) {
             return [];
         }
 
