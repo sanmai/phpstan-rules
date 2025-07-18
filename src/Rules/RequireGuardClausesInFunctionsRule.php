@@ -62,28 +62,31 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         }
 
         // Get the statements in the function body
-        $statements = $node->stmts;
-        if (null === $statements) {
-            return [];
-        }
+        $statements = $node->stmts ?? [];
 
-        // Count the number of if statements in the function
-        $ifCount = 0;
+        // Find if statements - return early if we find more than one
+        $ifStatement = null;
         foreach ($statements as $statement) {
             if (!$statement instanceof If_) {
                 continue;
             }
 
-            $ifCount++;
-            // Early exit if we find more than one if statement
-            if ($ifCount > 1) {
+            // If we already found one if statement, this function has multiple
+            if ($ifStatement !== null) {
                 return [];
             }
+
+            $ifStatement = $statement;
         }
 
-        // Check if the last statement is an if without else
+        // Must have exactly one if statement
+        if ($ifStatement === null) {
+            return [];
+        }
+
+        // The if statement must be the last statement and have no elseifs
         $lastStatement = $statements[count($statements) - 1];
-        if (!$lastStatement instanceof If_ || [] !== $lastStatement->elseifs) {
+        if ($ifStatement !== $lastStatement || [] !== $ifStatement->elseifs) {
             return [];
         }
 
@@ -91,7 +94,7 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->identifier('sanmai.requireGuardClausesInFunctions')
-                ->line($lastStatement->getStartLine())
+                ->line($ifStatement->getStartLine())
                 ->build(),
         ];
     }
