@@ -67,10 +67,10 @@ searchTag('0');
 
 function checkUnknown($str): bool
 {
-    return empty($str); // other rule handles this
+    return empty($str); // Error: empty() is not allowed (mixed contains string types)
 }
 
 function checkMixed(mixed $str): bool
 {
-    return empty($str); // other rule handles this
+    return empty($str); // Error: empty() is not allowed (mixed contains string types)
 }

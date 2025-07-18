@@ -77,10 +77,10 @@ function checkSingleNullType(?string $value): bool
 
 function checkUnknown($str): bool
 {
-    return empty($str); // Error: empty() on string - could miss "0"
+    return empty($str); // Error: empty() is not allowed (we do not know if this a string, so we must trigger)
 }
 
 function checkMixed(mixed $str): bool
 {
-    return empty($str); // Error: empty() on string - could miss "0"
+    return empty($str); // Error: empty() is not allowed (we do not know if this a string, so we must trigger)
 }

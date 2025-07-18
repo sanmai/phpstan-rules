@@ -50,15 +50,15 @@ final class NoEmptyOnStringsRule implements Rule
         $exprType = $scope->getType($node->expr);
 
         // Check if the type is or contains string
-        if ($this->containsStringType($exprType)) {
-            return [
-                RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                    ->identifier('sanmai.noEmptyOnStrings')
-                    ->build(),
-            ];
+        if (!$this->containsStringType($exprType)) {
+            return [];
         }
 
-        return [];
+        return [
+            RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                ->identifier('sanmai.noEmptyOnStrings')
+                ->build(),
+        ];
     }
 
     private function containsStringType(\PHPStan\Type\Type $type): bool
