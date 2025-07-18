@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
+use Iterator;
 
 use function Later\lazy;
 use function Pipeline\take;
@@ -58,6 +59,7 @@ final class UnusedFixturesTest extends TestCase
             new RecursiveDirectoryIterator($testsDir, RecursiveDirectoryIterator::SKIP_DOTS)
         );
 
+        /** @var Iterator<SplFileInfo> $iterator */
         $result = take($iterator)
             ->filter(fn(SplFileInfo $file) => 'php' === $file->getExtension())
             ->map(fn(SplFileInfo $file) => yield from $file->openFile('r'))
@@ -83,8 +85,8 @@ final class UnusedFixturesTest extends TestCase
         );
 
         return take($iterator)
-            ->filter(fn(SplFileInfo $file) => 'php' === $file->getExtension())
-            ->cast(fn(SplFileInfo $file) => [str_replace($fixturesDir . '/', '', $file->getRealPath())]);
+            ->filter(fn(SplFileInfo $file) => 'php' === $file->getExtension())  /** @phpstan-ignore argument.type */
+            ->cast(fn(SplFileInfo $file) => [str_replace($fixturesDir . '/', '', $file->getRealPath())]);  /** @phpstan-ignore argument.type */
     }
 
     #[DataProvider('provideFixtures')]

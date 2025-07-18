@@ -32,7 +32,7 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class NoElseRule implements Rule
 {
-    public const ERROR_MESSAGE = 'Else statements are not allowed. Consider using early returns or guard clauses instead.';
+    public const ERROR_MESSAGE = 'Else statements are not allowed. Use early returns to handle edge cases first, leaving the main logic unnested. This improves readability and reduces cognitive complexity.';
 
     #[Override]
     public function getNodeType(): string

@@ -168,14 +168,18 @@ return $user->getName();
 
 ### `NoEmptyRule`
 
-**Forbids the use of the `empty()` function.**
+**Forbids the use of the `empty()` function (except on nullable arrays).**
 
-This rule encourages more explicit checks instead of the ambiguous `empty()` function, which can hide bugs and make code harder to understand.
+This rule encourages more explicit checks instead of the ambiguous `empty()` function, which can hide bugs and make code harder to understand. The only exception is nullable arrays (`?array`) where `empty()` provides a cleaner syntax than `$items === null || $items === []`.
 
 #### Bad
 ```php
 if (empty($data)) { // Error: The empty() function is not allowed
     return null;
+}
+
+if (empty($items)) { // Error: Use $items === [] instead
+    return 'No items';
 }
 ```
 
@@ -186,14 +190,56 @@ if ($data === null) {
     return null;
 }
 
-// Or for arrays
-if ($data === []) {
-    return null;
+// For arrays
+if ($items === []) {
+    return 'No items';
 }
 
-// Or for strings
-if ($data === '') {
-    return null;
+// Exception: nullable arrays are allowed
+function process(?array $items): void
+{
+    if (empty($items)) { // OK: cleaner than ($items === null || $items === [])
+        return;
+    }
+    // process items...
+}
+```
+
+### `NoEmptyOnStringsRule`
+
+**Forbids the use of `empty()` on string types with a specific warning about the `'0'` gotcha.**
+
+This rule specifically targets string types and mixed types (which could contain strings) to warn about the dangerous behavior where `empty('0')` returns `true`. This has caused real bugs in production systems where users couldn't search for "0" or use "0" as a valid input.
+
+#### Bad
+```php
+function validateTag(string $tag): void
+{
+    if (empty($tag)) { // Error: empty() on strings - empty('0') returns true!
+        throw new \InvalidArgumentException('Tag cannot be empty');
+    }
+}
+
+// This will throw an exception even though '0' is a valid tag!
+validateTag('0');
+```
+
+#### Good
+```php
+function validateTag(string $tag): void
+{
+    if ($tag === '') { // Explicit check that doesn't treat '0' as empty
+        throw new \InvalidArgumentException('Tag cannot be empty');
+    }
+}
+
+// For nullable strings, be explicit about both conditions
+function process(?string $input): void
+{
+    if ($input === null || $input === '') {
+        return;
+    }
+    // process input...
 }
 ```
 

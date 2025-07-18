@@ -22,24 +22,32 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Sanmai\PHPStanRules\Rules\NoEmptyRule;
+use Sanmai\PHPStanRules\Rules\NoEmptyOnStringsRule;
 
 /**
- * @extends SingleRuleTestCase<NoEmptyRule>
+ * @extends SingleRuleTestCase<NoEmptyOnStringsRule>
  */
-#[CoversClass(NoEmptyRule::class)]
-final class NoEmptyRuleTest extends SingleRuleTestCase
+#[CoversClass(NoEmptyOnStringsRule::class)]
+final class NoEmptyOnStringsRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new NoEmptyRule();
+        return new NoEmptyOnStringsRule();
     }
 
-    public function test_detects_empty_function_calls(): void
+    public function test_detects_empty_on_strings(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/NoEmptyOnStringsRule/empty_string_checks.php'],
+            [7, 12, 17, 22, 27, 35, 58, 70, 75]
+        );
+    }
+
+    public function test_detects_empty_on_strings_from_main_fixture(): void
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/NoEmptyRule/empty_function_calls.php'],
-            [7, 12, 22, 36, 45, 65, 70, 80, 85]
+            [7, 17, 22, 30, 36, 45, 60, 75, 80, 85]  // String-related and mixed type errors
         );
     }
 }

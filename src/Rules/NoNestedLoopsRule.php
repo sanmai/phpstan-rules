@@ -36,7 +36,7 @@ use Override;
  */
 final class NoNestedLoopsRule implements Rule
 {
-    public const ERROR_MESSAGE = 'Nested loops are not allowed. Use functional approaches like map(), filter(), or extract to a separate method.';
+    public const ERROR_MESSAGE = 'Nested loops are not allowed. They hide O(n²) complexity and make code harder to test. Use lookup tables/arrays to reduce complexity to O(n), or functional approaches (map/filter/reduce) that avoid nested iteration.';
 
     #[Override]
     public function getNodeType(): string

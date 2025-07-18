@@ -26,15 +26,13 @@ use PhpParser\Node\Expr\Empty_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\Type\TypeCombinator;
-use PHPStan\Type\UnionType;
 
 /**
  * @implements Rule<Empty_>
  */
-final class NoEmptyRule implements Rule
+final class NoEmptyOnStringsRule implements Rule
 {
-    public const ERROR_MESSAGE = 'The empty() function is not allowed. Use more explicit checks like === null, === [] instead.';
+    public const ERROR_MESSAGE = 'The empty() function is not allowed on strings. Use more explicit checks like === "" or === "0" instead. Note: empty("0") === empty(null)';
 
     #[Override]
     public function getNodeType(): string
@@ -51,31 +49,16 @@ final class NoEmptyRule implements Rule
     {
         $exprType = $scope->getType($node->expr);
 
-        // Allow empty() on nullable arrays only
-        if ($this->isNullableArray($exprType)) {
-            return [];
-        }
-
-        // Skip string types - they're handled by NoEmptyOnStringsRule
-        if ($this->containsStringType($exprType)) {
+        // Check if the type is or contains string
+        if (!$this->containsStringType($exprType)) {
             return [];
         }
 
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noEmpty')
+                ->identifier('sanmai.noEmptyOnStrings')
                 ->build(),
         ];
-    }
-
-    private function isNullableArray(\PHPStan\Type\Type $type): bool
-    {
-        // For nullable arrays, check if removing null leaves just array
-        $typeWithoutNull = TypeCombinator::removeNull($type);
-
-        // If the type changed when removing null AND what's left is an array,
-        // then original was a nullable array
-        return !$type->equals($typeWithoutNull) && $typeWithoutNull->isArray()->yes();
     }
 
     private function containsStringType(\PHPStan\Type\Type $type): bool
@@ -85,8 +68,13 @@ final class NoEmptyRule implements Rule
             return true;
         }
 
+        // Mixed type can contain strings
+        if ($type instanceof \PHPStan\Type\MixedType) {
+            return true;
+        }
+
         // Check if it's a union type containing string
-        if ($type instanceof UnionType) {
+        if ($type instanceof \PHPStan\Type\UnionType) {
             foreach ($type->getTypes() as $innerType) {
                 if ($innerType->isString()->yes()) {
                     return true;
