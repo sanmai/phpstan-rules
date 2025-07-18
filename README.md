@@ -318,6 +318,46 @@ if (count($items) === 1) {
 }
 ```
 
+### `NoFinalClassesRule`
+
+**Prevents the use of `final` keyword on classes.**
+
+This rule discourages final classes in PHP codebases where they often create more problems than they solve, especially for testing and mocking. The `@final` annotation is allowed as it provides documentation without the runtime restrictions.
+
+#### Bad
+```php
+final class UserService
+{
+    public function getUser(int $id): User
+    {
+        // ...
+    }
+}
+```
+
+#### Good
+```php
+class UserService
+{
+    public function getUser(int $id): User
+    {
+        // ...
+    }
+}
+
+// Or with @final annotation for documentation
+/**
+ * @final
+ */
+class UserService
+{
+    public function getUser(int $id): User
+    {
+        // ...
+    }
+}
+```
+
 ## Ignoring Rules
 
 [Please refer to the PHPStan documentation.](https://phpstan.org/user-guide/ignoring-errors)
