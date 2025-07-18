@@ -30,8 +30,6 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
-use function count;
-
 /**
  * @implements Rule<Stmt>
  */
@@ -66,7 +64,9 @@ final class RequireGuardClausesInFunctionsRule implements Rule
 
         // Find if statements - return early if we find more than one
         $ifStatement = null;
+        $lastStatement = null;
         foreach ($statements as $statement) {
+            $lastStatement = $statement;
             if (!$statement instanceof If_) {
                 continue;
             }
@@ -79,13 +79,9 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             $ifStatement = $statement;
         }
 
-        // Must have exactly one if statement
-        if (null === $ifStatement) {
-            return [];
-        }
+        /** @var If_ $ifStatement */
 
         // The if statement must be the last statement and have no elseifs
-        $lastStatement = $statements[count($statements) - 1];
         if ($ifStatement !== $lastStatement || [] !== $ifStatement->elseifs) {
             return [];
         }
