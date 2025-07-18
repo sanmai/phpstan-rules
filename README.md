@@ -322,7 +322,7 @@ if (count($items) === 1) {
 
 **Prevents the use of `final` keyword on classes.**
 
-This rule discourages final classes in PHP codebases where they often create more problems than they solve, especially for testing and mocking. The `@final` annotation is allowed as it provides documentation without the runtime restrictions.
+This rule discourages final classes as they often create more problems than they solve, especially for testing and mocking. The `@final` annotation provides the same benefits by preventing extension via static analysis without the runtime restrictions that interfere with testing and lead to indirection hell.
 
 #### Bad
 ```php
@@ -356,6 +356,14 @@ class UserService
         // ...
     }
 }
+```
+
+If you'd rather [use `dg/bypass-finals`](https://github.com/dg/bypass-finals) for testing, you can turn off this rule by adding the following to your `phpstan.neon`:
+
+```neon
+parameters:
+    ignoreErrors:
+        - '#Final classes are not allowed#'
 ```
 
 ## Ignoring Rules

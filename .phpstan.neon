@@ -12,3 +12,4 @@ parameters:
         -
             identifier: argument.type
             path: tests/UnusedFixturesTest.php
+        - '#Final classes are not allowed#'
