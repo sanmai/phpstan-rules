@@ -11,5 +11,5 @@ parameters:
     ignoreErrors:
         -
             identifier: argument.type
-            path: tests/*Test.php
+            path: tests/*.php
         - '#Final classes are not allowed#'
