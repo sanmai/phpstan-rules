@@ -21,13 +21,15 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
-use PHPStan\Testing\RuleTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Sanmai\PHPStanRules\Rules\NoFinalClassesRule;
 
 /**
- * @extends RuleTestCase<NoFinalClassesRule>
+ * @extends SingleRuleTestCase<NoFinalClassesRule>
  */
-class NoFinalClassesRuleTest extends RuleTestCase
+#[CoversClass(NoFinalClassesRule::class)]
+
+class NoFinalClassesRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
@@ -36,20 +38,14 @@ class NoFinalClassesRuleTest extends RuleTestCase
 
     public function testRule(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/NoFinalClassesRule/final-classes.php'], [
-            [
-                NoFinalClassesRule::ERROR_MESSAGE,
-                7,
-            ],
-            [
-                NoFinalClassesRule::ERROR_MESSAGE,
-                14,
-            ],
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoFinalClassesRule/final-classes.php'], [
+            7,
+            14,
         ]);
     }
 
     public function testRuleAllowsNonFinalClasses(): void
     {
-        $this->analyse([__DIR__ . '/../Fixtures/NoFinalClassesRule/non-final-classes.php'], []);
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoFinalClassesRule/non-final-classes.php'], []);
     }
 }
