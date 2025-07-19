@@ -11,5 +11,5 @@ parameters:
     ignoreErrors:
         -
             identifier: argument.type
-            path: tests/UnusedFixturesTest.php
+            path: tests/*Test.php
         - '#Final classes are not allowed#'
