@@ -11,4 +11,6 @@ parameters:
     ignoreErrors:
         -
             identifier: argument.type
-            path: tests/*Test.php
+            path: tests/*.php
+        -
+            identifier: sanmai.noFinalClasses
