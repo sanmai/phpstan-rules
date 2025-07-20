@@ -28,7 +28,7 @@ use Sanmai\PHPStanRules\Rules\RequireGuardClausesRule;
  * @extends SingleRuleTestCase<RequireGuardClausesRule>
  */
 #[CoversClass(RequireGuardClausesRule::class)]
-final class RequireGuardClausesTest extends SingleRuleTestCase
+final class RequireGuardClausesRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
