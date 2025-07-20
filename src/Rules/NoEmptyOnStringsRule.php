@@ -34,6 +34,8 @@ final class NoEmptyOnStringsRule implements Rule
 {
     public const ERROR_MESSAGE = 'The empty() function is not allowed on strings. Use more explicit checks like === "" or === "0" instead. Note: empty("0") === empty(null)';
 
+    public const IDENTIFIER = 'sanmai.noEmptyOnStrings';
+
     #[Override]
     public function getNodeType(): string
     {
@@ -56,7 +58,7 @@ final class NoEmptyOnStringsRule implements Rule
 
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noEmptyOnStrings')
+                ->identifier(self::IDENTIFIER)
                 ->build(),
         ];
     }

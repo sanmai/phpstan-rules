@@ -36,6 +36,8 @@ final class NoNestedIfStatementsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Nested if statements should be avoided. Consider using guard clauses, combining conditions with &&, or extracting to a method.';
 
+    public const IDENTIFIER = 'sanmai.noNestedIf';
+
     private const EXACTLY_ONE = 1;
 
     #[Override]
@@ -73,7 +75,7 @@ final class NoNestedIfStatementsRule implements Rule
 
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noNestedIf')
+                ->identifier(self::IDENTIFIER)
                 ->line($node->getLine())
                 ->build(),
         ];

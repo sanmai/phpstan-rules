@@ -33,6 +33,8 @@ class NoFinalClassesRule implements Rule
 {
     public const ERROR_MESSAGE = 'Final classes create testing obstacles and indirection hell. Use @final annotation for static analysis protection without runtime restrictions.';
 
+    public const IDENTIFIER = 'sanmai.noFinalClasses';
+
     #[Override]
     public function getNodeType(): string
     {
@@ -49,7 +51,7 @@ class NoFinalClassesRule implements Rule
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->line($node->getLine())
-                ->identifier('sanmai.noFinalClasses')
+                ->identifier(self::IDENTIFIER)
                 ->build(),
         ];
     }
