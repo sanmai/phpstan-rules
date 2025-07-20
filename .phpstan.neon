@@ -12,4 +12,5 @@ parameters:
         -
             identifier: argument.type
             path: tests/*.php
-        - '#Final classes are not allowed#'
+        -
+            identifier: sanmai.noFinalClasses

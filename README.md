@@ -345,7 +345,7 @@ class UserService
     }
 }
 
-// Or with @final annotation for documentation
+// Or with @final annotation
 /**
  * @final
  */
@@ -355,15 +355,39 @@ class UserService
     {
         // ...
     }
+
+    // Private methods are not prohibited
+    private function updateUsers(): void
+    {
+
+    }
+
+    // Just as final methods are still discretionary
+    final public function getAll(): iterable
+    {
+
+    }
 }
 ```
 
-If you'd rather [use `dg/bypass-finals`](https://github.com/dg/bypass-finals) for testing, you can turn off this rule by adding the following to your `phpstan.neon`:
+This rule only applies to classes. To turn off this rule for specific classes, you can use PHPStan's annotation:
+
+```php
+/**
+ * @phpstan-ignore sanmai.noFinalClasses
+ */
+final class SpecialCaseThatMustBeFinal
+{
+    // This final class will be ignored
+}
+```
+
+If you'd rather [use `dg/bypass-finals`](https://github.com/dg/bypass-finals) for testing, you can turn off this rule entirely by adding the following to your `phpstan.neon`:
 
 ```neon
 parameters:
     ignoreErrors:
-        - '#Final classes are not allowed#'
+        - identifier: sanmai.noFinalClasses
 ```
 
 ## Ignoring Rules

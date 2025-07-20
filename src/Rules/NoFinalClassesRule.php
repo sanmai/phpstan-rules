@@ -49,7 +49,7 @@ class NoFinalClassesRule implements Rule
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->line($node->getLine())
-                ->identifier('noFinalClasses')
+                ->identifier('sanmai.noFinalClasses')
                 ->build(),
         ];
     }

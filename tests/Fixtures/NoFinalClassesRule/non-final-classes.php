@@ -45,3 +45,23 @@ trait SomeTrait
     {
     }
 }
+
+class UserService
+{
+    public function getUser(int $id)
+    {
+        // ...
+    }
+
+    // Private methods are not prohibited
+    private function updateUsers(): void
+    {
+
+    }
+
+    // Just as final methods are still discretionary
+    final public function getAll(): iterable
+    {
+        yield;
+    }
+}
