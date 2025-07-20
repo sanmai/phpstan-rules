@@ -318,6 +318,78 @@ if (count($items) === 1) {
 }
 ```
 
+### `NoFinalClassesRule`
+
+**Prevents the use of `final` keyword on classes.**
+
+This rule discourages final classes as they often create more problems than they solve, especially for testing and mocking. The `@final` annotation provides the same benefits by preventing extension via static analysis without the runtime restrictions that interfere with testing and lead to indirection hell.
+
+#### Bad
+```php
+final class UserService
+{
+    public function getUser(int $id): User
+    {
+        // ...
+    }
+}
+```
+
+#### Good
+```php
+class UserService
+{
+    public function getUser(int $id): User
+    {
+        // ...
+    }
+}
+
+// Or with @final annotation
+/**
+ * @final
+ */
+class UserService
+{
+    public function getUser(int $id): User
+    {
+        // ...
+    }
+
+    // Private methods are not prohibited
+    private function updateUsers(): void
+    {
+
+    }
+
+    // Just as final methods are still discretionary
+    final public function getAll(): iterable
+    {
+
+    }
+}
+```
+
+This rule only applies to classes. To turn off this rule for specific classes, you can use PHPStan's annotation:
+
+```php
+/**
+ * @phpstan-ignore sanmai.noFinalClasses
+ */
+final class SpecialCaseThatMustBeFinal
+{
+    // This final class will be ignored
+}
+```
+
+If you'd rather [use `dg/bypass-finals`](https://github.com/dg/bypass-finals) for testing, you can turn off this rule entirely by adding the following to your `phpstan.neon`:
+
+```neon
+parameters:
+    ignoreErrors:
+        - identifier: sanmai.noFinalClasses
+```
+
 ## Ignoring Rules
 
 [Please refer to the PHPStan documentation.](https://phpstan.org/user-guide/ignoring-errors)

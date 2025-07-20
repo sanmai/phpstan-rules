@@ -27,7 +27,6 @@ use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
-use Iterator;
 
 use function Later\lazy;
 use function Pipeline\take;
@@ -54,14 +53,7 @@ final class UnusedFixturesTest extends TestCase
      */
     public static function extractFixtureNamesFromTests(): iterable
     {
-        $testsDir = __DIR__ . '/Rules';
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($testsDir, RecursiveDirectoryIterator::SKIP_DOTS)
-        );
-
-        /** @var Iterator<SplFileInfo> $iterator */
-        $result = take($iterator)
-            ->filter(fn(SplFileInfo $file) => 'php' === $file->getExtension())
+        $result = take(new RuleTestsList())
             ->map(fn(SplFileInfo $file) => yield from $file->openFile('r'))
             ->filter(fn(string $line) => str_contains($line, 'Fixtures'))
             ->cast(fn(string $line) => preg_match("#Fixtures/(.+)'#", $line, $matches) ? $matches[1] : null)
