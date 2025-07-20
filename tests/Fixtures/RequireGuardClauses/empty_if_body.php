@@ -37,3 +37,11 @@ for ($i = 0; $i < 10; $i++) {
         // Just a comment
     }
 }
+
+foreach ($items as $item) {
+    if ($item->baz() > 5) {
+        foreach ($item->foo() as $bar) {
+
+        }
+    }
+}
