@@ -36,6 +36,7 @@ use PHPStan\Rules\RuleErrorBuilder;
 final class RequireGuardClausesInFunctionsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Functions/methods with void return type should use guard clauses instead of wrapping main logic in if statements. Invert the condition and return early.';
+    public const IDENTIFIER = 'sanmai.requireGuardClausesInFunctions';
 
     #[Override]
     public function getNodeType(): string
@@ -89,7 +90,7 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         // If we got here, we have a function with exactly one if statement that should use a guard clause
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.requireGuardClausesInFunctions')
+                ->identifier(self::IDENTIFIER)
                 ->line($ifStatement->getStartLine())
                 ->build(),
         ];

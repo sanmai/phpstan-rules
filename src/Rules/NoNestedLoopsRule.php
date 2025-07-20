@@ -38,6 +38,8 @@ final class NoNestedLoopsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Nested loops are not allowed. They hide O(n²) complexity and make code harder to test. Use lookup tables/arrays to reduce complexity to O(n), or functional approaches (map/filter/reduce) that avoid nested iteration.';
 
+    public const IDENTIFIER = 'sanmai.noNestedLoops';
+
     #[Override]
     public function getNodeType(): string
     {
@@ -64,7 +66,7 @@ final class NoNestedLoopsRule implements Rule
 
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noNestedLoops')
+                ->identifier(self::IDENTIFIER)
                 ->build(),
         ];
     }

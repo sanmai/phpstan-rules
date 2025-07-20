@@ -45,6 +45,8 @@ final class NoCountZeroComparisonRule implements Rule
 {
     public const ERROR_MESSAGE = 'Avoid comparing count() with 0. Use === [] for empty arrays or !== [] for non-empty arrays instead.';
 
+    public const IDENTIFIER = 'sanmai.noCountZeroComparison';
+
     #[Override]
     public function getNodeType(): string
     {

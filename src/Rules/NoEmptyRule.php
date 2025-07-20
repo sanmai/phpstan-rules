@@ -36,6 +36,8 @@ final class NoEmptyRule implements Rule
 {
     public const ERROR_MESSAGE = 'The empty() function is not allowed. Use more explicit checks like === null, === [] instead.';
 
+    public const IDENTIFIER = 'sanmai.noEmpty';
+
     #[Override]
     public function getNodeType(): string
     {

@@ -34,6 +34,8 @@ final class NoElseRule implements Rule
 {
     public const ERROR_MESSAGE = 'Else statements are not allowed. Use early returns to handle edge cases first, leaving the main logic unnested. This improves readability and reduces cognitive complexity.';
 
+    public const IDENTIFIER = 'sanmai.noElse';
+
     #[Override]
     public function getNodeType(): string
     {
