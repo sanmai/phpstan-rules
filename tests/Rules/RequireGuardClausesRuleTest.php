@@ -96,6 +96,9 @@ final class RequireGuardClausesRuleTest extends SingleRuleTestCase
                 9,  // For loop with empty if body
                 15, // Foreach with empty if body
                 30, // Do-while with empty if body
+                42, // Foreach with nested foreach in if
+                50, // Foreach with nested while in if
+                58, // Foreach with nested do-while in if
             ]
         );
     }

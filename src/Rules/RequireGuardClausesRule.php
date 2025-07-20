@@ -150,6 +150,11 @@ final class RequireGuardClausesRule implements Rule
                 continue;
             }
 
+            // Loops inside if statements should trigger the rule, not be exempted
+            if ($this->isLoopNode($statement)) {
+                return false;
+            }
+
             $count++;
 
             if ($count > 1) {
