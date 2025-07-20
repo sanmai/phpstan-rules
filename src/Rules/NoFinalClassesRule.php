@@ -22,6 +22,7 @@ namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use Override;
@@ -37,6 +38,10 @@ class NoFinalClassesRule implements Rule
 
     private const PHPUNIT_TEST_CASE = \PHPUnit\Framework\TestCase::class;
 
+    public function __construct(
+        private ReflectionProvider $reflectionProvider
+    ) {}
+
     #[Override]
     public function getNodeType(): string
     {
@@ -51,7 +56,7 @@ class NoFinalClassesRule implements Rule
         }
 
         // Exception: Allow final classes that extend PHPUnit\Framework\TestCase
-        if (self::extendsPhpUnitTestCase($node, $scope)) {
+        if ($this->extendsPhpUnitTestCase($node, $scope)) {
             return [];
         }
 
@@ -63,29 +68,37 @@ class NoFinalClassesRule implements Rule
         ];
     }
 
-    private static function extendsPhpUnitTestCase(Node\Stmt\Class_ $node, Scope $scope): bool
+    private function extendsPhpUnitTestCase(Node\Stmt\Class_ $node, Scope $scope): bool
     {
         if (null === $node->extends) {
             return false;
         }
 
-        // Shortcut for direct descendant
+        // Direct inheritance check
         if (self::PHPUNIT_TEST_CASE === $node->extends->toString()) {
             return true;
         }
 
         $classType = $scope->getClassReflection();
 
+        // Fallback: If scope doesn't have class reflection, use ReflectionProvider
+        if (null === $classType && null !== $node->namespacedName) {
+            $fullClassName = $node->namespacedName->toString();
+            if ($this->reflectionProvider->hasClass($fullClassName)) {
+                $classType = $this->reflectionProvider->getClass($fullClassName);
+            }
+        }
+
         if (null === $classType) {
             return false;
         }
 
-        foreach ($classType->getParents() as $parent) {
-            if (self::PHPUNIT_TEST_CASE === $parent->getName()) {
-                return true;
-            }
+        // Use built-in inheritance check
+        if (!$this->reflectionProvider->hasClass(self::PHPUNIT_TEST_CASE)) {
+            return false;
         }
 
-        return false;
+        return $classType->isSubclassOf(self::PHPUNIT_TEST_CASE);
     }
+
 }

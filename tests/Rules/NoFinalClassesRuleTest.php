@@ -33,7 +33,7 @@ class NoFinalClassesRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new NoFinalClassesRule();
+        return new NoFinalClassesRule($this->createReflectionProvider());
     }
 
     public function testRule(): void
@@ -52,11 +52,18 @@ class NoFinalClassesRuleTest extends SingleRuleTestCase
     public function testRuleAllowsPHPUnitTestCases(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoFinalClassesRule/final-classes-exceptions.php'], [
-            14, // MyTestCase - local TestCase, not PHPUnit's
             23, // MyUndefinedExtension
             31, // CustomTestCase
             45, // ConcreteTestCase - local AbstractTestCase, not PHPUnit's
             54, // StillFinalClass
+        ]);
+    }
+
+    public function testRuleWithPHPUnitExtension(): void
+    {
+        // With bug fix, PHPUnit test cases are now properly exempted!
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoFinalClassesRule/phpunit-inheritance-test.php'], [
+            19, // RegularClass - correctly flagged, MyTestCase is exempted
         ]);
     }
 
