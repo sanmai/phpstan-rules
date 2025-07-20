@@ -40,7 +40,7 @@ use function count;
 /**
  * @implements Rule<Stmt>
  */
-final class RequireGuardClausesInLoopsRule implements Rule
+final class RequireGuardClausesRule implements Rule
 {
     public const ERROR_MESSAGE = 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; } or if (!condition) { return; }';
 

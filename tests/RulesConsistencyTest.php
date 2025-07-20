@@ -33,7 +33,7 @@ use Sanmai\PHPStanRules\Rules\NoFinalClassesRule;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInFunctionsRule;
-use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
+use Sanmai\PHPStanRules\Rules\RequireGuardClausesRule;
 use SplFileInfo;
 use ReflectionClass;
 use Iterator;
@@ -59,7 +59,7 @@ final class RulesConsistencyTest extends TestCase
         NoNestedIfStatementsRule::class,
         NoNestedLoopsRule::class,
         RequireGuardClausesInFunctionsRule::class,
-        RequireGuardClausesInLoopsRule::class,
+        RequireGuardClausesRule::class,
     ];
 
     public function testConstantHasAllRules(): void
