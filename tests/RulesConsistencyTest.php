@@ -29,6 +29,7 @@ use Sanmai\PHPStanRules\Rules\NoCountZeroComparisonRule;
 use Sanmai\PHPStanRules\Rules\NoElseRule;
 use Sanmai\PHPStanRules\Rules\NoEmptyOnStringsRule;
 use Sanmai\PHPStanRules\Rules\NoEmptyRule;
+use Sanmai\PHPStanRules\Rules\NoFinalClassesRule;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInFunctionsRule;
@@ -54,6 +55,7 @@ final class RulesConsistencyTest extends TestCase
         NoElseRule::class,
         NoEmptyOnStringsRule::class,
         NoEmptyRule::class,
+        NoFinalClassesRule::class,
         NoNestedIfStatementsRule::class,
         NoNestedLoopsRule::class,
         RequireGuardClausesInFunctionsRule::class,
