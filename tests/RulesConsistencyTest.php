@@ -144,7 +144,7 @@ final class RulesConsistencyTest extends TestCase
         $content = file_get_contents($reflection->getFileName());
 
         // Look for ->identifier() calls with string literals
-        if (preg_match('/->identifier\(\s*[\'"]([^\'"]*)[\'"]/', $content, $matches)) {
+        if (preg_match('/->identifier\(\s*([^:)]*)\s*\)/', $content, $matches)) {
             $this->fail(sprintf('Rule must use self::IDENTIFIER constant in ->identifier() call, found "%s"', $matches[1]));
         }
 
