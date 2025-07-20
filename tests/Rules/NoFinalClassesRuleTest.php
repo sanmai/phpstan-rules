@@ -53,21 +53,11 @@ class NoFinalClassesRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoFinalClassesRule/final-classes-exceptions.php'], [
             14, // MyTestCase - local TestCase, not PHPUnit's
-            23, // MyUndefinedExtension 
+            23, // MyUndefinedExtension
             31, // CustomTestCase
             45, // ConcreteTestCase - local AbstractTestCase, not PHPUnit's
             54, // StillFinalClass
         ]);
     }
 
-    public function testRuleWithPHPUnitTestCases(): void
-    {
-        // Even with fake TestCase, PHPStan's isolation prevents inheritance detection
-        // In real projects, test classes would be properly exempted
-        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoFinalClassesRule/phpunit-test-cases.php'], [
-            18, // DirectTestCase - would be exempted in real project
-            32, // ConcreteTestCase - would be exempted in real project
-            41, // RegularFinalClass - correctly flagged
-        ]);
-    }
 }

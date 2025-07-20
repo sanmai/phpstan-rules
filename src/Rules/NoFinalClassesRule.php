@@ -35,6 +35,8 @@ class NoFinalClassesRule implements Rule
 
     public const IDENTIFIER = 'sanmai.noFinalClasses';
 
+    private const PHPUNIT_TEST_CASE = \PHPUnit\Framework\TestCase::class;
+
     #[Override]
     public function getNodeType(): string
     {
@@ -49,19 +51,8 @@ class NoFinalClassesRule implements Rule
         }
 
         // Exception: Allow final classes that extend PHPUnit\Framework\TestCase
-        if ($node->extends !== null) {
-            $classType = $scope->getClassReflection();
-            if ($classType !== null) {
-                try {
-                    foreach ($classType->getParents() as $parent) {
-                        if ($parent->getName() === 'PHPUnit\\Framework\\TestCase') {
-                            return [];
-                        }
-                    }
-                } catch (\Throwable) {
-                    // Ignore errors in reflection
-                }
-            }
+        if (self::extendsPhpUnitTestCase($node, $scope)) {
+            return [];
         }
 
         return [
@@ -70,5 +61,31 @@ class NoFinalClassesRule implements Rule
                 ->identifier(self::IDENTIFIER)
                 ->build(),
         ];
+    }
+
+    private function extendsPhpUnitTestCase(Node\Stmt\Class_ $node, Scope $scope): bool
+    {
+        if (null === $node->extends) {
+            return false;
+        }
+
+        // Shortcut for direct descendant
+        if (self::PHPUNIT_TEST_CASE === $node->extends->toString()) {
+            return false;
+        }
+
+        $classType = $scope->getClassReflection();
+
+        if (null === $classType) {
+            return false;
+        }
+
+        foreach ($classType->getParents() as $parent) {
+            if (self::PHPUNIT_TEST_CASE === $parent->getName()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
