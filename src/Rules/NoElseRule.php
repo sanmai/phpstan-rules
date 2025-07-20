@@ -51,7 +51,7 @@ final class NoElseRule implements Rule
     {
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noElse')
+                ->identifier(self::IDENTIFIER)
                 ->build(),
         ];
     }

@@ -43,6 +43,7 @@ use function count;
 final class RequireGuardClausesInLoopsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; } or if (!condition) { return; }';
+
     public const IDENTIFIER = 'sanmai.requireGuardClauses';
 
     private const EXPECTED_STATEMENT_COUNT = 1;

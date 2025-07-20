@@ -75,7 +75,7 @@ final class NoCountZeroComparisonRule implements Rule
 
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noCountZeroComparison')
+                ->identifier(self::IDENTIFIER)
                 ->build(),
         ];
     }

@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Tests;
 
 use GlobIterator;
+use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -34,16 +35,20 @@ use Sanmai\PHPStanRules\Rules\RequireGuardClausesInFunctionsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
 use SplFileInfo;
 use ReflectionClass;
+use Iterator;
+use PHPStan\Rules\Rule;
 
 use function basename;
 use function file_get_contents;
 use function Pipeline\take;
+use function preg_match;
 use function sprintf;
 use function str_replace;
 
 #[CoversNothing]
 final class RulesConsistencyTest extends TestCase
 {
+    /** @var list<class-string> */
     private const ALL_RULES = [
         NoCountZeroComparisonRule::class,
         NoElseRule::class,
@@ -57,30 +62,37 @@ final class RulesConsistencyTest extends TestCase
 
     public function testConstantHasAllRules(): void
     {
-        $actualFiles = take(new GlobIterator(__DIR__ . '/../src/Rules/*Rule.php'))
+        /** @var Iterator<SplFileInfo> $files */
+        $files = new GlobIterator(__DIR__ . '/../src/Rules/*Rule.php');
+
+        $actualRules = take($files)
             ->cast(static fn(SplFileInfo $file) => basename($file->getFilename(), '.php'))
             ->toList();
 
-        $expectedFiles = take(self::provideRuleClasses())
+        $expectedRules = take(self::provideRuleClasses())
             ->keys()
             ->toList();
 
         $this->assertEqualsCanonicalizing(
-            $expectedFiles,
-            $actualFiles,
+            $expectedRules,
+            $actualRules,
             'ALL_RULES constant must contain all rule classes'
         );
     }
 
     /**
-     * @return iterable<array{string}>
+     * @return iterable<array{string, ReflectionClass<Rule<Node>>}>
      */
     public static function provideRuleClasses(): iterable
     {
         return take(self::ALL_RULES)
-            ->map(static fn(string $className) => yield basename(str_replace('\\', '/', $className)) => [$className]);
+            ->map(static fn(string $className) => yield basename(str_replace('\\', '/', $className)) => [
+                $className,
+                new ReflectionClass($className),
+            ]);
     }
 
+    /** @param class-string $className */
     #[DataProvider('provideRuleClasses')]
     public function testRuleHasConstants(string $className): void
     {
@@ -95,6 +107,7 @@ final class RulesConsistencyTest extends TestCase
         $constant = $reflection->getConstant('IDENTIFIER');
         $this->assertIsString($constant, 'IDENTIFIER must be a string');
         $this->assertNotEmpty($constant, 'IDENTIFIER must not be empty');
+        $this->assertStringStartsWith('sanmai.', $constant, 'IDENTIFIER must be namespaced');
     }
 
     #[DataProvider('provideRuleClasses')]
@@ -120,6 +133,26 @@ final class RulesConsistencyTest extends TestCase
             sprintf('### `%s`', $ruleName),
             $content,
             'Rule must be documented in README.md with section header'
+        );
+    }
+
+    /** @param class-string $className */
+    #[DataProvider('provideRuleClasses')]
+    public function testRuleUsesConstantForIdentifier(string $className): void
+    {
+        $reflection = new ReflectionClass($className);
+        $content = file_get_contents($reflection->getFileName());
+
+        // Look for ->identifier() calls with string literals
+        if (preg_match('/->identifier\(\s*[\'"]([^\'"]*)[\'"]/', $content, $matches)) {
+            $this->fail(sprintf('Rule must use self::IDENTIFIER constant in ->identifier() call, found "%s"', $matches[1]));
+        }
+
+        // Ensure ->identifier() is called with constants (self::IDENTIFIER pattern)
+        $this->assertMatchesRegularExpression(
+            '/->identifier\(\s*self::IDENTIFIER\s*\)/',
+            $content,
+            'Rule must use self::IDENTIFIER constant in ->identifier() call'
         );
     }
 }

@@ -65,7 +65,7 @@ final class NoEmptyRule implements Rule
 
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noEmpty')
+                ->identifier(self::IDENTIFIER)
                 ->build(),
         ];
     }

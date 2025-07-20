@@ -36,6 +36,7 @@ use PHPStan\Rules\RuleErrorBuilder;
 final class RequireGuardClausesInFunctionsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Functions/methods with void return type should use guard clauses instead of wrapping main logic in if statements. Invert the condition and return early.';
+
     public const IDENTIFIER = 'sanmai.requireGuardClausesInFunctions';
 
     #[Override]

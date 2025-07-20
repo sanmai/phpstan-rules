@@ -58,7 +58,7 @@ final class NoEmptyOnStringsRule implements Rule
 
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noEmptyOnStrings')
+                ->identifier(self::IDENTIFIER)
                 ->build(),
         ];
     }

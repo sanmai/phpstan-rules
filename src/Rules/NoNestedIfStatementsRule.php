@@ -75,7 +75,7 @@ final class NoNestedIfStatementsRule implements Rule
 
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier('sanmai.noNestedIf')
+                ->identifier(self::IDENTIFIER)
                 ->line($node->getLine())
                 ->build(),
         ];
