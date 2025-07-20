@@ -31,7 +31,7 @@ use Override;
  */
 class NoFinalClassesRule implements Rule
 {
-    public const ERROR_MESSAGE = 'Final classes are not allowed. Consider using composition over inheritance or @final annotation if needed.';
+    public const ERROR_MESSAGE = 'Final classes create testing obstacles and indirection hell. Use @final annotation for static analysis protection without runtime restrictions.';
 
     #[Override]
     public function getNodeType(): string
