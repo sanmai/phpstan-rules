@@ -43,6 +43,9 @@ class NoNestedLoopsRuleTest extends SingleRuleTestCase
             27,
             38,
             48,
+            83, // Foreach with nested foreach in if
+            91, // Foreach with nested while in if
+            99, // Foreach with nested do-while in if
         ]);
     }
 

@@ -103,7 +103,7 @@ if (!$user->hasPermission('edit')) {
 $this->grantAccess();
 ```
 
-### `RequireGuardClausesInLoopsRule`
+### `RequireGuardClausesRule`
 
 **Enforces the use of guard clauses in loops instead of wrapping the main logic in if statements.**
 

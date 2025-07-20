@@ -24,7 +24,7 @@ use PHPStan\Rules\Rule;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
-use Sanmai\PHPStanRules\Rules\RequireGuardClausesInLoopsRule;
+use Sanmai\PHPStanRules\Rules\RequireGuardClausesRule;
 
 /**
  * Tests that all "good" examples from README don't trigger any rules
@@ -51,7 +51,7 @@ class ReadmeExamplesTest extends SingleRuleTestCase
 
     public function testRequireGuardClausesInLoopsRule(): void
     {
-        $this->rule = new RequireGuardClausesInLoopsRule();
+        $this->rule = new RequireGuardClausesRule();
 
         // Should have no errors - all examples are "good"
         $this->analyse([__DIR__ . '/../Fixtures/ReadmeExamples/good_examples.php'], []);

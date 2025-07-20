@@ -40,7 +40,7 @@ use function count;
 /**
  * @implements Rule<Stmt>
  */
-final class RequireGuardClausesInLoopsRule implements Rule
+final class RequireGuardClausesRule implements Rule
 {
     public const ERROR_MESSAGE = 'Use guard clauses instead of wrapping code in if statements. Consider using: if (!condition) { continue; } or if (!condition) { return; }';
 
@@ -148,6 +148,11 @@ final class RequireGuardClausesInLoopsRule implements Rule
                 // Allow as many yields as needed, but with only one following statement
                 $count = 0;
                 continue;
+            }
+
+            // Loops inside if statements should trigger the rule, not be exempted
+            if ($this->isLoopNode($statement)) {
+                return false;
             }
 
             $count++;

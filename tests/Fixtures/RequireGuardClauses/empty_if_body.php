@@ -16,7 +16,7 @@ foreach ($items as $item) {
     }
 }
 
-// While loop with empty if body  
+// While loop with empty if body
 $i = 0;
 while ($i < 10) {
     if ($i > 5) {
@@ -35,5 +35,29 @@ do {
 for ($i = 0; $i < 10; $i++) {
     if ($i > 5) {
         // Just a comment
+    }
+}
+
+foreach ($items as $item) {
+    if ($item->baz() > 5) {
+        foreach ($item->foo() as $bar) {
+            // Bad
+        }
+    }
+}
+
+foreach ($items as $item) {
+    if ($item->baz() > 5) {
+        while ($item->foo()) {
+            // Bad
+        }
+    }
+}
+
+foreach ($items as $item) {
+    if ($item->baz() > 5) {
+        do {
+            // Bad
+        } while ($item->foo());
     }
 }

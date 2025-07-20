@@ -79,3 +79,27 @@ class Example
         }
     }
 }
+
+foreach ($items as $item) {
+    if ($item->baz() > 5) {
+        foreach ($item->foo() as $bar) {
+            // Bad
+        }
+    }
+}
+
+foreach ($items as $item) {
+    if ($item->baz() > 5) {
+        while ($item->foo()) {
+            // Bad
+        }
+    }
+}
+
+foreach ($items as $item) {
+    if ($item->baz() > 5) {
+        do {
+            // Bad
+        } while ($item->foo());
+    }
+}

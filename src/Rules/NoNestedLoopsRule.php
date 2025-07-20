@@ -25,6 +25,7 @@ use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Do_;
 use PhpParser\Node\Stmt\For_;
 use PhpParser\Node\Stmt\Foreach_;
+use PhpParser\Node\Stmt\If_;
 use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -101,9 +102,17 @@ final class NoNestedLoopsRule implements Rule
      */
     private function hasDirectNestedLoop(array $stmts): bool
     {
-        // Simply check if any direct statement is a loop
+        // Check if any direct statement is a loop, or if statements contain loops
         foreach ($stmts as $stmt) {
             if ($this->isLoopNode($stmt)) {
+                return true;
+            }
+
+            if (!$stmt instanceof If_) {
+                continue;
+            }
+
+            if ($this->hasDirectNestedLoop($stmt->stmts)) {
                 return true;
             }
         }
