@@ -48,6 +48,22 @@ class NoFinalClassesRule implements Rule
             return [];
         }
 
+        // Exception: Allow final classes that extend PHPUnit\Framework\TestCase
+        if ($node->extends !== null) {
+            $classType = $scope->getClassReflection();
+            if ($classType !== null) {
+                try {
+                    foreach ($classType->getParents() as $parent) {
+                        if ($parent->getName() === 'PHPUnit\\Framework\\TestCase') {
+                            return [];
+                        }
+                    }
+                } catch (\Throwable) {
+                    // Ignore errors in reflection
+                }
+            }
+        }
+
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->line($node->getLine())
