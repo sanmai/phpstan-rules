@@ -63,7 +63,7 @@ class NoFinalClassesRule implements Rule
         ];
     }
 
-    private function extendsPhpUnitTestCase(Node\Stmt\Class_ $node, Scope $scope): bool
+    private static function extendsPhpUnitTestCase(Node\Stmt\Class_ $node, Scope $scope): bool
     {
         if (null === $node->extends) {
             return false;
@@ -71,7 +71,7 @@ class NoFinalClassesRule implements Rule
 
         // Shortcut for direct descendant
         if (self::PHPUNIT_TEST_CASE === $node->extends->toString()) {
-            return false;
+            return true;
         }
 
         $classType = $scope->getClassReflection();
