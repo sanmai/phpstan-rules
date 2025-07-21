@@ -31,7 +31,7 @@ use Sanmai\PHPStanRules\Rules\RequireGuardClausesRule;
  * @phpstan-ignore missingType.generics
  */
 #[CoversNothing]
-class ReadmeExamplesTest extends SingleRuleTestCase
+final class ReadmeExamplesTest extends SingleRuleTestCase
 {
     public function testNoNestedLoopsRule(): void
     {

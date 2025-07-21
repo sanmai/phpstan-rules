@@ -66,10 +66,8 @@ class NoFinalClassesRule implements Rule
 
     private function isTestFile(Scope $scope): bool
     {
-        $fileName = $scope->getFile();
-
-        // Check if file path contains "tests" or ends with "Test.php"
-        return str_contains($fileName, 'tests') || str_ends_with($fileName, 'Test.php');
+        // Check if file ends with "Test.php"
+        return str_ends_with($scope->getFile(), 'Test.php');
     }
 
 }

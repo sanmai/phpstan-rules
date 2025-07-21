@@ -28,7 +28,7 @@ use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
  * @extends SingleRuleTestCase<NoNestedLoopsRule>
  */
 #[CoversClass(NoNestedLoopsRule::class)]
-class NoNestedLoopsRuleTest extends SingleRuleTestCase
+final class NoNestedLoopsRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {

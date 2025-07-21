@@ -28,7 +28,7 @@ use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
  * @extends SingleRuleTestCase<NoNestedIfStatementsRule>
  */
 #[CoversClass(NoNestedIfStatementsRule::class)]
-class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
+final class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
