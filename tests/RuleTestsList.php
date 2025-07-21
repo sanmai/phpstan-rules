@@ -31,9 +31,8 @@ use function str_ends_with;
 
 /**
  * @implements IteratorAggregate<array-key, SplFileInfo>
- * @final
  */
-class RuleTestsList implements IteratorAggregate
+final class RuleTestsList implements IteratorAggregate
 {
     public function getIterator(): Traversable
     {
