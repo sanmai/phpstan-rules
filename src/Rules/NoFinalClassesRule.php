@@ -26,6 +26,9 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use Override;
 
+use function str_contains;
+use function str_ends_with;
+
 /**
  * @implements Rule<Node\Stmt\Class_>
  */
@@ -64,7 +67,7 @@ class NoFinalClassesRule implements Rule
     private function isTestFile(Scope $scope): bool
     {
         $fileName = $scope->getFile();
-        
+
         // Check if file path contains "tests" or ends with "Test.php"
         return str_contains($fileName, 'tests') || str_ends_with($fileName, 'Test.php');
     }
