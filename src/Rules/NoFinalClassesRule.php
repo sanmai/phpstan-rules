@@ -22,7 +22,6 @@ namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
-use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use Override;
@@ -35,12 +34,6 @@ class NoFinalClassesRule implements Rule
     public const ERROR_MESSAGE = 'Final classes create testing obstacles and indirection hell. Use @final annotation for static analysis protection without runtime restrictions.';
 
     public const IDENTIFIER = 'sanmai.noFinalClasses';
-
-    private const PHPUNIT_TEST_CASE = \PHPUnit\Framework\TestCase::class;
-
-    public function __construct(
-        private ReflectionProvider $reflectionProvider
-    ) {}
 
     #[Override]
     public function getNodeType(): string
@@ -55,8 +48,8 @@ class NoFinalClassesRule implements Rule
             return [];
         }
 
-        // Exception: Allow final classes that extend PHPUnit\Framework\TestCase
-        if ($this->extendsPhpUnitTestCase($node, $scope)) {
+        // Exception: Allow final classes in test files
+        if ($this->isTestFile($scope)) {
             return [];
         }
 
@@ -68,37 +61,12 @@ class NoFinalClassesRule implements Rule
         ];
     }
 
-    private function extendsPhpUnitTestCase(Node\Stmt\Class_ $node, Scope $scope): bool
+    private function isTestFile(Scope $scope): bool
     {
-        if (null === $node->extends) {
-            return false;
-        }
-
-        // Direct inheritance check
-        if (self::PHPUNIT_TEST_CASE === $node->extends->toString()) {
-            return true;
-        }
-
-        $classType = $scope->getClassReflection();
-
-        // Fallback: If scope doesn't have class reflection, use ReflectionProvider
-        if (null === $classType && null !== $node->namespacedName) {
-            $fullClassName = $node->namespacedName->toString();
-            if ($this->reflectionProvider->hasClass($fullClassName)) {
-                $classType = $this->reflectionProvider->getClass($fullClassName);
-            }
-        }
-
-        if (null === $classType) {
-            return false;
-        }
-
-        // Use built-in inheritance check
-        if (!$this->reflectionProvider->hasClass(self::PHPUNIT_TEST_CASE)) {
-            return false;
-        }
-
-        return $classType->isSubclassOf(self::PHPUNIT_TEST_CASE);
+        $fileName = $scope->getFile();
+        
+        // Check if file path contains "tests" or ends with "Test.php"
+        return str_contains($fileName, 'tests') || str_ends_with($fileName, 'Test.php');
     }
 
 }

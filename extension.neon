@@ -33,7 +33,5 @@ services:
             - phpstan.rules.rule
     -
         class: Sanmai\PHPStanRules\Rules\NoFinalClassesRule
-        arguments:
-            - @reflectionProvider
         tags:
             - phpstan.rules.rule
