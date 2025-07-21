@@ -26,7 +26,6 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use Override;
 
-use function str_contains;
 use function str_ends_with;
 
 /**
