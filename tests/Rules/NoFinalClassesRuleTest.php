@@ -28,8 +28,7 @@ use Sanmai\PHPStanRules\Rules\NoFinalClassesRule;
  * @extends SingleRuleTestCase<NoFinalClassesRule>
  */
 #[CoversClass(NoFinalClassesRule::class)]
-
-class NoFinalClassesRuleTest extends SingleRuleTestCase
+final class NoFinalClassesRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
@@ -47,5 +46,10 @@ class NoFinalClassesRuleTest extends SingleRuleTestCase
     public function testRuleAllowsNonFinalClasses(): void
     {
         $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoFinalClassesRule/non-final-classes.php'], []);
+    }
+
+    public function testRuleAllowsFinalTestClasses(): void
+    {
+        $this->analyse([__FILE__], []);
     }
 }

@@ -26,6 +26,8 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use Override;
 
+use function str_ends_with;
+
 /**
  * @implements Rule<Node\Stmt\Class_>
  */
@@ -48,6 +50,11 @@ class NoFinalClassesRule implements Rule
             return [];
         }
 
+        // Exception: Allow final classes in test files
+        if ($this->isTestFile($scope)) {
+            return [];
+        }
+
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->line($node->getLine())
@@ -55,4 +62,11 @@ class NoFinalClassesRule implements Rule
                 ->build(),
         ];
     }
+
+    private function isTestFile(Scope $scope): bool
+    {
+        // Check if file ends with "Test.php"
+        return str_ends_with($scope->getFile(), 'Test.php');
+    }
+
 }

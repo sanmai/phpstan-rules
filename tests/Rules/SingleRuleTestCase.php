@@ -25,6 +25,7 @@ use PHPStan\Testing\RuleTestCase;
 
 use function Pipeline\take;
 use function is_array;
+use function realpath;
 
 /**
  * @template T of Rule
@@ -38,6 +39,11 @@ abstract class SingleRuleTestCase extends RuleTestCase
      */
     public function analyseExpectingErrorLines(array $files, array $expectedErrorLines = []): void
     {
+        $expectedPrefix = realpath(__DIR__ . '/../Fixtures/');
+        foreach ($files as $file) {
+            $this->assertStringStartsWith($expectedPrefix, realpath($file), "All tests fixtures must be in subdirectories of tests/Fixtures/");
+        }
+
         $this->analyse($files, $this->linesToErrors($expectedErrorLines));
     }
 
