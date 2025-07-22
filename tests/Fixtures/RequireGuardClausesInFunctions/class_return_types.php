@@ -10,13 +10,13 @@ class Example {}
 function returnsClass(): Example
 {
     $this->setup();
-    
+
     if ($this->condition) {
         $this->process();
     }
 }
 
-function returnsStdClass(): stdClass  
+function returnsStdClass(): stdClass
 {
     if ($this->condition) {
         $this->process();

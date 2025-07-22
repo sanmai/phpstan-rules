@@ -17,7 +17,7 @@ class NotLoopsTest
             }
         }
     }
-    
+
     public function testSwitchStatement($value)
     {
         // Switch statement - should not trigger any loop rules
@@ -30,7 +30,7 @@ class NotLoopsTest
                 break;
         }
     }
-    
+
     public function testTryCatch()
     {
         // Try-catch - should not trigger any loop rules
@@ -40,7 +40,7 @@ class NotLoopsTest
             handleError($e);
         }
     }
-    
+
     public function testFunctionCalls()
     {
         // Function calls - should not trigger any loop rules
@@ -52,7 +52,7 @@ class NotLoopsTest
             return $item;
         }, [1, 2, 3]);
     }
-    
+
     public function testClassDeclaration()
     {
         // Anonymous class - should not trigger any loop rules
@@ -65,7 +65,7 @@ class NotLoopsTest
             }
         };
     }
-    
+
     public function testReturn()
     {
         // Return statement - should not trigger any loop rules
@@ -76,14 +76,14 @@ class NotLoopsTest
             ]
         ];
     }
-    
+
     public function testEcho()
     {
         // Echo statement - should not trigger any loop rules
         echo "Hello";
         echo " World";
     }
-    
+
     public function testAssignment()
     {
         // Assignment - should not trigger any loop rules

@@ -9,7 +9,7 @@ function elseIfWithoutElse($value): string
     } elseif ($value < 0) {
         return 'negative';
     }
-    
+
     return 'zero';
 }
 
@@ -22,6 +22,6 @@ function multipleElseIf($value): string
     } elseif ($value > 0) {
         return 'small';
     }
-    
+
     return 'not positive';
 }

@@ -49,7 +49,7 @@ class SingleLoopTypes
         if ($condition) {
             echo "Not a loop";
         }
-        
+
         switch ($condition) {
             case 1:
                 echo "Still not a loop";

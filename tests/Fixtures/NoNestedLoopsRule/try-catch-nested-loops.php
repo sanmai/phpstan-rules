@@ -11,7 +11,7 @@ class TryCatchNestedLoops
         $that = true;
         $foo = [1, 2, 3];
         $baz = 2;
-        
+
         if ($that) {
             try {
                 foreach ($foo as $bar) { // This should NOT be flagged - only one loop
@@ -23,10 +23,10 @@ class TryCatchNestedLoops
                 // Empty catch
             }
         }
-        
+
         return [];
     }
-    
+
     public function anotherLoop(): void
     {
         foreach ($items as $item) {
@@ -39,7 +39,7 @@ class TryCatchNestedLoops
             }
         }
     }
-    
+
     public function singleLoopInTry(): void
     {
         try {
@@ -47,7 +47,7 @@ class TryCatchNestedLoops
                 $item->process();
             }
         } catch (\Exception $e) {
-            // Handle exception  
+            // Handle exception
         }
     }
 }
