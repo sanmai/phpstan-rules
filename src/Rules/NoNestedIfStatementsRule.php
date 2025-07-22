@@ -67,10 +67,7 @@ final class NoNestedIfStatementsRule implements Rule
         if (self::EXACTLY_ONE === $statementCount) {
             $statement = $node->stmts[0];
 
-            if (
-                !$statement instanceof If_ ||
-                self::ifHasElseIf($statement)
-            ) {
+            if (!$statement instanceof If_) {
                 return [];
             }
 
@@ -90,8 +87,7 @@ final class NoNestedIfStatementsRule implements Rule
             if (
                 !$firstStatement instanceof Expression ||
                 !$firstStatement->expr instanceof Assign ||
-                !$secondStatement instanceof If_ ||
-                self::ifHasElseIf($secondStatement)
+                !$secondStatement instanceof If_
             ) {
                 return [];
             }
@@ -107,8 +103,4 @@ final class NoNestedIfStatementsRule implements Rule
         return [];
     }
 
-    private static function ifHasElseIf(If_ $if): bool
-    {
-        return [] !== $if->elseifs;
-    }
 }
