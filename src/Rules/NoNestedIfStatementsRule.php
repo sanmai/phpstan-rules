@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -38,7 +40,7 @@ final class NoNestedIfStatementsRule implements Rule
 
     public const IDENTIFIER = 'sanmai.noNestedIf';
 
-    private const EXACTLY_ONE = 1;
+    private const EXACTLY_TWO = 2;
 
     #[Override]
     public function getNodeType(): string
@@ -58,18 +60,12 @@ final class NoNestedIfStatementsRule implements Rule
             return [];
         }
 
-        // Only flag if the if statement contains exactly one statement
-        if (self::EXACTLY_ONE !== count($node->stmts)) {
+        // More than two statements, it is a pass
+        if (count($node->stmts) > self::EXACTLY_TWO) {
             return [];
         }
 
-        $statement = $node->stmts[0];
-
-        // Skip if the nested if has elseif (more complex control flow)
-        if (
-            !$statement instanceof If_ ||
-            self::ifHasElseIf($statement)
-        ) {
+        if (!self::shouldBeFlagged($node->stmts[0], $node->stmts[1] ?? null)) {
             return [];
         }
 
@@ -81,8 +77,22 @@ final class NoNestedIfStatementsRule implements Rule
         ];
     }
 
-    private static function ifHasElseIf(If_ $if): bool
+    private static function shouldBeFlagged(Node $first, ?Node $second): bool
     {
-        return [] !== $if->elseifs;
+        // Handle case 1: exactly one statement that is an if
+        if ($first instanceof If_ && null === $second) {
+            return true;
+        }
+
+        if (
+            !$first instanceof Expression ||
+            !$first->expr instanceof Assign ||
+            !$second instanceof If_
+        ) {
+            return false;
+        }
+
+        return true;
     }
+
 }

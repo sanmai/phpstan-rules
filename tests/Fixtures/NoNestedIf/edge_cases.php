@@ -56,3 +56,35 @@ if ($condition) {
     }
 }
 
+// Not flagged
+if ($condition) {
+    if ($nested) {
+        doMore();
+    }
+    if ($other) {
+        doMore();
+    }
+    doSomething();
+}
+
+// Not flagged
+if ($condition) {
+    if ($nested) {
+        doMore();
+    }
+    if ($other) {
+        doMore();
+    }
+    if ($condition) {
+        doSomething();
+    }
+}
+
+// Not flagged
+if ($condition) {
+    $foo = bar();
+    if ($nested) {
+        doMore();
+    }
+    doSomething();
+}
