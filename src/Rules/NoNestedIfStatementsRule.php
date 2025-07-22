@@ -62,18 +62,18 @@ final class NoNestedIfStatementsRule implements Rule
         }
 
         $statementCount = count($node->stmts);
-        
+
         // Handle case 1: exactly one statement that is an if
         if (self::EXACTLY_ONE === $statementCount) {
             $statement = $node->stmts[0];
-            
+
             if (
                 !$statement instanceof If_ ||
                 self::ifHasElseIf($statement)
             ) {
                 return [];
             }
-            
+
             return [
                 RuleErrorBuilder::message(self::ERROR_MESSAGE)
                     ->identifier(self::IDENTIFIER)
@@ -81,12 +81,12 @@ final class NoNestedIfStatementsRule implements Rule
                     ->build(),
             ];
         }
-        
+
         // Handle case 2: exactly two statements where first is assignment and second is if
         if (self::EXACTLY_TWO === $statementCount) {
             $firstStatement = $node->stmts[0];
             $secondStatement = $node->stmts[1];
-            
+
             if (
                 !$firstStatement instanceof Expression ||
                 !$firstStatement->expr instanceof Assign ||
@@ -95,7 +95,7 @@ final class NoNestedIfStatementsRule implements Rule
             ) {
                 return [];
             }
-            
+
             return [
                 RuleErrorBuilder::message(self::ERROR_MESSAGE)
                     ->identifier(self::IDENTIFIER)
@@ -103,7 +103,7 @@ final class NoNestedIfStatementsRule implements Rule
                     ->build(),
             ];
         }
-        
+
         return [];
     }
 
