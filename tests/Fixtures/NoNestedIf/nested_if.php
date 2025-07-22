@@ -54,3 +54,14 @@ function example($a, $b)
     }
     return 0;
 }
+
+// Example with else and elseif
+if ($condition1) {
+    if ($condition2) { // error: Nested if statements should be avoided.
+        doSomething();
+    } elseif ($condition3) {
+        doSomethingElseIf();
+    } else {
+        doSomethingElse();
+    }
+}

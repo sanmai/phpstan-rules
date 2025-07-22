@@ -42,6 +42,7 @@ final class NoNestedIfStatementsRuleTest extends SingleRuleTestCase
             21,
             39,
             50,
+            59,
         ]);
     }
 
