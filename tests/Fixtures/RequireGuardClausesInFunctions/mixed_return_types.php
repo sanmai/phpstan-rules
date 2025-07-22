@@ -8,22 +8,22 @@ declare(strict_types=1);
 function stringReturn(): string
 {
     $result = '';
-    
+
     if ($condition) {
         $result = 'yes';
     }
-    
+
     return $result;
 }
 
 function intReturn(): int
 {
     $value = 0;
-    
+
     if ($condition) {
         $value = 1;
     }
-    
+
     return $value;
 }
 
@@ -32,7 +32,7 @@ function intReturn(): int
 function endingWithIf(): string
 {
     $this->prepare();
-    
+
     if ($this->condition) {
         $this->process();
         $this->result = 'done';

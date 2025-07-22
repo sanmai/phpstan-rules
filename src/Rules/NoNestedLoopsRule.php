@@ -26,6 +26,7 @@ use PhpParser\Node\Stmt\Do_;
 use PhpParser\Node\Stmt\For_;
 use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\If_;
+use PhpParser\Node\Stmt\TryCatch;
 use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -108,13 +109,29 @@ final class NoNestedLoopsRule implements Rule
                 return true;
             }
 
-            if (!$stmt instanceof If_) {
+            if (!self::shouldCheckInside($stmt)) {
                 continue;
             }
 
             if ($this->hasDirectNestedLoop($stmt->stmts)) {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    /**
+     * @phpstan-assert-if-true If_|TryCatch $stmt
+     */
+    private static function shouldCheckInside(Node $stmt): bool
+    {
+        if ($stmt instanceof If_) {
+            return true;
+        }
+
+        if ($stmt instanceof TryCatch) {
+            return true;
         }
 
         return false;
