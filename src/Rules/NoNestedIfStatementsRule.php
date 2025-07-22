@@ -40,7 +40,6 @@ final class NoNestedIfStatementsRule implements Rule
 
     public const IDENTIFIER = 'sanmai.noNestedIf';
 
-    private const EXACTLY_ONE = 1;
     private const EXACTLY_TWO = 2;
 
     #[Override]
@@ -61,46 +60,39 @@ final class NoNestedIfStatementsRule implements Rule
             return [];
         }
 
-        $statementCount = count($node->stmts);
+        // More than two statements, it is a pass
+        if (count($node->stmts) > self::EXACTLY_TWO) {
+            return [];
+        }
 
+        if (!self::shouldBeFlagged($node->stmts[0], $node->stmts[1] ?? null)) {
+            return [];
+        }
+
+        return [
+            RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                ->identifier(self::IDENTIFIER)
+                ->line($node->getLine())
+                ->build(),
+        ];
+    }
+
+    private static function shouldBeFlagged(Node $first, ?Node $second): bool
+    {
         // Handle case 1: exactly one statement that is an if
-        if (self::EXACTLY_ONE === $statementCount) {
-            $statement = $node->stmts[0];
-
-            if (!$statement instanceof If_) {
-                return [];
-            }
-
-            return [
-                RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                    ->identifier(self::IDENTIFIER)
-                    ->line($node->getLine())
-                    ->build(),
-            ];
+        if ($first instanceof If_ && null === $second) {
+            return true;
         }
 
-        // Handle case 2: exactly two statements where first is assignment and second is if
-        if (self::EXACTLY_TWO === $statementCount) {
-            $firstStatement = $node->stmts[0];
-            $secondStatement = $node->stmts[1];
-
-            if (
-                !$firstStatement instanceof Expression ||
-                !$firstStatement->expr instanceof Assign ||
-                !$secondStatement instanceof If_
-            ) {
-                return [];
-            }
-
-            return [
-                RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                    ->identifier(self::IDENTIFIER)
-                    ->line($node->getLine())
-                    ->build(),
-            ];
+        if (
+            !$first instanceof Expression ||
+            !$first->expr instanceof Assign ||
+            !$second instanceof If_
+        ) {
+            return false;
         }
 
-        return [];
+        return true;
     }
 
 }
