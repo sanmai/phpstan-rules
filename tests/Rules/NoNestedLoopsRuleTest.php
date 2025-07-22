@@ -81,4 +81,12 @@ final class NoNestedLoopsRuleTest extends SingleRuleTestCase
         // No errors expected - all nodes are non-loops
         $this->analyse([__DIR__ . '/../Fixtures/MixedNodeTypes/not_loops.php'], []);
     }
+
+    public function test_try_catch_nested_loops(): void
+    {
+        // Test that nested loops are detected even when separated by try-catch blocks
+        $this->analyseExpectingErrorLines([__DIR__ . '/../Fixtures/NoNestedLoopsRule/try-catch-nested-loops.php'], [
+            32, // anotherLoop() - foreach with nested foreach inside try-catch
+        ]);
+    }
 }
