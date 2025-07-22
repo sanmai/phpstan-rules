@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace Sanmai\PHPStanRules\Rules;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -39,6 +41,7 @@ final class NoNestedIfStatementsRule implements Rule
     public const IDENTIFIER = 'sanmai.noNestedIf';
 
     private const EXACTLY_ONE = 1;
+    private const EXACTLY_TWO = 2;
 
     #[Override]
     public function getNodeType(): string
@@ -58,27 +61,50 @@ final class NoNestedIfStatementsRule implements Rule
             return [];
         }
 
-        // Only flag if the if statement contains exactly one statement
-        if (self::EXACTLY_ONE !== count($node->stmts)) {
-            return [];
+        $statementCount = count($node->stmts);
+        
+        // Handle case 1: exactly one statement that is an if
+        if (self::EXACTLY_ONE === $statementCount) {
+            $statement = $node->stmts[0];
+            
+            if (
+                !$statement instanceof If_ ||
+                self::ifHasElseIf($statement)
+            ) {
+                return [];
+            }
+            
+            return [
+                RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                    ->identifier(self::IDENTIFIER)
+                    ->line($node->getLine())
+                    ->build(),
+            ];
         }
-
-        $statement = $node->stmts[0];
-
-        // Skip if the nested if has elseif (more complex control flow)
-        if (
-            !$statement instanceof If_ ||
-            self::ifHasElseIf($statement)
-        ) {
-            return [];
+        
+        // Handle case 2: exactly two statements where first is assignment and second is if
+        if (self::EXACTLY_TWO === $statementCount) {
+            $firstStatement = $node->stmts[0];
+            $secondStatement = $node->stmts[1];
+            
+            if (
+                !$firstStatement instanceof Expression ||
+                !$firstStatement->expr instanceof Assign ||
+                !$secondStatement instanceof If_ ||
+                self::ifHasElseIf($secondStatement)
+            ) {
+                return [];
+            }
+            
+            return [
+                RuleErrorBuilder::message(self::ERROR_MESSAGE)
+                    ->identifier(self::IDENTIFIER)
+                    ->line($node->getLine())
+                    ->build(),
+            ];
         }
-
-        return [
-            RuleErrorBuilder::message(self::ERROR_MESSAGE)
-                ->identifier(self::IDENTIFIER)
-                ->line($node->getLine())
-                ->build(),
-        ];
+        
+        return [];
     }
 
     private static function ifHasElseIf(If_ $if): bool
