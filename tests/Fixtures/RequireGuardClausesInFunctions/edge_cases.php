@@ -90,3 +90,10 @@ abstract class AbstractExample
         }
     }
 }
+
+function itThrows(): void
+{
+    if (bad()) {
+        throw new Exception();
+    }
+}
