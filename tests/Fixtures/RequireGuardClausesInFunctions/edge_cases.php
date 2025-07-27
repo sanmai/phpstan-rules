@@ -97,3 +97,33 @@ function itThrows(): void
         throw new Exception();
     }
 }
+
+function multipleStatementsWithThrow(): void
+{
+    if (bad()) { // Error: should use guard clause (multiple statements including throw)
+        $this->cleanup();
+        throw new Exception();
+    }
+}
+
+function singleReturnStatement(): void
+{
+    if (bad()) { // Error: should use guard clause (single return, not throw)
+        return;
+    }
+}
+
+function emptyIfStatement(): void
+{
+    if (bad()) { // Error: should use guard clause (empty if block)
+        // empty block
+    }
+}
+
+function throwThenCleanup(): void
+{
+    if (bad()) { // Error: should use guard clause (throw followed by more statements)
+        throw new Exception();
+        $this->cleanup(); // This makes it multiple statements
+    }
+}

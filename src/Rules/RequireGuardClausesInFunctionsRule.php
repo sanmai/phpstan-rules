@@ -129,13 +129,8 @@ final class RequireGuardClausesInFunctionsRule implements Rule
      */
     private function containsOnlyThrow(array $statements): bool
     {
-        if (1 !== count($statements)) {
-            return false;
-        }
-
-        $statement = $statements[0];
-
-        // Throw expressions are wrapped in Expression statements in PHP 8+
-        return $statement instanceof Expression && $statement->expr instanceof Throw_;
+        return 1 === count($statements)
+            && $statements[0] instanceof Expression
+            && $statements[0]->expr instanceof Throw_;
     }
 }
