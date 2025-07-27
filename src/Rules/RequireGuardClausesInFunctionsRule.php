@@ -22,13 +22,17 @@ namespace Sanmai\PHPStanRules\Rules;
 
 use Override;
 use PhpParser\Node;
+use PhpParser\Node\Expr\Throw_;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+
+use function count;
 
 /**
  * @implements Rule<Stmt>
@@ -88,6 +92,11 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             return [];
         }
 
+        // Skip if the if statement only contains a throw
+        if ($this->containsOnlyThrow($ifStatement->stmts)) {
+            return [];
+        }
+
         // If we got here, we have a function with exactly one if statement that should use a guard clause
         return [
             RuleErrorBuilder::message(self::ERROR_MESSAGE)
@@ -113,5 +122,20 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         }
 
         return false;
+    }
+
+    /**
+     * @param array<Stmt> $statements
+     */
+    private function containsOnlyThrow(array $statements): bool
+    {
+        if (1 !== count($statements)) {
+            return false;
+        }
+
+        $statement = $statements[0];
+
+        // Throw expressions are wrapped in Expression statements in PHP 8+
+        return $statement instanceof Expression && $statement->expr instanceof Throw_;
     }
 }
