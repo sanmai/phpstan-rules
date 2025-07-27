@@ -116,14 +116,13 @@ function singleReturnStatement(): void
 function emptyIfStatement(): void
 {
     if (bad()) { // Error: should use guard clause (empty if block)
-        // empty block
     }
 }
 
 function throwThenCleanup(): void
 {
-    if (bad()) { // Error: should use guard clause (throw followed by more statements)
+    if (bad()) { // OK: starts with throw, so no guard clause needed (unreachable code after throw)
         throw new Exception();
-        $this->cleanup(); // This makes it multiple statements
+        $this->cleanup(); // This is unreachable code after throw
     }
 }

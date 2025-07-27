@@ -32,8 +32,6 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
-use function count;
-
 /**
  * @implements Rule<Stmt>
  */
@@ -92,8 +90,8 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             return [];
         }
 
-        // Skip if the if statement only contains a throw
-        if ($this->containsOnlyThrow($ifStatement->stmts)) {
+        // Skip if the if statement starts with a throw
+        if ($this->startsWithThrow($ifStatement->stmts)) {
             return [];
         }
 
@@ -127,10 +125,11 @@ final class RequireGuardClausesInFunctionsRule implements Rule
     /**
      * @param array<Stmt> $statements
      */
-    private function containsOnlyThrow(array $statements): bool
+    private function startsWithThrow(array $statements): bool
     {
-        return 1 === count($statements)
-            && $statements[0] instanceof Expression
-            && $statements[0]->expr instanceof Throw_;
+        $firstStatement = $statements[0] ?? null;
+
+        return $firstStatement instanceof Expression
+            && $firstStatement->expr instanceof Throw_;
     }
 }
