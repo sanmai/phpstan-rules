@@ -32,6 +32,8 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
+use function array_filter;
+
 /**
  * @implements Rule<Stmt>
  */
@@ -90,8 +92,16 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             return [];
         }
 
-        // Skip if the if statement starts with a throw
-        if ($this->startsWithThrow($ifStatement->stmts)) {
+        // Skip if statements with empty body (it is horrendous, but not our call)
+        if ([] === array_filter($ifStatement->stmts, static fn(Node $node) => !$node instanceof Stmt\Nop)) {
+            return [];
+        }
+
+        // Skip if statements that start with a throw
+        if (
+            $ifStatement->stmts[0] instanceof Expression &&
+            $ifStatement->stmts[0]->expr instanceof Throw_
+        ) {
             return [];
         }
 
@@ -120,16 +130,5 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         }
 
         return false;
-    }
-
-    /**
-     * @param array<Stmt> $statements
-     */
-    private function startsWithThrow(array $statements): bool
-    {
-        $firstStatement = $statements[0] ?? null;
-
-        return $firstStatement instanceof Expression
-            && $firstStatement->expr instanceof Throw_;
     }
 }

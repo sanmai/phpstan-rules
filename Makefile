@@ -84,7 +84,7 @@ test-prerequisites: prerequisites composer.lock
 
 .PHONY: phpunit
 phpunit: cs
-	rm -fr build/logs/*
+	@rm -fr build/logs/*
 	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_ARGS)
 
 .PHONY: infection
@@ -105,7 +105,7 @@ psalm: cs psalm.xml.dist
 .PHONY: cs
 cs: test-prerequisites
 	$(SILENT) $(PHP) $(PHP_CS_FIXER) $(PHP_CS_FIXER_ARGS) --diff fix
-	sed -i 's:[ \t]*$$::' tests/Fixtures/*/*.php
+	@sed -i 's:[ \t]*$$::' tests/Fixtures/*/*.php
 
 ##############################################################
 # Prerequisites Setup                                        #

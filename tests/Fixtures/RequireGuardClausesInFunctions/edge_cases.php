@@ -115,8 +115,15 @@ function singleReturnStatement(): void
 
 function emptyIfStatement(): void
 {
-    if (bad()) { // Error: should use guard clause (empty if block)
+    if (bad()) {
+        // empty if statements are probably work-in-progress, not an error
     }
+}
+
+function reallyEmptyIfStatement(): void
+{
+    // truly empty statement
+    if (bad()) {}
 }
 
 function throwThenCleanup(): void
