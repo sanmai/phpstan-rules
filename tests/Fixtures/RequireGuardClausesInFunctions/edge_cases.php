@@ -90,3 +90,46 @@ abstract class AbstractExample
         }
     }
 }
+
+function itThrows(): void
+{
+    if (bad()) {
+        throw new Exception();
+    }
+}
+
+function multipleStatementsWithThrow(): void
+{
+    if (bad()) { // Error: should use guard clause (multiple statements including throw)
+        $this->cleanup();
+        throw new Exception();
+    }
+}
+
+function singleReturnStatement(): void
+{
+    if (bad()) { // Error: should use guard clause (single return, not throw)
+        return;
+    }
+}
+
+function emptyIfStatement(): void
+{
+    if (bad()) {
+        // empty if statements are probably work-in-progress, not an error
+    }
+}
+
+function reallyEmptyIfStatement(): void
+{
+    // truly empty statement
+    if (bad()) {}
+}
+
+function throwThenCleanup(): void
+{
+    if (bad()) { // OK: starts with throw, so no guard clause needed (unreachable code after throw)
+        throw new Exception();
+        $this->cleanup(); // This is unreachable code after throw
+    }
+}

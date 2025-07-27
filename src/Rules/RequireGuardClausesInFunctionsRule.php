@@ -22,13 +22,17 @@ namespace Sanmai\PHPStanRules\Rules;
 
 use Override;
 use PhpParser\Node;
+use PhpParser\Node\Expr\Throw_;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+
+use function array_filter;
 
 /**
  * @implements Rule<Stmt>
@@ -85,6 +89,19 @@ final class RequireGuardClausesInFunctionsRule implements Rule
 
         // The if statement must be the last statement and have no elseifs
         if ($ifStatement !== $lastStatement || [] !== $ifStatement->elseifs) {
+            return [];
+        }
+
+        // Skip if statements with empty body (it is horrendous, but not our call)
+        if ([] === array_filter($ifStatement->stmts, static fn(Node $node) => !$node instanceof Stmt\Nop)) {
+            return [];
+        }
+
+        // Skip if statements that start with a throw
+        if (
+            $ifStatement->stmts[0] instanceof Expression &&
+            $ifStatement->stmts[0]->expr instanceof Throw_
+        ) {
             return [];
         }
 

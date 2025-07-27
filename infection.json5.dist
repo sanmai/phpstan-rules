@@ -4,5 +4,6 @@
             "src"
         ]
     },
+    "threads": "max",
     "timeout": 10
 }

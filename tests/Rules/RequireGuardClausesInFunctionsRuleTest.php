@@ -55,7 +55,7 @@ final class RequireGuardClausesInFunctionsRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/RequireGuardClausesInFunctions/edge_cases.php'],
-            [8, 27, 38, 48, 59, 88]  // singleStatement, onlyIfStatement, ifWithSingleStatement, noReturnType, and concreteMethod should trigger
+            [8, 27, 38, 48, 59, 88, 103, 111]
         );
     }
 
