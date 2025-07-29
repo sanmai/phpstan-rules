@@ -26,6 +26,7 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
+use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
@@ -50,32 +51,47 @@ final class NoStaticMethodsRule implements Rule
         return Class_::class;
     }
 
+    /**
+     * @return list<IdentifierRuleError>
+     */
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
         // Skip classes with private constructors using reflection
-        if (null !== $node->namespacedName) {
-            $className = $node->namespacedName->toString();
-            if ($this->reflectionProvider->hasClass($className)) {
-                $classReflection = $this->reflectionProvider->getClass($className);
-                if ($classReflection->hasConstructor()) {
-                    $constructor = $classReflection->getConstructor();
-                    if ($constructor->isPrivate()) {
-                        return [];
-                    }
-                }
-            }
-        }
-
-        $publicStaticMethods = $this->getPublicStaticMethods($node);
-
-        if (count($publicStaticMethods) <= 1) {
+        if ($this->hasPrivateConstructor($node)) {
             return [];
         }
 
+        return $this->processPublicStaticMethods($node);
+    }
+
+    /**
+     * Check if class has a private constructor
+     */
+    private function hasPrivateConstructor(Class_ $node): bool
+    {
+        // Mutation testing has shown these edge cases aren't needed
+        // Keep it simple - the common case works fine
+        if (null === $node->namespacedName || !$this->reflectionProvider->hasClass($node->namespacedName->toString())) {
+            return false;
+        }
+
+        $classReflection = $this->reflectionProvider->getClass($node->namespacedName->toString());
+        return $classReflection->hasConstructor() && $classReflection->getConstructor()->isPrivate();
+    }
+
+    /**
+     * Process public static methods and return errors for violations
+     * @return list<IdentifierRuleError>
+     */
+    private function processPublicStaticMethods(Class_ $node): array
+    {
+        $publicStaticMethods = $this->getPublicStaticMethods($node);
+        $additionalMethods = array_slice($publicStaticMethods, 1);
+
         // Create error for each additional public static method (beyond the first one)
         $errors = [];
-        foreach (array_slice($publicStaticMethods, 1) as $method) {
+        foreach ($additionalMethods as $method) {
             $errors[] = RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->line($method->getLine())
                 ->identifier(self::IDENTIFIER)

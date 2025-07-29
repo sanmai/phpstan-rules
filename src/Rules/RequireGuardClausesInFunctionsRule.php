@@ -85,7 +85,10 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             $ifStatement = $statement;
         }
 
-        /** @var If_ $ifStatement */
+        // If no if statement was found, this function doesn't need guard clauses
+        if ($ifStatement === null) {
+            return [];
+        }
 
         // The if statement must be the last statement and have no elseifs
         if ($ifStatement !== $lastStatement || [] !== $ifStatement->elseifs) {
