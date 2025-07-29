@@ -39,7 +39,9 @@ final class NoStaticMethodsRuleTest extends SingleRuleTestCase
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/NoStaticMethods/no_static_methods.php'],
-            [15] // Only FooBar::baz should trigger (second public static method)
+            [
+                15, // Only FooBar::baz should trigger (second public static method)
+            ]
         );
     }
 }

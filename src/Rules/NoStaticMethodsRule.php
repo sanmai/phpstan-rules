@@ -38,6 +38,7 @@ use function count;
 final class NoStaticMethodsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Only one public static method is allowed per class. Static methods are impossible to mock in tests.';
+    public const IDENTIFIER = 'sanmai.noStaticMethods';
 
     #[Override]
     public function getNodeType(): string
@@ -48,7 +49,6 @@ final class NoStaticMethodsRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
-
         // Skip if class has private constructor (factory pattern exception)
         if ($this->hasPrivateConstructor($node)) {
             return [];
@@ -60,10 +60,12 @@ final class NoStaticMethodsRule implements Rule
             return [];
         }
 
+        // Create error for each additional public static method (beyond the first one)
         $errors = [];
         foreach (array_slice($publicStaticMethods, 1) as $method) {
             $errors[] = RuleErrorBuilder::message(self::ERROR_MESSAGE)
                 ->line($method->getLine())
+                ->identifier(self::IDENTIFIER)
                 ->build();
         }
 
@@ -79,12 +81,11 @@ final class NoStaticMethodsRule implements Rule
             }
         }
 
-        // Check traits for private constructor
+        // For now, we assume classes with traits might have private constructors
+        // This is a simplification - in practice we'd need more sophisticated analysis
         foreach ($class->stmts as $stmt) {
             if ($stmt instanceof TraitUse) {
-                // We assume if a trait is used, it might have a private constructor
-                // In practice, this would need more sophisticated analysis
-                return true;
+                return true; // Assume trait might have private constructor
             }
         }
 
