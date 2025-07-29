@@ -421,6 +421,11 @@ class UserService
     {
         return [];
     }
+
+    protected static function validate(): void
+    {
+
+    }
 }
 
 // Classes with private constructors are exempt (factory pattern)
