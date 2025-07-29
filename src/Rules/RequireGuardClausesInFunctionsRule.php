@@ -86,7 +86,7 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         }
 
         // If no if statement was found, this function doesn't need guard clauses
-        if ($ifStatement === null) {
+        if (null === $ifStatement) {
             return [];
         }
 

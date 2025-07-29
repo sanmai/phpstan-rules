@@ -31,7 +31,6 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
 use function array_slice;
-use function count;
 
 /**
  * @implements Rule<Class_>
@@ -70,9 +69,11 @@ final class NoStaticMethodsRule implements Rule
      */
     private function hasPrivateConstructor(Class_ $node): bool
     {
-        // Mutation testing has shown these edge cases aren't needed
-        // Keep it simple - the common case works fine
-        if (null === $node->namespacedName || !$this->reflectionProvider->hasClass($node->namespacedName->toString())) {
+        if (null === $node->namespacedName) {
+            return false;
+        }
+
+        if (!$this->reflectionProvider->hasClass($node->namespacedName->toString())) {
             return false;
         }
 
