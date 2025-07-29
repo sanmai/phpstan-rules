@@ -50,7 +50,7 @@ final class NoStaticMethodsRuleTest extends SingleRuleTestCase
         );
     }
 
-    public function test_detects_multiple_static_methods_in_root_namesapce(): void
+    public function test_detects_multiple_static_methods_in_root_namespace(): void
     {
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/NoStaticMethods/root_namespace.php'],
