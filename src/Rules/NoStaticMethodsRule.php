@@ -32,6 +32,7 @@ use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Reflection\ClassReflection;
 
 use function array_slice;
+use function str_ends_with;
 
 /**
  * @implements Rule<Class_>
@@ -58,12 +59,24 @@ final class NoStaticMethodsRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
+        // Skip test files - they commonly need multiple static methods for data providers
+        if ($this->isTestFile($scope)) {
+            return [];
+        }
+
         // Skip classes with private constructors using reflection
         if ($this->hasPrivateConstructor($node)) {
             return [];
         }
 
         return $this->processPublicStaticMethods($node);
+    }
+
+    private function isTestFile(Scope $scope): bool
+    {
+        // Check if file ends with "Test.php" or "TestCase.php"
+        return str_ends_with($scope->getFile(), 'Test.php')
+            || str_ends_with($scope->getFile(), 'TestCase.php');
     }
 
     private function getReflection(Class_ $node): ?ClassReflection
