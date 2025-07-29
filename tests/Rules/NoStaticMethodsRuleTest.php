@@ -43,6 +43,7 @@ final class NoStaticMethodsRuleTest extends SingleRuleTestCase
                 15,
                 55,
                 56,
+                63,
             ]
         );
     }

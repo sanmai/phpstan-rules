@@ -65,33 +65,10 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             return [];
         }
 
-        // Get the statements in the function body
-        $statements = $node->stmts ?? [];
+        $ifStatement = $this->findOneIfStatement($node->stmts ?? []);
 
-        // Find if statements - return early if we find more than one
-        $ifStatement = null;
-        $lastStatement = null;
-        foreach ($statements as $statement) {
-            $lastStatement = $statement;
-            if (!$statement instanceof If_) {
-                continue;
-            }
-
-            // If we already found one if statement, this function has multiple
-            if (null !== $ifStatement) {
-                return [];
-            }
-
-            $ifStatement = $statement;
-        }
-
-        // If no if statement was found, this function doesn't need guard clauses
-        if (null === $ifStatement) {
-            return [];
-        }
-
-        // The if statement must be the last statement and have no elseifs
-        if ($ifStatement !== $lastStatement || [] !== $ifStatement->elseifs) {
+        // The last if statement must be found and have no elseifs
+        if (null === $ifStatement || [] !== $ifStatement->elseifs) {
             return [];
         }
 
@@ -115,6 +92,27 @@ final class RequireGuardClausesInFunctionsRule implements Rule
                 ->line($ifStatement->getStartLine())
                 ->build(),
         ];
+    }
+
+    /**
+     * Find if statements - return early if we find more than one
+     * @param Node\Stmt[] $statements
+     */
+    private function findOneIfStatement(iterable $statements): ?If_
+    {
+        $ifStatement = null;
+        foreach ($statements as $statement) {
+            // If we already found one if statement, this function has multiple
+            if (null !== $ifStatement) {
+                return null;
+            }
+
+            if ($statement instanceof If_) {
+                $ifStatement = $statement;
+            }
+        }
+
+        return $ifStatement;
     }
 
     private function hasVoidOrNoReturnType(Function_|ClassMethod $node): bool

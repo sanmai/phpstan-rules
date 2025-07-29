@@ -29,6 +29,7 @@ use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Reflection\ClassReflection;
 
 use function array_slice;
 
@@ -52,6 +53,7 @@ final class NoStaticMethodsRule implements Rule
 
     /**
      * @return list<IdentifierRuleError>
+     * @param Class_ $node
      */
     #[Override]
     public function processNode(Node $node, Scope $scope): array
@@ -64,21 +66,28 @@ final class NoStaticMethodsRule implements Rule
         return $this->processPublicStaticMethods($node);
     }
 
+    private function getReflection(Class_ $node): ?ClassReflection
+    {
+        if (null === $node->namespacedName) {
+            return null;
+        }
+
+        $name = $node->namespacedName->toString();
+
+        if (!$this->reflectionProvider->hasClass($name)) {
+            return null;
+        }
+
+        return $this->reflectionProvider->getClass($name);
+    }
+
     /**
      * Check if class has a private constructor
      */
     private function hasPrivateConstructor(Class_ $node): bool
     {
-        if (null === $node->namespacedName) {
-            return false;
-        }
-
-        if (!$this->reflectionProvider->hasClass($node->namespacedName->toString())) {
-            return false;
-        }
-
-        $classReflection = $this->reflectionProvider->getClass($node->namespacedName->toString());
-        return $classReflection->hasConstructor() && $classReflection->getConstructor()->isPrivate();
+        $classReflection = $this->getReflection($node);
+        return $classReflection?->hasConstructor() && $classReflection->getConstructor()->isPrivate();
     }
 
     /**
