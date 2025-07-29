@@ -133,3 +133,12 @@ function throwThenCleanup(): void
         $this->cleanup(); // This is unreachable code after throw
     }
 }
+
+function lastComment(): void
+{
+    if (bad()) { // Error: should use guard clause (multiple statements including throw)
+        $this->cleanup();
+        throw new Exception();
+    }
+    // A trailing comment
+}

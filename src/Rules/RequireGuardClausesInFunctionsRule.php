@@ -103,7 +103,10 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         $ifStatement = null;
         foreach ($statements as $statement) {
             // If we already found one if statement, this function has multiple
-            if (null !== $ifStatement) {
+            if (
+                null !== $ifStatement &&
+                !$statement instanceof Stmt\Nop
+            ) {
                 return null;
             }
 
@@ -115,6 +118,11 @@ final class RequireGuardClausesInFunctionsRule implements Rule
         return $ifStatement;
     }
 
+    /**
+     * Identifies functions that:
+     * - have no return type specified
+     * - have void type
+     */
     private function hasVoidOrNoReturnType(Function_|ClassMethod $node): bool
     {
         // No return type specified
@@ -122,12 +130,8 @@ final class RequireGuardClausesInFunctionsRule implements Rule
             return true;
         }
 
-        // Check if it's void type
-        $returnType = $node->returnType;
-
-        // Handle identifier nodes (like 'void', 'never', etc.)
-        if ($returnType instanceof Node\Identifier) {
-            return 'void' === $returnType->name;
+        if ($node->returnType instanceof Node\Identifier) {
+            return 'void' === $node->returnType->name;
         }
 
         return false;
