@@ -35,3 +35,7 @@ services:
         class: Sanmai\PHPStanRules\Rules\NoFinalClassesRule
         tags:
             - phpstan.rules.rule
+    -
+        class: Sanmai\PHPStanRules\Rules\NoStaticMethodsRule
+        tags:
+            - phpstan.rules.rule
