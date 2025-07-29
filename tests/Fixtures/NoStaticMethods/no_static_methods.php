@@ -27,7 +27,7 @@ class FooPrivateConstructor {
     public static function baz() {} // Not error: classes with private constructors can have as many static methods
 }
 
-trait PrivateConstructorTrait {
+trait SomeConstructorTrait {
     private function __construct()
     {
 
@@ -35,8 +35,23 @@ trait PrivateConstructorTrait {
 }
 
 class FooPrivateConstructorTrait {
-    use PrivateConstructorTrait;
+    use SomeConstructorTrait;
 
     public static function bar() {} // One method is fine
     public static function baz() {} // Not error: classes with private constructors can have as many static methods
+}
+
+trait SomeConstructorTrait2 {
+    public function __construct()
+    {
+
+    }
+}
+
+class FooPublicConstructorTrait {
+    use SomeConstructorTrait2;
+
+    public static function bar() {} // One method is fine
+    public static function baz() {} // ERROR: classes with private constructors can have as many static methods
+    public static function woo() {} // ERROR: classes with private constructors can have as many static methods
 }
