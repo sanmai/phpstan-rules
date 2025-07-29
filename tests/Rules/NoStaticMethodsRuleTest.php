@@ -23,6 +23,8 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 use PHPStan\Rules\Rule;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Sanmai\PHPStanRules\Rules\NoStaticMethodsRule;
+use ReflectionClass;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @extends SingleRuleTestCase<NoStaticMethodsRule>
@@ -58,4 +60,25 @@ final class NoStaticMethodsRuleTest extends SingleRuleTestCase
         );
     }
 
+    /**
+     * This test file itself ends with Test.php and has multiple static methods
+     * - it should not trigger any errors
+     */
+    public function test_allows_multiple_static_methods_in_test_files(): void
+    {
+        $this->analyse([__FILE__], []);
+    }
+
+    /**
+     * PHPUnit's TestCase has multiple static methods and should not trigger errors
+     */
+    public function test_allows_multiple_static_methods_in_testcase_files(): void
+    {
+        $reflection = new ReflectionClass(TestCase::class);
+        $this->analyse([$reflection->getFileName()], []);
+    }
+
+    public static function foo(): void {}
+
+    public static function bar(): void {}
 }

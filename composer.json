@@ -26,6 +26,7 @@
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpunit/phpunit": "^9.5 || ^10.0",
         "sanmai/later": "^0.1.7",
+        "sanmai/phpunit-double-colon-syntax": "^0.1.1",
         "sanmai/pipeline": "^6.22 || ^7.0",
         "vimeo/psalm": ">=2"
     },
