@@ -32,7 +32,7 @@ final class NoStaticMethodsRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new NoStaticMethodsRule();
+        return new NoStaticMethodsRule($this->createReflectionProvider());
     }
 
     public function test_detects_multiple_static_methods(): void
@@ -40,8 +40,21 @@ final class NoStaticMethodsRuleTest extends SingleRuleTestCase
         $this->analyseExpectingErrorLines(
             [__DIR__ . '/../Fixtures/NoStaticMethods/no_static_methods.php'],
             [
-                15, // Only FooBar::baz should trigger (second public static method)
+                15,
+                55,
+                56,
             ]
         );
     }
+
+    public function test_detects_multiple_static_methods_in_root_namesapce(): void
+    {
+        $this->analyseExpectingErrorLines(
+            [__DIR__ . '/../Fixtures/NoStaticMethods/root_namespace.php'],
+            [
+                7,
+            ]
+        );
+    }
+
 }

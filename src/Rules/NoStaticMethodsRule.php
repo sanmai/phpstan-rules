@@ -24,8 +24,8 @@ use Override;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\TraitUse;
 use PHPStan\Analyser\Scope;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
@@ -40,6 +40,10 @@ final class NoStaticMethodsRule implements Rule
     public const ERROR_MESSAGE = 'Only one public static method is allowed per class. Static methods are impossible to mock in tests.';
     public const IDENTIFIER = 'sanmai.noStaticMethods';
 
+    public function __construct(
+        private ReflectionProvider $reflectionProvider
+    ) {}
+
     #[Override]
     public function getNodeType(): string
     {
@@ -49,9 +53,18 @@ final class NoStaticMethodsRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
-        // Skip if class has private constructor (factory pattern exception)
-        if ($this->hasPrivateConstructor($node)) {
-            return [];
+        // Skip classes with private constructors using reflection
+        if (null !== $node->namespacedName) {
+            $className = $node->namespacedName->toString();
+            if ($this->reflectionProvider->hasClass($className)) {
+                $classReflection = $this->reflectionProvider->getClass($className);
+                if ($classReflection->hasConstructor()) {
+                    $constructor = $classReflection->getConstructor();
+                    if ($constructor->isPrivate()) {
+                        return [];
+                    }
+                }
+            }
         }
 
         $publicStaticMethods = $this->getPublicStaticMethods($node);
@@ -72,25 +85,6 @@ final class NoStaticMethodsRule implements Rule
         return $errors;
     }
 
-    private function hasPrivateConstructor(Class_ $class): bool
-    {
-        // Check direct constructor
-        foreach ($class->stmts as $stmt) {
-            if ($stmt instanceof ClassMethod && '__construct' === $stmt->name->toString()) {
-                return $stmt->isPrivate();
-            }
-        }
-
-        // For now, we assume classes with traits might have private constructors
-        // This is a simplification - in practice we'd need more sophisticated analysis
-        foreach ($class->stmts as $stmt) {
-            if ($stmt instanceof TraitUse) {
-                return true; // Assume trait might have private constructor
-            }
-        }
-
-        return false;
-    }
 
     /**
      * @return ClassMethod[]
