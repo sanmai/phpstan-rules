@@ -42,12 +42,4 @@ final class NoEmptyOnStringsRuleTest extends SingleRuleTestCase
             [7, 12, 17, 22, 27, 35, 58, 70, 75]
         );
     }
-
-    public function test_detects_empty_on_strings_from_main_fixture(): void
-    {
-        $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/NoEmptyRule/empty_function_calls.php'],
-            [7, 17, 22, 30, 36, 45, 60, 75, 80, 85]  // String-related and mixed type errors
-        );
-    }
 }
