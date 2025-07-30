@@ -22,52 +22,50 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesRule;
 
 /**
  * Tests that all "good" examples from README don't trigger any rules
- * @phpstan-ignore missingType.generics
  */
 #[CoversNothing]
 final class ReadmeExamplesTest extends SingleRuleTestCase
 {
-    public function testNoNestedLoopsRule(): void
+    private const RULES = [
+        NoNestedLoopsRule::class,
+        NoNestedIfStatementsRule::class,
+        RequireGuardClausesRule::class,
+    ];
+
+    /**
+     * @return iterable<array<Rule>>
+     */
+    public static function provideRules(): iterable
     {
-        $this->rule = new NoNestedLoopsRule();
-
-        // Should have no errors - all examples are "good"
-        $this->analyse([__DIR__ . '/../Fixtures/ReadmeExamples/good_examples.php'], []);
-    }
-
-    public function testNoNestedIfStatementsRule(): void
-    {
-        $this->rule = new NoNestedIfStatementsRule();
-
-        // Should have no errors - all examples are "good"
-        $this->analyse([__DIR__ . '/../Fixtures/ReadmeExamples/good_examples.php'], []);
-    }
-
-    public function testRequireGuardClausesInLoopsRule(): void
-    {
-        $this->rule = new RequireGuardClausesRule();
-
-        // Should have no errors - all examples are "good"
-        $this->analyse([__DIR__ . '/../Fixtures/ReadmeExamples/good_examples.php'], []);
+        foreach (self::RULES as $rule) {
+            yield $rule => [new $rule()];
+        }
     }
 
     /**
-     * @phpstan-ignore missingType.generics
+     * Should have no errors - all examples are "good"
      */
+    #[DataProvider('provideRules')]
+    public function testRule(Rule $rule): void
+    {
+        $this->rule = $rule;
+
+        $this->analyse([__DIR__ . '/../Fixtures/ReadmeExamples/good_examples.php'], []);
+    }
+
     protected function getRule(): Rule
     {
-        // This is set in each test method
         return $this->rule;
     }
 
     /**
-     * @phpstan-ignore missingType.generics
      */
     private Rule $rule;
 }
