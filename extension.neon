@@ -36,6 +36,6 @@ services:
         tags:
             - phpstan.rules.rule
     -
-        class: Sanmai\PHPStanRules\Rules\NoStaticMethodsRule
+        class: Sanmai\PHPStanRules\Rules\NoPublicStaticMethodsRule
         tags:
             - phpstan.rules.rule

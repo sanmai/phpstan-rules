@@ -32,7 +32,7 @@ use Sanmai\PHPStanRules\Rules\NoEmptyRule;
 use Sanmai\PHPStanRules\Rules\NoFinalClassesRule;
 use Sanmai\PHPStanRules\Rules\NoNestedIfStatementsRule;
 use Sanmai\PHPStanRules\Rules\NoNestedLoopsRule;
-use Sanmai\PHPStanRules\Rules\NoStaticMethodsRule;
+use Sanmai\PHPStanRules\Rules\NoPublicStaticMethodsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesInFunctionsRule;
 use Sanmai\PHPStanRules\Rules\RequireGuardClausesRule;
 use SplFileInfo;
@@ -59,7 +59,7 @@ final class RulesConsistencyTest extends TestCase
         NoFinalClassesRule::class,
         NoNestedIfStatementsRule::class,
         NoNestedLoopsRule::class,
-        NoStaticMethodsRule::class,
+        NoPublicStaticMethodsRule::class,
         RequireGuardClausesInFunctionsRule::class,
         RequireGuardClausesRule::class,
     ];

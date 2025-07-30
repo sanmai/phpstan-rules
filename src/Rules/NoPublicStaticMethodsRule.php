@@ -37,10 +37,10 @@ use function str_ends_with;
 /**
  * @implements Rule<Class_>
  */
-final class NoStaticMethodsRule implements Rule
+final class NoPublicStaticMethodsRule implements Rule
 {
     public const ERROR_MESSAGE = 'Only one public static method is allowed per class. Static methods are impossible to mock in tests.';
-    public const IDENTIFIER = 'sanmai.noStaticMethods';
+    public const IDENTIFIER = 'sanmai.noPublicStaticMethods';
 
     public function __construct(
         private ReflectionProvider $reflectionProvider

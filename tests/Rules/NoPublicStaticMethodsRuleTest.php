@@ -22,25 +22,25 @@ namespace Sanmai\PHPStanRules\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Sanmai\PHPStanRules\Rules\NoStaticMethodsRule;
+use Sanmai\PHPStanRules\Rules\NoPublicStaticMethodsRule;
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @extends SingleRuleTestCase<NoStaticMethodsRule>
+ * @extends SingleRuleTestCase<NoPublicStaticMethodsRule>
  */
-#[CoversClass(NoStaticMethodsRule::class)]
-final class NoStaticMethodsRuleTest extends SingleRuleTestCase
+#[CoversClass(NoPublicStaticMethodsRule::class)]
+final class NoPublicStaticMethodsRuleTest extends SingleRuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new NoStaticMethodsRule($this->createReflectionProvider());
+        return new NoPublicStaticMethodsRule($this->createReflectionProvider());
     }
 
     public function test_detects_multiple_static_methods(): void
     {
         $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/NoStaticMethods/no_static_methods.php'],
+            [__DIR__ . '/../Fixtures/NoPublicStaticMethods/no_static_methods.php'],
             [
                 15,
                 55,
@@ -53,7 +53,7 @@ final class NoStaticMethodsRuleTest extends SingleRuleTestCase
     public function test_detects_multiple_static_methods_in_root_namespace(): void
     {
         $this->analyseExpectingErrorLines(
-            [__DIR__ . '/../Fixtures/NoStaticMethods/root_namespace.php'],
+            [__DIR__ . '/../Fixtures/NoPublicStaticMethods/root_namespace.php'],
             [
                 7,
             ]
