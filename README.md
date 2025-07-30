@@ -390,6 +390,63 @@ parameters:
         - identifier: sanmai.noFinalClasses
 ```
 
+### `NoPublicStaticMethodsRule`
+
+**Allows only one public static method per class.**
+
+Static methods are impossible to mock in tests, making code harder to test. This rule limits classes to at most one public static method to encourage dependency injection.
+
+#### Bad
+```php
+class UserService
+{
+    public static function create(): self // First static method is fine
+    {
+        return new self();
+    }
+
+    public static function validate(User $user): bool // Error: Too many static methods
+    {
+        return $user->isValid();
+    }
+}
+```
+
+#### Good
+```php
+class UserService
+{
+    // Protected and private static methods are allowed
+    private static function getConfig(): array
+    {
+        return [];
+    }
+
+    protected static function validate(): void
+    {
+
+    }
+}
+
+// Classes with private constructors are exempt (factory pattern)
+class ValueObject
+{
+    private function __construct(private string $value) {}
+
+    public static function fromString(string $value): self // Allowed
+    {
+        return new self($value);
+    }
+
+    public static function fromArray(array $data): self // Also allowed
+    {
+        return new self($data['value']);
+    }
+}
+```
+
+PHPUnit tests and test cases are excluded.
+
 ## Ignoring Rules
 
 [Please refer to the PHPStan documentation.](https://phpstan.org/user-guide/ignoring-errors)
