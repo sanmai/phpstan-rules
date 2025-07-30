@@ -64,6 +64,11 @@ final class NoPublicStaticMethodsRule implements Rule
             return [];
         }
 
+        // Skip abstract classes - they often have multiple static utility methods
+        if ($node->isAbstract()) {
+            return [];
+        }
+
         // Skip classes with private constructors using reflection
         if ($this->hasPrivateConstructor($node)) {
             return [];
