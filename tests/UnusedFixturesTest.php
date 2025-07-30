@@ -28,6 +28,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
+use function array_unique;
 use function Later\lazy;
 use function Pipeline\take;
 use function sprintf;
@@ -39,7 +40,7 @@ use function preg_match;
 final class UnusedFixturesTest extends TestCase
 {
     /**
-     * @var Deferred<array<string, string>>
+     * @var Deferred<list<string>>
      */
     private static Deferred $usedFixtures;
 
@@ -49,7 +50,7 @@ final class UnusedFixturesTest extends TestCase
     }
 
     /**
-     * @return iterable<array<string, string>>
+     * @return iterable<list<string>>
      */
     public static function extractFixtureNamesFromTests(): iterable
     {
@@ -58,10 +59,9 @@ final class UnusedFixturesTest extends TestCase
             ->filter(fn(string $line) => str_contains($line, 'Fixtures'))
             ->cast(fn(string $line) => preg_match("#Fixtures/(.+)'#", $line, $matches) ? $matches[1] : null)
             ->filter(strict: true)
-            ->map(fn(string $fixture) => yield $fixture => $fixture)
-            ->toAssoc()
+            ->toList()
         ;
-        /** @var array<string, string> $result */
+        /** @var list<string> $result */
 
         yield $result;
     }
@@ -84,13 +84,22 @@ final class UnusedFixturesTest extends TestCase
     #[DataProvider('provideFixtures')]
     public function test_fixtures_used(string $filename): void
     {
-        $this->assertArrayHasKey(
+        $this->assertContains(
             $filename,
             self::$usedFixtures->get(),
             sprintf(
                 'Fixture "%s" is not used in any test. Please remove it.',
                 $filename
             )
+        );
+    }
+
+    public function test_fixture_used_once(): void
+    {
+        $this->assertSame(
+            self::$usedFixtures->get(),
+            array_unique(self::$usedFixtures->get()),
+            "Each fixture should be used once."
         );
     }
 }
