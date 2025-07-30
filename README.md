@@ -390,7 +390,7 @@ parameters:
         - identifier: sanmai.noFinalClasses
 ```
 
-### `NoStaticMethodsRule`
+### `NoPublicStaticMethodsRule`
 
 **Allows only one public static method per class.**
 
