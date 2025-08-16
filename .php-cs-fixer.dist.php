@@ -66,6 +66,7 @@ $config
         'array_indentation' => true,
         'no_superfluous_phpdoc_tags' => true,
         'no_unused_imports' => true,
+        'operator_linebreak' => ['only_booleans' => true],
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
