@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "phpstan/phpstan": "^2.0"
+        "phpstan/phpstan": "^2.1.36"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.8",
