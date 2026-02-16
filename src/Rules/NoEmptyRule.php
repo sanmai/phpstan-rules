@@ -51,7 +51,7 @@ final class NoEmptyRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
-        $exprType = $scope->getType($node->expr);
+        $exprType = $scope->getScopeType($node->expr);
 
         // Allow empty() on nullable arrays only
         if ($this->isNullableArray($exprType)) {
