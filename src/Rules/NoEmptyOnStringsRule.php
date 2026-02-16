@@ -49,7 +49,7 @@ final class NoEmptyOnStringsRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
-        $exprType = $scope->getType($node->expr);
+        $exprType = $scope->getScopeType($node->expr);
 
         // Check if the type is or contains string
         if (!$this->containsStringType($exprType)) {
