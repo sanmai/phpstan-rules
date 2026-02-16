@@ -65,6 +65,7 @@ abstract class SingleRuleTestCase extends RuleTestCase
         /** @phpstan-ignore classConstant.notFound */
         $message = $this->getRule()::ERROR_MESSAGE;
 
+        /** @var list<array{0: string, 1: int, 2?: string|null}> */
         return take($lines)
             ->cast(fn(array|int $line): array => is_array($line) ? $line : [$message, $line])
             ->toList();
