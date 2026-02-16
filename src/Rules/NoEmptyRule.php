@@ -29,8 +29,6 @@ use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\TypeCombinator;
 use PHPStan\Type\UnionType;
 
-use function is_string;
-
 /**
  * @implements Rule<Empty_>
  */
@@ -53,10 +51,7 @@ final class NoEmptyRule implements Rule
     #[Override]
     public function processNode(Node $node, Scope $scope): array
     {
-        // Use the variable's declared type when available, as PHPStan
-        // narrows types inside empty() (removing null), which prevents
-        // us from detecting nullable arrays via $scope->getType().
-        $exprType = $this->getExpressionType($node->expr, $scope);
+        $exprType = $scope->getScopeType($node->expr);
 
         // Allow empty() on nullable arrays only
         if ($this->isNullableArray($exprType)) {
@@ -73,15 +68,6 @@ final class NoEmptyRule implements Rule
                 ->identifier(self::IDENTIFIER)
                 ->build(),
         ];
-    }
-
-    private function getExpressionType(Node\Expr $expr, Scope $scope): \PHPStan\Type\Type
-    {
-        if ($expr instanceof Node\Expr\Variable && is_string($expr->name) && $scope->hasVariableType($expr->name)->yes()) {
-            return $scope->getVariableType($expr->name);
-        }
-
-        return $scope->getType($expr);
     }
 
     private function isNullableArray(\PHPStan\Type\Type $type): bool
