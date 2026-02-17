@@ -37,7 +37,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          coverage: pcov
+          coverage: none
+          ini-values: opcache.enable_cli=1, opcache.jit=tracing, opcache.jit_buffer_size=64M
           tools: composer:v2
 
       - name: Cache dependencies
@@ -55,31 +56,93 @@ jobs:
         run: |
           composer require --no-update "nikic/php-parser:${{ matrix.php-parser }}"
 
-      - name: Install dependencies
+      - name: Remove non-test dependencies
         run: |
           composer remove --no-update --dev \
-              phan/phan phpstan/phpstan vimeo/psalm \
-              infection/infection friendsofphp/php-cs-fixer
-          composer update --prefer-dist --no-interaction --no-progress
+              phpstan/phpstan vimeo/psalm \
+              infection/infection friendsofphp/php-cs-fixer php-coveralls/php-coveralls
+
+      - name: Install dependencies
+        uses: nick-fields/retry@v3
+        with:
+          timeout_seconds: 30
+          max_attempts: 3
+          retry_on: error
+          command: |
+            composer update --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
         run: |
-          make ci-test
+          php vendor/bin/phpunit --group=default --display-deprecations
 
-      - name: Upload coverage report
+  mt:
+    name: Mutation Testing
+    runs-on: ubuntu-latest
+
+    env:
+      PHP_VERSION: '8.4'
+      COMPOSER_ROOT_VERSION: 0.3.99
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP with coverage
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: pcov
+          tools: composer:v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ env.PHP_VERSION }}-${{ hashFiles('composer.*') }}
+          restore-keys: |
+            composer-${{ env.PHP_VERSION }}-
+            composer-
+
+      - name: Install dependencies
+        run: |
+          composer remove --no-update --dev \
+              phpstan/phpstan vimeo/psalm \
+              friendsofphp/php-cs-fixer
+          composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Generate coverage
+        run: |
+          php vendor/bin/phpunit --coverage-xml=build/logs/coverage-xml --coverage-clover=build/logs/clover.xml --log-junit=build/logs/junit.xml
+
+      - name: Upload coverage to Coveralls
         continue-on-error: true
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           php vendor/bin/php-coveralls -v
 
-  analyze:
+      - name: Create opcache directory
+        run: mkdir -p /tmp/opcache
+
+      - name: Setup PHP for mutation testing
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+          ini-values: opcache.enable_cli=1, opcache.file_cache=/tmp/opcache, opcache.file_cache_only=1
+          tools: composer:v2
+
+      - name: Run mutation testing
+        run: |
+          make ci-infection
+
+  static-analysis:
     name: Static Analysis and Validation
     runs-on: ubuntu-latest
 
     env:
-      PHP_VERSION: '8.3'
-      COMPOSER_ROOT_VERSION: v5.99
+      PHP_VERSION: '8.4'
+      COMPOSER_ROOT_VERSION: 0.3.99
 
     steps:
       - name: Checkout code
@@ -89,8 +152,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
-          extensions: ast
-          coverage: pcov
+          coverage: none
+          ini-values: memory_limit=512M, opcache.enable_cli=1, opcache.jit=tracing, opcache.jit_buffer_size=64M
           tools: composer:v2
 
       - name: Cache dependencies
@@ -113,6 +176,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          composer remove --no-update --dev infection/infection
           composer update --prefer-dist --no-interaction --no-progress
 
       - name: Validate composer.json
@@ -123,10 +187,10 @@ jobs:
         run: |
           make yamllint
 
-      - name: Non-code tests
+      - name: Check code style
         run: |
-          php vendor/bin/phpunit --group=documentation
+          make ci-cs
 
-      - name: Final Analysis and Validation
+      - name: Static Analysis
         run: |
-          make ci-analyze --keep-going -j2 --output-sync=target
+          make ci-phpstan ci-psalm --keep-going -j8 --output-sync
