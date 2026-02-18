@@ -73,7 +73,7 @@ jobs:
 
       - name: Execute tests
         run: |
-          php vendor/bin/phpunit --group=default --display-deprecations
+          make ci-test
 
   mt:
     name: Mutation Testing
