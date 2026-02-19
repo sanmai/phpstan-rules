@@ -50,7 +50,7 @@ ci-test: prerequisites
 	$(SILENT) $(PHP) $(PHPUNIT) --group=$(PHPUNIT_GROUP)
 
 ci-analyze: SILENT=
-ci-analyze: prerequisites ci-phpunit ci-infection ci-phpstan ci-psalm
+ci-analyze: prerequisites ci-cs ci-phpstan ci-psalm
 
 ci-phpunit: ci-cs
 	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_ARGS)
