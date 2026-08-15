@@ -74,8 +74,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PHP_VERSION: '8.3'
-      COMPOSER_ROOT_VERSION: v5.99
+      PHP_VERSION: '8.4'
+      COMPOSER_ROOT_VERSION: 0.3.99
 
     steps:
       - name: Checkout code
