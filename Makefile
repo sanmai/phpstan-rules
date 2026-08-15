@@ -47,21 +47,15 @@ all: test
 
 ci-test: SILENT=
 ci-test: prerequisites
-	$(SILENT) $(PHP) $(PHPUNIT) --group=$(PHPUNIT_GROUP)
+	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_COVERAGE_CLOVER) --group=$(PHPUNIT_GROUP)
 
 ci-analyze: SILENT=
-ci-analyze: prerequisites ci-cs ci-phpstan ci-psalm
+ci-analyze: prerequisites ci-phpunit ci-infection ci-phpstan ci-psalm
 
 ci-phpunit: ci-cs
 	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_ARGS)
 
-# Coverage files for infection - can be pre-generated or downloaded as artifact
-PHP_SRC := $(wildcard src/*.php src/*/*.php tests/*.php tests/*/*.php)
-
-build/logs/junit.xml: $(PHP_SRC)
-	$(MAKE) ci-phpunit
-
-ci-infection: build/logs/junit.xml
+ci-infection: ci-phpunit
 	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS) --no-progress
 
 ci-phpstan: ci-cs .phpstan.neon
