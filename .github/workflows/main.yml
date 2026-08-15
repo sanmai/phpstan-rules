@@ -77,7 +77,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PHP_VERSION: '8.3'
+      PHP_VERSION: '8.4'
       COMPOSER_ROOT_VERSION: 0.3.99
 
     steps:
